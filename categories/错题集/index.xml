@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>错题集 on INKPATTERN</title>
+    <link>https://munlelee.github.io/categories/%E9%94%99%E9%A2%98%E9%9B%86/</link>
+    <description>Recent content in 错题集 on INKPATTERN</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>&amp;copy; 2021 INKPATTERN</copyright>
+    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://munlelee.github.io/categories/%E9%94%99%E9%A2%98%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>leetcode 141 环形链表</title>
+      <link>https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</guid>
+      <description>寻找一个链表中是否存在环，返回一个布尔值</description>
+    </item>
+    
+  </channel>
+</rss>

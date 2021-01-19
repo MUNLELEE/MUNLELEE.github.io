@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang='zh' ><meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+<title>leetcode 862 和至少为K的最短子数组 | INKPATTERN</title>
+<link rel="stylesheet" href="https://munlelee.github.io/css/eureka.min.css">
+<script defer src="https://munlelee.github.io/js/eureka.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/highlight.min.js"
+   crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/js/all.min.js"
+   integrity="sha256-uNYoXefWRqv&#43;PsIF/OflNmwtKM4lStn9yrz2gVl6ymo="  crossorigin></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+   integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3&#43;Aro6EYUG4&#43;cU&#43;KJWu/X"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" 
+  integrity="sha384-g7c&#43;Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI&#43;sEnkvrMWph2EDg4"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
+   integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC&#43;Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_32x32_fill_q75_box_center.jpg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_180x180_fill_q75_box_center.jpg">
+
+<meta name="description"
+  content="从一个数组中获得一个子数组，这个子数组的和满足一定值且长度为能够得到此条件数组的最短">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Posts",
+      "item":"https://munlelee.github.io/posts/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"leetcode 862 和至少为K的最短子数组",
+      "item":"https://munlelee.github.io/posts/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://munlelee.github.io/posts/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/"
+    },
+    "headline": "leetcode 862 和至少为K的最短子数组 | INKPATTERN","datePublished": "2021-01-18T00:00:00+00:00",
+    "dateModified": "2021-01-18T00:00:00+00:00",
+    "wordCount":  208 ,
+    "author": {
+        "@type": "Person",
+        "name": ["example-author"]
+    },
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://munlelee.github.io/images/aim.jpg"
+        }
+        },
+    "description": "从一个数组中获得一个子数组，这个子数组的和满足一定值且长度为能够得到此条件数组的最短"
+}
+</script><meta property="og:title" content="leetcode 862 和至少为K的最短子数组 | INKPATTERN" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="https://munlelee.github.io/images/aim.jpg">
+
+
+<meta property="og:url" content="https://munlelee.github.io/posts/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/" />
+
+
+
+
+<meta property="og:description" content="从一个数组中获得一个子数组，这个子数组的和满足一定值且长度为能够得到此条件数组的最短" />
+
+
+
+
+<meta property="og:locale" content="zh" />
+
+
+
+
+<meta property="og:site_name" content="INKPATTERN" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2021-01-18T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2021-01-18T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="posts" />
+
+
+<meta property="article:tag" content="leetcode" />
+
+
+
+
+
+
+
+
+
+<meta property="og:see_also" content="https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/" />
+
+
+
+
+
+
+
+<body class="flex flex-col min-h-screen">
+  <header class="fixed flex items-center w-full min-h-16 pl-scrollbar z-50 bg-secondary-bg shadow-sm">
+    <div class="w-full max-w-screen-xl mx-auto"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap p-4">
+    <a href="/" class="mr-6 text-primary-text text-xl font-bold">INKPATTERN</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:flex-grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="text-sm md:flex-grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/authors/example-author/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">关于我</a>
+            <a href="/posts/"
+                class="block mt-4 md:inline-block md:mt-0  text-eureka  hover:text-eureka mr-4">博文</a>
+            <a href="/docs/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">文档</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col left-0 md:left-auto right-auto md:right-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            switchMode('Auto')
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script></div>
+  </header>
+  <main class="flex-grow pt-16">
+    <div class="pl-scrollbar">
+      <div class="w-full max-w-screen-xl lg:px-4 xl:px-8 mx-auto">
+
+
+<div class="grid grid-cols-2 lg:grid-cols-8 gap-4 lg:pt-12">
+    <div
+        class="col-span-2  lg:col-span-6 bg-secondary-bg rounded px-6 py-8">
+        <h1 class="font-bold text-3xl text-primary-text">leetcode 862 和至少为K的最短子数组</h1>
+        <div class="flex flex-wrap flex-row items-center mt-2 text-tertiary-text">
+    <div class="mr-6 my-2">
+        <i class="fas fa-calendar mr-1"></i>
+        <span>2021-01-18</span>
+    </div>
+    <div class="mr-6 my-2">
+        <i class="fas fa-clock mr-1"></i>
+        <span>1分钟阅读时长</span>
+    </div>
+    
+    
+    <div class="mr-6 my-2">
+        <i class="fas fa-folder mr-1"></i>
+        
+        <a href="https://munlelee.github.io/categories/%E9%9A%BE%E9%A2%98%E9%9B%86/" class="hover:text-eureka">难题集</a>
+        
+    </div>
+    
+
+    
+    <div class="mr-6 my-2">
+        <i class="fas fa-th-list mr-1"></i>
+        
+        <a href="https://munlelee.github.io/series/%E7%BC%96%E7%A8%8B%E7%BB%83%E4%B9%A0/" class="hover:text-eureka">编程练习</a>
+        
+    </div>
+    
+</div>
+        
+        
+        
+
+        <div class="content">
+            <h4 id="题目描述">题目描述：</h4>
+<p>返回 <code>A</code> 的最短的非空连续子数组的长度，该子数组的和至少为 <code>K</code> 。</p>
+<p>如果没有和至少为 <code>K</code> 的非空子数组，返回 <code>-1</code></p>
+<h4 id="示例">示例：</h4>
+<pre><code>输入：A = [1], K = 1
+输出：1
+
+输入：A = [1,2], K = 4
+输出：-1
+
+输入：A = [2,-1,2], K = 3
+输出：3
+</code></pre>
+<h4 id="提示">提示：</h4>
+<pre><code>1. 1 &lt;= A.length &lt;= 50000
+2. -10 ^ 5 &lt;= A[i] &lt;= 10 ^ 5
+3. 1 &lt;= K &lt;= 10 ^ 9
+</code></pre>
+<p>首先对于我这样一个不怎么有基础的人来说，这道题着实是令我作呕。。解题也是通过了其它题解的启发。下面就开始吧。</p>
+<h4 id="解题想法">解题想法：</h4>
+<p>由于题目中已经明确表示了数组的长度为50000，因此如果要使用暴力接法，势必造成O(n^2)的时间复杂度。因此就要想办法让i， j两个循环变量只跑一遍。而对于这道题因为绕不开要求取数组中的区间和。所以可以采用的一个方法是前缀和思想。大致的意思就是sum[i] = array[0] + array[1] + &hellip; + array[i - 1]利用这个前缀和数组就可以较为方便的得到一个数组的区间和，例如要知道区间[1, 3]的和，我们可以利用前缀和数组得到sum[4] - sum[1]（<strong>这里需要注意的是，为了便于计算前缀和数组的第零个元素默认为零</strong>）</p>
+<p>解决了前缀和之后就要解决更加关键的问题，如何能够得到最短长度的和最小序列。首先我们不妨先这么想，如果我们当前的索引为i， 此时若区间[0, i]的和比区间[0, i - 1]的和要小，那么就不需要再考虑i - 1这个位置的索引了（<strong>因为这个时候有sum[A.length] - sum[i] &gt; sum[A.length] - sum[i - 1] 且前者的区间长度要小于后者</strong>）而这个时候就要原先的存储的<code>i - 1</code>这个索引弹出，再将更优的<code>i</code>索引加入。这个时候可以利用队列这样的数据结构来保存。有了这个存删的机制就可以保证每次能够得到的长度都是最短且和最大的。之后就是获得长度的问题了。如果这个队列中还有元素的话，就从当前遍历到的索引<code>i</code>的前缀和减去队列头部保存的索引，即（<strong><code>sum[i] - sum[queue.front()]</code></strong>）这个条件需要满足题目中给出的K。由此可以看出这个队列需要两端都能出，因此我们需要维护一个单调递增的双端队列。下面附上C++代码</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    int shortestSubarray(vector&lt;int&gt;&amp; vec, int threshold) {
+        int len = vec.size();
+        int minLength = 5e4 + 11;
+        deque&lt;int&gt; dque;
+        vector&lt;int&gt; sum(len + 1, 0);  // 初始化前缀和数组
+        for (int i = 1; i &lt;= len; ++i) {
+            sum[i] = sum[i - 1] + vec[i - 1];
+        }
+        for (int i = 0; i &lt; len + 1; ++i) {
+            if (i != 0) {
+                // 满足性质就将队列尾部的索引给删除不再考虑
+                while (dque.size() &amp;&amp; sum[dque.back()] &gt;= sum[i]) {
+                    dque.pop_back();
+                }
+                // 从队列头部开始寻找满足条件的最短区间
+                // 如果不满足条件就要将队列头部元素删除
+                while (dque.size() &amp;&amp; sum[i] - sum[dque.front()] &gt;= threshold) {
+                    minLength = min(minLength, i - dque.front());
+                    dque.pop_front();
+                }
+            }
+            dque.push_back(i);
+        }
+        return minLength == 5e4 + 11 ? -1 : minLength;
+    }
+};
+</code></pre>
+
+        </div>
+        
+        <div class="my-4">
+    
+    <a href="https://munlelee.github.io/tags/leetcode/" class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 mr-2 hover:text-eureka">#leetcode</a>
+    
+</div>
+        
+        
+        
+        
+        
+        <div class="py-2">
+    
+    <div class="flex flex-col md:flex-row items-center my-8">
+        <a href="https://munlelee.github.io/authors/example-author/" class="w-24 h-24 md:mr-4">
+            
+            
+            <img src="https://munlelee.github.io/images/aim.jpg" class="w-full bg-primary-bg rounded-full" alt="Avatar">
+            
+        </a>
+        <div class="w-full md:w-auto mt-4 md:mt-0">
+            <a href="https://munlelee.github.io/authors/example-author/" class="block font-bold text-lg pb-1 mb-2 border-b">墨纹</a>
+            <span class="block pb-2">一个来自江南边陲小镇的福建人</span>
+            
+            
+            
+            
+            
+            <a href="1102122303@qq.com" class="mr-1">
+                <i class="fas fa-envelope"></i>
+            </a>
+            
+            
+            
+            
+            
+            <a href="https://weibo.com/6059508861/profile?rightmod=1&amp;wvr=6&amp;mod=personinfo&amp;is_all=1" class="mr-1">
+                <i class="fab fa-weibo"></i>
+            </a>
+            
+            
+            
+            
+            
+            <a href="https://github.com/MUNLELEE" class="mr-1">
+                <i class="fab fa-github"></i>
+            </a>
+            
+        </div>
+    </div>
+    
+</div>
+        
+        
+        
+<div class="flex flex-col md:flex-row md:justify-between -mx-2 mt-4 px-2 pt-4 border-t">
+    <div>
+        
+        <span class="block font-bold">上一页</span>
+        <a href="https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/" class="block">leetcode 141 环形链表</a>
+        
+    </div>
+    <div class="md:text-right mt-4 md:mt-0">
+        
+    </div>
+</div>
+
+        
+    </div>
+    
+    <div class="col-span-2">
+        
+        
+<div class="bg-secondary-bg rounded p-6">
+    <h3 class="text-lg font-semibold mb-4">系列文章</h3>
+    <div class="content">
+        
+        
+        <a href="https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/">leetcode 141 环形链表</a>
+        <br />
+        
+        <a href="https://munlelee.github.io/posts/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/">leetcode 862 和至少为K的最短子数组</a>
+        <br />
+        
+        
+    </div>
+</div>
+        
+        
+    </div>
+    
+
+    
+    
+    <div
+        class="col-span-2  lg:col-span-6 bg-secondary-bg rounded p-6">
+        <h2 class="text-lg font-semibold mb-4">相关</h2>
+        <div class="content">
+            
+            <a href="https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/">leetcode 141 环形链表</a>
+            <br />
+            
+        </div>
+    </div>
+    
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        hljs.initHighlightingOnLoad();
+    })
+</script>
+
+      </div>
+    </div>
+    
+  </main>
+  <footer class="pl-scrollbar">
+    <div class="w-full max-w-screen-xl mx-auto"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2021 INKPATTERN &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+  </footer>
+</body>
+
+</html>

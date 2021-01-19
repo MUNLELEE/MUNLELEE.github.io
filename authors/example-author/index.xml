@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>墨纹 on INKPATTERN</title>
+    <link>https://munlelee.github.io/authors/example-author/</link>
+    <description>Recent content in 墨纹 on INKPATTERN</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>&amp;copy; 2021 INKPATTERN</copyright>
+    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://munlelee.github.io/authors/example-author/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>leetcode 141 环形链表</title>
+      <link>https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</guid>
+      <description>寻找一个链表中是否存在环，返回一个布尔值</description>
+    </item>
+    
+    <item>
+      <title>leetcode 862 和至少为K的最短子数组</title>
+      <link>https://munlelee.github.io/posts/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://munlelee.github.io/posts/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</guid>
+      <description>从一个数组中获得一个子数组，这个子数组的和满足一定值且长度为能够得到此条件数组的最短</description>
+    </item>
+    
+  </channel>
+</rss>

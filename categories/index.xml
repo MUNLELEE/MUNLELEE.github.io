@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on INKPATTERN</title>
+    <link>https://munlelee.github.io/categories/</link>
+    <description>Recent content in Categories on INKPATTERN</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <copyright>&amp;copy; 2021 INKPATTERN</copyright>
+    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://munlelee.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>错题集</title>
+      <link>https://munlelee.github.io/categories/%E9%94%99%E9%A2%98%E9%9B%86/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://munlelee.github.io/categories/%E9%94%99%E9%A2%98%E9%9B%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>难题集</title>
+      <link>https://munlelee.github.io/categories/%E9%9A%BE%E9%A2%98%E9%9B%86/</link>
+      <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://munlelee.github.io/categories/%E9%9A%BE%E9%A2%98%E9%9B%86/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
