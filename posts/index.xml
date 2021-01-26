@@ -26,24 +26,5 @@
       <description>从一个数组中获得一个子数组，这个子数组的和满足一定值且长度为能够得到此条件数组的最短</description>
     </item>
     
-    <item>
-      <title></title>
-      <link>https://munlelee.github.io/posts/%E4%BB%A3%E5%8F%91%E6%96%87%E6%A1%A3%E5%85%B3%E4%BA%8E%E9%AB%98%E6%95%B0/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://munlelee.github.io/posts/%E4%BB%A3%E5%8F%91%E6%96%87%E6%A1%A3%E5%85%B3%E4%BA%8E%E9%AB%98%E6%95%B0/</guid>
-      <description>一、函数与极限 1、常见的等价无穷小 ① $x$~$tanx$~$sinx$~$arcsinx$~$e^x+1$~$arctanx$~$ln(x+1)$~$ln(x+\sqrt{1+x^2})$ ② $(1-cosx)$~$x^2\over{2}$ ③ $\log_a(1+x)$~$x\over\ln a$ ④ $(x-sinx)$~$x^3\over6$~$arcsinx - x$ ⑤ $(tanx - x)$~$x^3\over 3$ ⑥ $(1+bx)^a - 1$~$abx$ ⑦ $(tanx - sinx)$~$x^3\over2$ ⑧ $a^x - 1$~$xln a$ ⑨ $\sqrt[n]{1+x} - 1$~$x\over n$
-2、两个重要极限 ① $\lim_{x\rightarrow0}{sinx\over x}$ = 1 ② $\lim_{x\rightarrow\infty}({1 + {1\over x}})^x$ = e</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://munlelee.github.io/posts/%E5%BE%85%E5%8F%91/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://munlelee.github.io/posts/%E5%BE%85%E5%8F%91/</guid>
-      <description>class Solution {public:vector&amp;lt;int&amp;gt; twoSum(vector&amp;lt;int&amp;gt;&amp;amp; nums, int target) {int i, j;for (i = 0; i &amp;lt; nums.size() - 1; ++i) {for (j = i + 1; j &amp;lt; nums.size(); ++j) {if (nums[i] + nums[j] == target) {return {i, j};}}}return {};}}; class Solution {public:vector&amp;lt;int&amp;gt; twoSum(vector&amp;lt;int&amp;gt;&amp;amp; nums, int target) {map&amp;lt;int, int&amp;gt; store;vector&amp;lt;int&amp;gt; res(2, -1);for (int i = 0; i &amp;lt; nums.</description>
-    </item>
-    
   </channel>
 </rss>
