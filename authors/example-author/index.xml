@@ -9,6 +9,15 @@
     <copyright>&amp;copy; 2021 INKPATTERN</copyright>
     <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://munlelee.github.io/authors/example-author/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>数学小记</title>
+      <link>https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/</guid>
+      <description>在复习数学时觉得需要记下来的一些东西</description>
+    </item>
+    
+    <item>
       <title>leetcode 141 环形链表</title>
       <link>https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang='zh' ><meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+<title>高数 | 数学小记 | INKPATTERN</title>
+<link rel="stylesheet" href="https://munlelee.github.io/css/eureka.min.css">
+<script defer src="https://munlelee.github.io/js/eureka.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/highlight.min.js"
+   crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/js/all.min.js"
+   integrity="sha256-uNYoXefWRqv&#43;PsIF/OflNmwtKM4lStn9yrz2gVl6ymo="  crossorigin></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+   integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3&#43;Aro6EYUG4&#43;cU&#43;KJWu/X"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" 
+  integrity="sha384-g7c&#43;Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI&#43;sEnkvrMWph2EDg4"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
+   integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC&#43;Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_32x32_fill_q75_box_center.jpg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_180x180_fill_q75_box_center.jpg">
+
+<meta name="description"
+  content="一、函数与极限 1、常见的等价无穷小 ① $x$~$tanx$~$sinx$~$arcsinx$~$e^x&#43;1$~$arctanx$~$ln(x&#43;1)$~$ln(x&#43;\sqrt{1&#43;x^2})$
+② $(1-cosx)$~$x^2\over{2}$
+③ $\log_a(1&#43;x)$~$x\over\ln a$
+④ $(x-sinx)$~$x^3\over6$~$arcsinx - x$
+⑤ $(tanx - x)$~$x^3\over 3$
+⑥ $(1&#43;bx)^a - 1$~$abx$
+⑦ $(tanx - sinx)$~$x^3\over2$
+⑧ $a^x - 1$~$xln a$
+⑨ $\sqrt[n]{1&#43;x} - 1$~$x\over n$
+2、两个重要极限 ① $\lim_{x\rightarrow0}{sinx\over x}$ = 1
+② $\lim_{x\rightarrow\infty}({1 &#43; {1\over x}})^x$ = e">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"系列文档",
+      "item":"https://munlelee.github.io/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"数学小记",
+      "item":"https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"高数",
+      "item":"https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/%E9%AB%98%E6%95%B0/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/%E9%AB%98%E6%95%B0/"
+    },
+    "headline": "高数 | 数学小记 | INKPATTERN","wordCount":  49 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://munlelee.github.io/images/aim.jpg"
+        }
+        },
+    "description": "一、函数与极限 1、常见的等价无穷小 ① $x$~$tanx$~$sinx$~$arcsinx$~$e^x\u002b1$~$arctanx$~$ln(x\u002b1)$~$ln(x\u002b\\sqrt{1\u002bx^2})$\n② $(1-cosx)$~$x^2\\over{2}$\n③ $\\log_a(1\u002bx)$~$x\\over\\ln a$\n④ $(x-sinx)$~$x^3\\over6$~$arcsinx - x$\n⑤ $(tanx - x)$~$x^3\\over 3$\n⑥ $(1\u002bbx)^a - 1$~$abx$\n⑦ $(tanx - sinx)$~$x^3\\over2$\n⑧ $a^x - 1$~$xln a$\n⑨ $\\sqrt[n]{1\u002bx} - 1$~$x\\over n$\n2、两个重要极限 ① $\\lim_{x\\rightarrow0}{sinx\\over x}$ = 1\n② $\\lim_{x\\rightarrow\\infty}({1 \u002b {1\\over x}})^x$ = e"
+}
+</script><meta property="og:title" content="高数 | 数学小记 | INKPATTERN" />
+<meta property="og:type" content="website" />
+
+
+<meta property="og:image" content="https://munlelee.github.io/images/aim.jpg">
+
+
+<meta property="og:url" content="https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/%E9%AB%98%E6%95%B0/" />
+
+
+
+
+
+<meta property="og:description" content="Eureka is a elegant and powerful theme for Hugo." />
+
+
+
+
+
+<meta property="og:locale" content="zh" />
+
+
+
+
+<meta property="og:site_name" content="INKPATTERN" />
+
+
+
+
+
+
+<meta property="og:updated_time" content="2021-01-26T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+<link rel="alternate" type="application/rss+xml" href="https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/%E9%AB%98%E6%95%B0/index.xml" title="INKPATTERN" />
+
+<body class="flex flex-col min-h-screen">
+  <header class="fixed flex items-center w-full min-h-16 pl-scrollbar z-50 bg-secondary-bg shadow-sm">
+    <div class="w-full max-w-screen-xl mx-auto"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap p-4">
+    <a href="/" class="mr-6 text-primary-text text-xl font-bold">INKPATTERN</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:flex-grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="text-sm md:flex-grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/authors/example-author/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">关于我</a>
+            <a href="/posts/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">博文</a>
+            <a href="/docs/"
+                class="block mt-4 md:inline-block md:mt-0  text-eureka  hover:text-eureka mr-4">系列文章</a>
+            <a href="/categories/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">分类</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col left-0 md:left-auto right-auto md:right-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            switchMode('Auto')
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script></div>
+  </header>
+  <main class="flex-grow pt-16">
+    <div class="pl-scrollbar">
+      <div class="w-full max-w-screen-xl lg:px-4 xl:px-8 mx-auto">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-r">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">目录</span>
+    <i class="fas fa-caret-right ml-1"></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pr-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ml-4 -mr-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/">数学小记</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="pl-6">
+    
+    
+    
+    <li class="py-2">
+        <div class=" pb-2 ">
+            <a class=" text-eureka  hover:text-eureka"
+                href="https://munlelee.github.io/docs/%E5%9C%A8%E5%A4%8D%E4%B9%A0%E6%95%B0%E5%AD%A6%E6%97%B6%E8%A7%89%E5%BE%97%E9%9C%80%E8%A6%81%E8%AE%B0%E4%BD%8F%E7%9A%84%E4%B8%9C%E8%A5%BF/%E9%AB%98%E6%95%B0/">高数</a>
+        </div>
+        
+        
+<ul class="pl-6">
+    
+</ul>
+
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="w-full lg:w-3/4 pl-6 ml-0 mr-auto">
+                <h1 class="font-bold text-3xl text-primary-text">高数</h1>
+                <div class="flex flex-wrap flex-row items-center mt-2 text-tertiary-text">
+    <div class="mr-6 my-2">
+        <i class="fas fa-calendar mr-1"></i>
+        <span>2021-01-26</span>
+    </div>
+    <div class="mr-6 my-2">
+        <i class="fas fa-clock mr-1"></i>
+        <span>1分钟阅读时长</span>
+    </div>
+    
+    
+
+    
+</div>
+            </div>
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    
+                    
+                    <div class="content">
+                        <h2 id="一函数与极限">一、函数与极限</h2>
+<h3 id="1常见的等价无穷小">1、常见的等价无穷小</h3>
+<p>① $x$~$tanx$~$sinx$~$arcsinx$~$e^x+1$~$arctanx$~$ln(x+1)$~$ln(x+\sqrt{1+x^2})$</p>
+<p>② $(1-cosx)$~$x^2\over{2}$</p>
+<p>③ $\log_a(1+x)$~$x\over\ln a$</p>
+<p>④ $(x-sinx)$~$x^3\over6$~$arcsinx - x$</p>
+<p>⑤ $(tanx - x)$~$x^3\over 3$</p>
+<p>⑥ $(1+bx)^a - 1$~$abx$</p>
+<p>⑦ $(tanx - sinx)$~$x^3\over2$</p>
+<p>⑧ $a^x - 1$~$xln a$</p>
+<p>⑨ $\sqrt[n]{1+x} - 1$~$x\over n$</p>
+<h3 id="2两个重要极限">2、两个重要极限</h3>
+<p>① $\lim_{x\rightarrow0}{sinx\over x}$ = 1</p>
+<p>② $\lim_{x\rightarrow\infty}({1 + {1\over x}})^x$ = e</p>
+
+                    </div>
+                    
+                    
+
+                    
+
+                    
+                    
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div class="sticky top-16 z-10 hidden lg:block px-6 py-4  bg-secondary-bg pt-16 -mt-16 ">
+    <span class="text-lg font-semibold">本页内容</span>
+</div>
+<div class="sticky-toc hidden lg:block px-6 pb-6  pt-10 -mt-10 border-l ">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一函数与极限">一、函数与极限</a>
+      <ul>
+        <li><a href="#1常见的等价无穷小">1、常见的等价无穷小</a></li>
+        <li><a href="#2两个重要极限">2、两个重要极限</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        enableStickyToc();
+    });
+</script>
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+    
+  </main>
+  <footer class="pl-scrollbar">
+    <div class="w-full max-w-screen-xl mx-auto"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2021 INKPATTERN &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+  </footer>
+</body>
+
+</html>
