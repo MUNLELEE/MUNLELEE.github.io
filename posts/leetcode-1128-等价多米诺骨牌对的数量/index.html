@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width">
 
 
-<title>leetcode 11 盛最多水的容器 | INKPATTERN</title>
+<title>leetcode 1128 等价多米诺骨牌对的数量 | INKPATTERN</title>
 <link rel="stylesheet" href="https://munlelee.github.io/css/eureka.min.css">
 <script defer src="https://munlelee.github.io/js/eureka.min.js"></script>
 
@@ -45,7 +45,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_180x180_fill_q75_box_center.jpg">
 
 <meta name="description"
-  content="在给出的数组中寻找一个矩形的最大面积">
+  content="在一个二维数组中判重">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -57,8 +57,8 @@
       "item":"https://munlelee.github.io/posts/"},{
       "@type": "ListItem",
       "position": 2 ,
-      "name":"leetcode 11 盛最多水的容器",
-      "item":"https://munlelee.github.io/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/"}]
+      "name":"leetcode 1128 等价多米诺骨牌对的数量",
+      "item":"https://munlelee.github.io/posts/leetcode-1128-%E7%AD%89%E4%BB%B7%E5%A4%9A%E7%B1%B3%E8%AF%BA%E9%AA%A8%E7%89%8C%E5%AF%B9%E7%9A%84%E6%95%B0%E9%87%8F/"}]
 }
 </script>
 
@@ -70,11 +70,11 @@
     "@type": "Article",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://munlelee.github.io/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/"
+        "@id": "https://munlelee.github.io/posts/leetcode-1128-%E7%AD%89%E4%BB%B7%E5%A4%9A%E7%B1%B3%E8%AF%BA%E9%AA%A8%E7%89%8C%E5%AF%B9%E7%9A%84%E6%95%B0%E9%87%8F/"
     },
-    "headline": "leetcode 11 盛最多水的容器 | INKPATTERN","datePublished": "2021-01-26T00:00:00+00:00",
-    "dateModified": "2021-01-26T00:00:00+00:00",
-    "wordCount":  111 ,
+    "headline": "leetcode 1128 等价多米诺骨牌对的数量 | INKPATTERN","datePublished": "2021-01-27T00:00:00+00:00",
+    "dateModified": "2021-01-27T00:00:00+00:00",
+    "wordCount":  106 ,
     "author": {
         "@type": "Person",
         "name": ["example-author"]
@@ -87,21 +87,21 @@
             "url": "https://munlelee.github.io/images/aim.jpg"
         }
         },
-    "description": "在给出的数组中寻找一个矩形的最大面积"
+    "description": "在一个二维数组中判重"
 }
-</script><meta property="og:title" content="leetcode 11 盛最多水的容器 | INKPATTERN" />
+</script><meta property="og:title" content="leetcode 1128 等价多米诺骨牌对的数量 | INKPATTERN" />
 <meta property="og:type" content="article" />
 
 
 <meta property="og:image" content="https://munlelee.github.io/images/aim.jpg">
 
 
-<meta property="og:url" content="https://munlelee.github.io/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/" />
+<meta property="og:url" content="https://munlelee.github.io/posts/leetcode-1128-%E7%AD%89%E4%BB%B7%E5%A4%9A%E7%B1%B3%E8%AF%BA%E9%AA%A8%E7%89%8C%E5%AF%B9%E7%9A%84%E6%95%B0%E9%87%8F/" />
 
 
 
 
-<meta property="og:description" content="在给出的数组中寻找一个矩形的最大面积" />
+<meta property="og:description" content="在一个二维数组中判重" />
 
 
 
@@ -118,10 +118,10 @@
 
 
 
-<meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00" />
+<meta property="article:published_time" content="2021-01-27T00:00:00&#43;00:00" />
 
 
-<meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-01-27T00:00:00&#43;00:00" />
 
 
 
@@ -138,9 +138,9 @@
 
 
 
-<meta property="og:see_also" content="https://munlelee.github.io/posts/leetcode-1128-%E7%AD%89%E4%BB%B7%E5%A4%9A%E7%B1%B3%E8%AF%BA%E9%AA%A8%E7%89%8C%E5%AF%B9%E7%9A%84%E6%95%B0%E9%87%8F/" />
 
 
+<meta property="og:see_also" content="https://munlelee.github.io/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/" />
 
 
 
@@ -232,11 +232,11 @@
 <div class="grid grid-cols-2 lg:grid-cols-8 gap-4 lg:pt-12">
     <div
         class="col-span-2  lg:col-span-6 bg-secondary-bg rounded px-6 py-8">
-        <h1 class="font-bold text-3xl text-primary-text">leetcode 11 盛最多水的容器</h1>
+        <h1 class="font-bold text-3xl text-primary-text">leetcode 1128 等价多米诺骨牌对的数量</h1>
         <div class="flex flex-wrap flex-row items-center mt-2 text-tertiary-text">
     <div class="mr-6 my-2">
         <i class="fas fa-calendar mr-1"></i>
-        <span>2021-01-26</span>
+        <span>2021-01-27</span>
     </div>
     <div class="mr-6 my-2">
         <i class="fas fa-clock mr-1"></i>
@@ -247,7 +247,7 @@
     <div class="mr-6 my-2">
         <i class="fas fa-folder mr-1"></i>
         
-        <a href="https://munlelee.github.io/categories/%E9%9A%BE%E9%A2%98%E9%9B%86/" class="hover:text-eureka">难题集</a>
+        <a href="https://munlelee.github.io/categories/%E9%94%99%E9%A2%98%E9%9B%86/" class="hover:text-eureka">错题集</a>
         
     </div>
     
@@ -267,47 +267,32 @@
 
         <div class="content">
             <h4 id="题目描述">题目描述：</h4>
-<p>给你 <code>n</code>个非负整数 <code>a1</code>，<code>a2</code>，&hellip;，<code>an</code>，每个数代表坐标中的一个点 <code>(i, ai)</code> 。在坐标内画 n 条垂直线，垂直线 <code>i</code>的两个端点分别为 <code>(i, ai)</code> 和 <code>(i, 0)</code> 。找出其中的两条线，使得它们与 <code>x </code>轴共同构成的容器可以容纳最多的水。</p>
-<p><strong>说明</strong>：你不能倾斜容器。</p>
+<p>给你一个由一些多米诺骨牌组成的列表 <code>dominoes</code>。</p>
+<p>如果其中某一张多米诺骨牌可以通过旋转 <code>0</code> 度或 <code>180</code> 度得到另一张多米诺骨牌，我们就认为这两张牌是等价的。</p>
+<p>形式上，<code>dominoes[i] = [a, b]</code> 和 <code>dominoes[j] = [c, d]</code> 等价的前提是 <code>a==c</code> 且 <code>b==d</code>，或是 <code>a==d </code>且 <code>b==c</code>。</p>
+<p>在 <code>0 &lt;= i &lt; j &lt; dominoes.length</code> 的前提下，找出满足 <code>dominoes[i]</code> 和 <code>dominoes[j]</code> 等价的骨牌对 <code>(i, j) </code>的数量。</p>
 <h4 id="示例">示例：</h4>
-<p><img src="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/07/25/question_11.jpg" alt=""></p>
-<pre><code>输入：[1,8,6,2,5,4,8,3,7]
-输出：49 
-解释：图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
-</code></pre>
-<pre><code>输入：height = [1,1]
+<pre><code>输入：dominoes = [[1,2],[2,1],[3,4],[5,6]]
 输出：1
 </code></pre>
-<pre><code>输入：height = [4,3,2,1,4]
-输出：16
-</code></pre>
-<pre><code>输入：height = [1,2,1]
-输出：2
-</code></pre>
 <h4 id="提示">提示：</h4>
-<pre><code>n = height.length
-2 &lt;= n &lt;= 3 * 10e4
-0 &lt;= height[i] &lt;= 3 * 10e4
+<pre><code>1 &lt;= dominoes.length &lt;= 40000
+1 &lt;= dominoes[i][j] &lt;= 9
 </code></pre>
-<p>这道题目为许久之前所做，但时至今日依然有些许的困难，索性就将其记录下来。</p>
 <h4 id="解题想法">解题想法：</h4>
-<p>首先题目需要求解的是数组之间围成的矩形面积的最大值，而很明显这个矩形面积的最大值取决于长和宽的大小，放在这个题目中，首先限制的便是两边的数的大小，但是最终的长度依旧只取决于较小的那个数。其次就是这两个数在数组中的索引距离。因此我们需要在一个时刻拥有两边的数据（<strong>即左边界的数据以及右边界的数据</strong>），因此可以使用两个变量来分别指向这两个数据，也就引出了这道题所使用的方法，双指针法。</p>
-<p>然后就要开始移动指针了，当然前提是，左指针的索引小于右指针的索引。在每一次的判断中，我们要移动的始终是两个指针中较小的那一个指针。这时候就会有疑问了，现在开始讲解。假设我们有左右两个指针<code>l</code>、<code>r</code>（<strong><code>l</code> &lt;<code>r</code>这时候指针指向的为值</strong>)此时我们移动较大的指针，也就是<code>r</code>，我们只会将指针往中间移动，因为在初始化指针的时候应该是在边界处。如果<code>--r</code>指向的值较小，那么由于矩形的长宽都变小了，那么肯定不会是最优解。如果<code>--r</code>指向的值较大，也会因为受到较小的<code>l</code>指针的限制而无法使面积增大，因此只有移动较小的指针才有获得更优解的可能。只要每次的循环都能更新最大值，遍历一次便是题目所需要的最优解。下面附上C++代码</p>
+<p>这道题在leetcode上是属于简单题。。然而却不能做出来。。</p>
+<p>首先这道题乍一看要处理的东西很多，但是只要经过推敲不难看出，题目只需要判断二维数组中重复的单子数组对数。（<strong>因为多米诺骨牌只有两个数且只有反转的操作，因此可以将题目简化为一个判重问题</strong>，也就是这个判重问题卡住了我）。由于骨牌的数字不会超过9，也就是皆为个位数，由此要处理这个判重问题我们会希望如果能够忽略每一个单子数组内的元素顺序，就能够进行比较简单的判重，所以也就有了一个较为简单的方法，就是每次都将单子数组里的元素的较小值作为十位数，另一元素作为个位数，拼成一个数字。对一个数字进行判重就较为简单了。（<strong>由于这个拼成的数字最大值为99，所以只需要开一个100大小的数组便足够了</strong>），下面附上C++代码</p>
 <pre><code class="language-cpp">class Solution {
 public:
-    int maxArea(vector&lt;int&gt;&amp; height) {
-        int left = 0, right = height.size() - 1;
-        int field = 0;
-        while (left &lt; right) {
-            field = max(field, min(height[right], height[left]) * (right - left));
-            if (height[left] &lt; height[right]) {
-                ++left;
-            }
-            else {
-                --right;
-            }
+    int numEquivDominoPairs(vector&lt;vector&lt;int&gt;&gt;&amp; dominoes) {
+        vector&lt;int&gt; res(100); //用于保存对数的数组
+        int sum = 0;
+        for (auto item: dominoes) {
+            int num = item[0] &lt; item[1] ? item[0] * 10 + item[1] : item[1] * 10 + item[0];
+            sum += res[num];
+            ++res[num];
         }
-        return field;
+        return sum;
     }
 };
 </code></pre>
@@ -371,14 +356,11 @@ public:
 <div class="flex flex-col md:flex-row md:justify-between -mx-2 mt-4 px-2 pt-4 border-t">
     <div>
         
-        <span class="block font-bold">上一页</span>
-        <a href="https://munlelee.github.io/posts/leetcode-1128-%E7%AD%89%E4%BB%B7%E5%A4%9A%E7%B1%B3%E8%AF%BA%E9%AA%A8%E7%89%8C%E5%AF%B9%E7%9A%84%E6%95%B0%E9%87%8F/" class="block">leetcode 1128 等价多米诺骨牌对的数量</a>
-        
     </div>
     <div class="md:text-right mt-4 md:mt-0">
         
         <span class="block font-bold">下一页</span>
-        <a href="https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/" class="block">leetcode 141 环形链表</a>
+        <a href="https://munlelee.github.io/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/" class="block">leetcode 11 盛最多水的容器</a>
         
     </div>
 </div>
@@ -420,6 +402,9 @@ public:
         class="col-span-2  lg:col-span-6 bg-secondary-bg rounded p-6">
         <h2 class="text-lg font-semibold mb-4">相关</h2>
         <div class="content">
+            
+            <a href="https://munlelee.github.io/posts/leetcode-11-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/">leetcode 11 盛最多水的容器</a>
+            <br />
             
             <a href="https://munlelee.github.io/posts/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/">leetcode 141 环形链表</a>
             <br />
