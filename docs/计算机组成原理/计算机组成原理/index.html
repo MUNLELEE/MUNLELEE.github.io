@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang='zh' ><meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+<title>存储器 | 计算机组成原理 | INKPATTERN</title>
+<link rel="stylesheet" href="https://munlelee.github.io/css/eureka.min.css">
+<script defer src="https://munlelee.github.io/js/eureka.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/highlight.min.js"
+   crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/js/all.min.js"
+   integrity="sha256-uNYoXefWRqv&#43;PsIF/OflNmwtKM4lStn9yrz2gVl6ymo="  crossorigin></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+   integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3&#43;Aro6EYUG4&#43;cU&#43;KJWu/X"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" 
+  integrity="sha384-g7c&#43;Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI&#43;sEnkvrMWph2EDg4"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
+   integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC&#43;Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_32x32_fill_q75_box_center.jpg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_180x180_fill_q75_box_center.jpg">
+
+<meta name="description"
+  content="计算机组成原理中关于存储的概要内容">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"系列文档",
+      "item":"https://munlelee.github.io/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"计算机组成原理",
+      "item":"https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"存储器",
+      "item":"https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"
+    },
+    "headline": "存储器 | 计算机组成原理 | INKPATTERN","wordCount":  45 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://munlelee.github.io/images/aim.jpg"
+        }
+        },
+    "description": "计算机组成原理中关于存储的概要内容"
+}
+</script><meta property="og:title" content="存储器 | 计算机组成原理 | INKPATTERN" />
+<meta property="og:type" content="website" />
+
+
+<meta property="og:image" content="https://munlelee.github.io/images/aim.jpg">
+
+
+<meta property="og:url" content="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" />
+
+
+
+
+
+<meta property="og:description" content="Eureka is a elegant and powerful theme for Hugo." />
+
+
+
+
+
+<meta property="og:locale" content="zh" />
+
+
+
+
+<meta property="og:site_name" content="INKPATTERN" />
+
+
+
+
+
+
+<meta property="og:updated_time" content="2021-03-13T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+<link rel="alternate" type="application/rss+xml" href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/index.xml" title="INKPATTERN" />
+
+<body class="flex flex-col min-h-screen">
+  <header class="fixed flex items-center w-full min-h-16 pl-scrollbar z-50 bg-secondary-bg shadow-sm">
+    <div class="w-full max-w-screen-xl mx-auto"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap p-4">
+    <a href="/" class="mr-6 text-primary-text text-xl font-bold">INKPATTERN</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:flex-grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="text-sm md:flex-grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/authors/example-author/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">关于我</a>
+            <a href="/posts/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">博文</a>
+            <a href="/docs/"
+                class="block mt-4 md:inline-block md:mt-0  text-eureka  hover:text-eureka mr-4">系列文章</a>
+            <a href="/categories/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">分类</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col left-0 md:left-auto right-auto md:right-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            switchMode('Auto')
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script></div>
+  </header>
+  <main class="flex-grow pt-16">
+    <div class="pl-scrollbar">
+      <div class="w-full max-w-screen-xl lg:px-4 xl:px-8 mx-auto">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-r">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">目录</span>
+    <i class="fas fa-caret-right ml-1"></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pr-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ml-4 -mr-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="pl-6">
+    
+    
+    
+    <li class="py-2">
+        <div class=" pb-2 ">
+            <a class=" text-eureka  hover:text-eureka"
+                href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">存储器</a>
+        </div>
+        
+        
+<ul class="pl-6">
+    
+</ul>
+
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="w-full lg:w-3/4 pl-6 ml-0 mr-auto">
+                <h1 class="font-bold text-3xl text-primary-text">存储器</h1>
+                <div class="flex flex-wrap flex-row items-center mt-2 text-tertiary-text">
+    <div class="mr-6 my-2">
+        <i class="fas fa-calendar mr-1"></i>
+        <span>2021-03-13</span>
+    </div>
+    <div class="mr-6 my-2">
+        <i class="fas fa-clock mr-1"></i>
+        <span>1分钟阅读时长</span>
+    </div>
+    
+    
+
+    
+</div>
+            </div>
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    
+                    
+                    <div class="content">
+                        <h2 id="一存储器分类">一、存储器分类</h2>
+<h3 id="11-按存储介质分类">1.1 按存储介质分类</h3>
+<p>存储介质是指能寄存“0”“1”两种代码并能区别两种状态的物质或元器件。通常指半导体、磁性材料和光盘</p>
+<h4 id="111-半导体存储器">1.1.1 半导体存储器</h4>
+<p>现代半导体存储器一般采用超大规模集成电路，具有体积小、功耗低、存取时间短的优点。**缺点是当电源消失时，所存信息也随机丢失，是一种易失性存储器。**照材料不同也可以分为双极型和MOS半导体存储器，前者具有高速的特点，后者具有高集成度的特点，制造简单成本低廉功耗小</p>
+<h4 id="112-磁表面存储器">1.1.2 磁表面存储器</h4>
+<p>利用磁头进行读/写操作。可分为磁盘、磁带和磁鼓。按照剩磁状态的不同来区分“0”或“1”，剩磁状态不会轻易丢失，<strong>具有非易失型特点</strong></p>
+<h4 id="113-磁芯存储器">1.1.3 磁芯存储器</h4>
+<p>环状，也<strong>属于不易失的永久记忆存储器</strong></p>
+<h4 id="114-光盘存储器">1.1.4 光盘存储器</h4>
+<p><strong>也是非易失存储器</strong>，应用越来越广</p>
+<h3 id="12-按存储方式分类">1.2 按存储方式分类</h3>
+<p>可分为随机、只读、顺序和直接存取</p>
+<h4 id="121-随机存储器ram">1.2.1 随机存储器（RAM）</h4>
+<p><strong>特点是任何一个存储单元的内容都可以随机存取</strong>，且存取时间与存储单元的物理位置无关。计算机主存都采用RAM，RAM又分为静态RAM <strong>（触发器原理）</strong> 以及动态RAM <strong>（电容充放电原理）</strong></p>
+<h4 id="122-只读存储器rom">1.2.2 只读存储器（ROM）</h4>
+<p>对存储内容只能读出而不能重新写入的存储器。通常存放固定不变的程序、常数和字库或操作系统的固化。<strong>与RAM共同作为主存的一部分，统一构成主存的地址域</strong>后续又诞生了 <em>可编程只读存储器（PROM）、可擦除可编程只读存储器（EPROM）、用电可擦除可编程只读存储器（EEPROM）以及闪存存储器具有EEPROM的特点，但是速度快很多</em></p>
+<h4 id="123-串行访问存储器">1.2.3 串行访问存储器</h4>
+<p>需要按照物理位置的先后顺序寻找地址，如<em>磁带存储器</em>。这类存储器又被称为<strong>顺序存取存储器</strong>。而如磁盘需要首先直接指出某个区域，在进行顺序访问，则称为<strong>直接存取存储器</strong></p>
+<h3 id="13-按作用分类">1.3 按作用分类</h3>
+<p>主要分为主存、辅存、缓存。</p>
+<p>主存主要特点是可以与CPU直接交换信息。辅存是主存的后援，存放暂时不用的程序数据，不能与CPU直接交换信息。缓存用于两个速度不同的存储器中。存储器分类如图</p>
+<p><img src="https://img.imgdb.cn/item/604cd9c85aedab222c7bd475.jpg" alt=""></p>
+<h2 id="二存储器层次结构">二、存储器层次结构</h2>
+<p>主要有三个性能指标：速度、容量和每位价格。具体关系如图</p>
+<p><img src="https://img.imgdb.cn/item/604cd9c35aedab222c7bd1f9.png" alt=""></p>
+<p>现代计算机中也将Cache制作在CPU内，CPU不能直接访问辅存，辅存只能与主存交换信息。实际上存储器的层次结构主要体现在缓存-主存和主存-辅存这两个存储层次上。如图</p>
+<p><img src="https://img.imgdb.cn/item/604cd9d05aedab222c7bd996.png" alt="CPU与各存储间关系"></p>
+<p><strong>Note：</strong></p>
+<p><strong>1、缓存-主存层次主要解决CPU和主存速度不匹配的问题。主存和缓存之间的数据调动是由硬件自动完成的，对程序员是透明的。</strong></p>
+<p><strong>2、主存-辅存层次主要解决存储系统的容量问题。</strong> 当CPU需要辅存的信息时，将辅存内容调入主存。 <strong>主存和辅存之间的数据调动是由硬件和操作系统共同完成的</strong></p>
+<p>3、缓存-主存这一层次的速度接近于缓存，高于主存。主存-辅存这一层次的不断发展，形成了虚拟存储系统。在这个系统中程序员编程的地址范围与虚拟存储器的地址空间相对应。</p>
+
+                    </div>
+                    
+                    
+
+                    
+
+                    
+                    
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div class="sticky top-16 z-10 hidden lg:block px-6 py-4  bg-secondary-bg pt-16 -mt-16 ">
+    <span class="text-lg font-semibold">本页内容</span>
+</div>
+<div class="sticky-toc hidden lg:block px-6 pb-6  pt-10 -mt-10 border-l ">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一存储器分类">一、存储器分类</a>
+      <ul>
+        <li><a href="#11-按存储介质分类">1.1 按存储介质分类</a>
+          <ul>
+            <li><a href="#111-半导体存储器">1.1.1 半导体存储器</a></li>
+            <li><a href="#112-磁表面存储器">1.1.2 磁表面存储器</a></li>
+            <li><a href="#113-磁芯存储器">1.1.3 磁芯存储器</a></li>
+            <li><a href="#114-光盘存储器">1.1.4 光盘存储器</a></li>
+          </ul>
+        </li>
+        <li><a href="#12-按存储方式分类">1.2 按存储方式分类</a>
+          <ul>
+            <li><a href="#121-随机存储器ram">1.2.1 随机存储器（RAM）</a></li>
+            <li><a href="#122-只读存储器rom">1.2.2 只读存储器（ROM）</a></li>
+            <li><a href="#123-串行访问存储器">1.2.3 串行访问存储器</a></li>
+          </ul>
+        </li>
+        <li><a href="#13-按作用分类">1.3 按作用分类</a></li>
+      </ul>
+    </li>
+    <li><a href="#二存储器层次结构">二、存储器层次结构</a></li>
+  </ul>
+</nav>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        enableStickyToc();
+    });
+</script>
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+    
+  </main>
+  <footer class="pl-scrollbar">
+    <div class="w-full max-w-screen-xl mx-auto"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2021 INKPATTERN &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+  </footer>
+</body>
+
+</html>
