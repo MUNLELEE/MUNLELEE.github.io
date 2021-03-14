@@ -76,7 +76,7 @@
         "@type": "WebPage",
         "@id": "https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"
     },
-    "headline": "存储器 | 计算机组成原理 | INKPATTERN","wordCount":  130 ,
+    "headline": "存储器 | 计算机组成原理 | INKPATTERN","wordCount":  132 ,
     "publisher": {
         "@type": "Person",
         "name": "C. Wang",
@@ -377,7 +377,7 @@
 <p>程序连续存放在相邻体中，有交叉存储之称，<strong>低位地址用来表示体号，高位地址为体内地址。在模4交叉编址中，最低两位地址即可判断存储于哪个体</strong> 如图</p>
 <p><img src="https://img.imgdb.cn/item/604dfb935aedab222c104dfe.png" alt=""></p>
 <p><strong>Note：</strong></p>
-<p><strong>假设每个体的存储字长和数据总线一致，并假设低位交叉的存储器模块数位n存取周期为T，总线传输周期为t，那么采用流水线方式存储时，应该满足$T=nt$,为了保证启动某体后，经$nt$时间再次启动该体时，它的上次存取操作已完成，要求低位交叉存储器的模块数大于或等于n。流水线方式如图：</strong></p>
+<p>**假设每个体的存储字长和数据总线一致，并假设低位交叉的存储器模块数位n存取周期为T，总线传输周期为t，那么采用流水线方式存储时，应该满足$T=nt$,为了保证启动某体后，经$nt$时间再次启动该体时，它的上次存取操作已完成，要求低位交叉存储器的模块数大于或等于n。流水线方式如图。由此可见对于低位交叉的存储器，连续读取n个字所需的时间为： $T+(n-1)t$，若采用高位交叉编址，则连续读取n个字的时间为$nt$ **</p>
 <p><img src="https://img.imgdb.cn/item/604dfcc05aedab222c10da3f.png" alt=""></p>
 
                     </div>
