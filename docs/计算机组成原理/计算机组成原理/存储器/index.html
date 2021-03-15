@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang='zh' ><meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+<title>存储器 | 计算机组成原理 | INKPATTERN</title>
+<link rel="stylesheet" href="https://munlelee.github.io/css/eureka.min.css">
+<script defer src="https://munlelee.github.io/js/eureka.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/highlight.min.js"
+   crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/js/all.min.js"
+   integrity="sha256-uNYoXefWRqv&#43;PsIF/OflNmwtKM4lStn9yrz2gVl6ymo="  crossorigin></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+   integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3&#43;Aro6EYUG4&#43;cU&#43;KJWu/X"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" 
+  integrity="sha384-g7c&#43;Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI&#43;sEnkvrMWph2EDg4"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
+   integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC&#43;Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_32x32_fill_q75_box_center.jpg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_180x180_fill_q75_box_center.jpg">
+
+<meta name="description"
+  content="计算机组成原理中关于存储的概要内容">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"系列文档",
+      "item":"https://munlelee.github.io/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"计算机组成原理",
+      "item":"https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"存储器",
+      "item":"https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E5%AD%98%E5%82%A8%E5%99%A8/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E5%AD%98%E5%82%A8%E5%99%A8/"
+    },
+    "headline": "存储器 | 计算机组成原理 | INKPATTERN","datePublished": "2021-03-13T00:00:00+00:00",
+    "dateModified": "2021-03-13T00:00:00+00:00",
+    "wordCount":  190 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://munlelee.github.io/images/aim.jpg"
+        }
+        },
+    "description": "计算机组成原理中关于存储的概要内容"
+}
+</script><meta property="og:title" content="存储器 | 计算机组成原理 | INKPATTERN" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="https://munlelee.github.io/images/aim.jpg">
+
+
+<meta property="og:url" content="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E5%AD%98%E5%82%A8%E5%99%A8/" />
+
+
+
+
+<meta property="og:description" content="计算机组成原理中关于存储的概要内容" />
+
+
+
+
+<meta property="og:locale" content="zh" />
+
+
+
+
+<meta property="og:site_name" content="INKPATTERN" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2021-03-13T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2021-03-13T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+
+
+
+
+
+<meta property="og:see_also" content="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F/" />
+
+
+
+
+
+<body class="flex flex-col min-h-screen">
+  <header class="fixed flex items-center w-full min-h-16 pl-scrollbar z-50 bg-secondary-bg shadow-sm">
+    <div class="w-full max-w-screen-xl mx-auto"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap p-4">
+    <a href="/" class="mr-6 text-primary-text text-xl font-bold">INKPATTERN</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:flex-grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="text-sm md:flex-grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/authors/example-author/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">关于我</a>
+            <a href="/posts/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">博文</a>
+            <a href="/docs/"
+                class="block mt-4 md:inline-block md:mt-0  text-eureka  hover:text-eureka mr-4">系列文章</a>
+            <a href="/categories/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">分类</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col left-0 md:left-auto right-auto md:right-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            switchMode('Auto')
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script></div>
+  </header>
+  <main class="flex-grow pt-16">
+    <div class="pl-scrollbar">
+      <div class="w-full max-w-screen-xl lg:px-4 xl:px-8 mx-auto">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-r">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">目录</span>
+    <i class="fas fa-caret-right ml-1"></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pr-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ml-4 -mr-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="pl-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E5%AD%98%E5%82%A8%E5%99%A8/">存储器</a>
+        </div>
+        
+    </li>
+    
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" hover:text-eureka"
+                href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F/">指令系统</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="w-full lg:w-3/4 pl-6 ml-0 mr-auto">
+                <h1 class="font-bold text-3xl text-primary-text">存储器</h1>
+                <div class="flex flex-wrap flex-row items-center mt-2 text-tertiary-text">
+    <div class="mr-6 my-2">
+        <i class="fas fa-calendar mr-1"></i>
+        <span>2021-03-13</span>
+    </div>
+    <div class="mr-6 my-2">
+        <i class="fas fa-clock mr-1"></i>
+        <span>1分钟阅读时长</span>
+    </div>
+    
+    
+
+    
+    <div class="mr-6 my-2">
+        <i class="fas fa-th-list mr-1"></i>
+        
+        <a href="https://munlelee.github.io/series/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" class="hover:text-eureka">计算机组成原理</a>
+        
+    </div>
+    
+</div>
+            </div>
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    
+                    
+                    <div class="content">
+                        <h2 id="一存储器分类">一、存储器分类</h2>
+<h3 id="11-按存储介质分类">1.1 按存储介质分类</h3>
+<p>存储介质是指能寄存“0”“1”两种代码并能区别两种状态的物质或元器件。通常指半导体、磁性材料和光盘</p>
+<h4 id="111-半导体存储器">1.1.1 半导体存储器</h4>
+<p>现代半导体存储器一般采用超大规模集成电路，具有体积小、功耗低、存取时间短的优点。**缺点是当电源消失时，所存信息也随机丢失，是一种易失性存储器。**照材料不同也可以分为双极型和MOS半导体存储器，前者具有高速的特点，后者具有高集成度的特点，制造简单成本低廉功耗小</p>
+<h4 id="112-磁表面存储器">1.1.2 磁表面存储器</h4>
+<p>利用磁头进行读/写操作。可分为磁盘、磁带和磁鼓。按照剩磁状态的不同来区分“0”或“1”，剩磁状态不会轻易丢失，<strong>具有非易失型特点</strong></p>
+<h4 id="113-磁芯存储器">1.1.3 磁芯存储器</h4>
+<p>环状，也<strong>属于不易失的永久记忆存储器</strong></p>
+<h4 id="114-光盘存储器">1.1.4 光盘存储器</h4>
+<p><strong>也是非易失存储器</strong>，应用越来越广</p>
+<h3 id="12-按存储方式分类">1.2 按存储方式分类</h3>
+<p>可分为随机、只读、顺序和直接存取</p>
+<h4 id="121-随机存储器ram">1.2.1 随机存储器（RAM）</h4>
+<p><strong>特点是任何一个存储单元的内容都可以随机存取</strong>，且存取时间与存储单元的物理位置无关。计算机主存都采用RAM，RAM又分为静态RAM <strong>（触发器原理）</strong> 以及动态RAM <strong>（电容充放电原理）</strong></p>
+<h4 id="122-只读存储器rom">1.2.2 只读存储器（ROM）</h4>
+<p>对存储内容只能读出而不能重新写入的存储器。通常存放固定不变的程序、常数和字库或操作系统的固化。<strong>与RAM共同作为主存的一部分，统一构成主存的地址域</strong>后续又诞生了 <em>可编程只读存储器（PROM）、可擦除可编程只读存储器（EPROM）、用电可擦除可编程只读存储器（EEPROM）以及闪存存储器具有EEPROM的特点，但是速度快很多</em></p>
+<h4 id="123-串行访问存储器">1.2.3 串行访问存储器</h4>
+<p>需要按照物理位置的先后顺序寻找地址，如<em>磁带存储器</em>。这类存储器又被称为<strong>顺序存取存储器</strong>。而如磁盘需要首先直接指出某个区域，在进行顺序访问，则称为<strong>直接存取存储器</strong></p>
+<h3 id="13-按作用分类">1.3 按作用分类</h3>
+<p>主要分为主存、辅存、缓存。</p>
+<p>主存主要特点是可以与CPU直接交换信息。辅存是主存的后援，存放暂时不用的程序数据，不能与CPU直接交换信息。缓存用于两个速度不同的存储器中。存储器分类如图</p>
+<p><img src="https://img.imgdb.cn/item/604cd9c85aedab222c7bd475.jpg" alt=""></p>
+<h2 id="二存储器层次结构">二、存储器层次结构</h2>
+<p>主要有三个性能指标：速度、容量和每位价格。具体关系如图</p>
+<p><img src="https://img.imgdb.cn/item/604cd9c35aedab222c7bd1f9.png" alt=""></p>
+<p>现代计算机中也将Cache制作在CPU内，CPU不能直接访问辅存，辅存只能与主存交换信息。实际上存储器的层次结构主要体现在缓存-主存和主存-辅存这两个存储层次上。如图</p>
+<p><img src="https://img.imgdb.cn/item/604cd9d05aedab222c7bd996.png" alt="CPU与各存储间关系"></p>
+<p><strong>Note：</strong></p>
+<p><strong>1、缓存-主存层次主要解决CPU和主存速度不匹配的问题。主存和缓存之间的数据调动是由硬件自动完成的，对程序员是透明的。</strong></p>
+<p><strong>2、主存-辅存层次主要解决存储系统的容量问题。</strong> 当CPU需要辅存的信息时，将辅存内容调入主存。 <strong>主存和辅存之间的数据调动是由硬件和操作系统共同完成的</strong></p>
+<p>3、缓存-主存这一层次的速度接近于缓存，高于主存。主存-辅存这一层次的不断发展，形成了虚拟存储系统。在这个系统中程序员编程的地址范围与虚拟存储器的地址空间相对应。</p>
+<h2 id="三主存储器">三、主存储器</h2>
+<h3 id="31-工作原理">3.1 工作原理</h3>
+<p>当要从主存储读出某一信息字时，首先由CPU将该字的地址送到MAR，经地址总线送至主存，然后发出读命令。主存街道读命令后，得知需将该地址单元的内容读出，便进行读操作。将该单元的内容读至数据总线上。若要向主存存入一个信息字时，首先CPU将该字所在的主存单元的地址经MAR送到地址总线，并将信息字送入MDR，然后向主存发出写命令，主存接到写命令后，便将数据线上的信息写入到对应地址线指出的主存单元中。</p>
+<h3 id="32-主存的技术指标">3.2 主存的技术指标</h3>
+<h4 id="321-存储容量">3.2.1 存储容量</h4>
+<p>存储容量=存储单元个数 * 存储字长</p>
+<p>存储容量=存储单元个数 * 存储字长 / 8</p>
+<h4 id="322-存储速度">3.2.2 存储速度</h4>
+<p>由存储时间和存取周期来表示</p>
+<p>存取时间（访问时间），启动一次存储器操作到完成该操作所需的全部时间</p>
+<p>存取周期，存储器进行连续两次独立的存储器操作所需的最小间隔时间。</p>
+<h4 id="323-存储器带宽">3.2.3 存储器带宽</h4>
+<p>单位时间内存储器存取的信息量</p>
+<h3 id="33-改善传输速度">3.3 改善传输速度</h3>
+<p>1、缩短存储周期</p>
+<p>2、增加存储字长，使每个存取周期能够读写更多的二进制位数</p>
+<p>3、增加存储体</p>
+<h2 id="四半导体存储芯片">四、半导体存储芯片</h2>
+<h3 id="41-半导体存储芯片的基本结构">4.1 半导体存储芯片的基本结构</h3>
+<p><strong>地址线和数据线</strong>的位数共同反映存储芯片的容量，如地址线为10根，数据线为4根。芯片容量为$2^{10} * 4 = 4K$位，控制线主要有读写控制线和片选线。<strong>（读写控制线数为1或2，片选线通常为1，也可能为2）</strong>，因此芯片的最少线数应由这三者组成</p>
+<h3 id="42-译码驱动方式">4.2 译码驱动方式</h3>
+<p>主要方法有两种，线选法和重合法，其中线选法一次选一个字，重合法一次选一个位。</p>
+<h3 id="43-动态ram的刷新">4.3 动态RAM的刷新</h3>
+<p>刷新是一行一行进行的，必须在刷新周期内，才能保证动态RAM的信息不丢失，通常有三种方式，集中刷新，分散刷新，异步刷新</p>
+<h4 id="431-集中刷新">4.3.1 集中刷新</h4>
+<p>是在规定的一个刷新周期内，对全部存储单元集中一段时间逐行进行刷新，此时必须停止读写操作。<strong>但是存在“死时间”又称为访存“死区”</strong>。如图</p>
+<p><img src="https://img.imgdb.cn/item/604df5c75aedab222c0d631a.png" alt=""></p>
+<h4 id="432-分散刷新">4.3.2 分散刷新</h4>
+<p>对每行存储单元的刷新分散到每个存取周期内完成。其中把存取周期分为两段，前半段用来读写或维持信息，后半段用来刷新。<strong>不存在死时间，但是存取周期变长了，系统速度降低</strong>如图</p>
+<p><img src="https://img.imgdb.cn/item/604df66b5aedab222c0db85b.png" alt=""></p>
+<h4 id="433-异步刷新">4.3.3 异步刷新</h4>
+<p>在一个固定的刷新周期内对每一行都进行一次刷新，即每隔同一时间段对每行刷新。如图</p>
+<p><img src="https://img.imgdb.cn/item/604df6fa5aedab222c0dfdf7.png" alt=""></p>
+<h3 id="44-动态ram与静态ram的比较">4.4 动态RAM与静态RAM的比较</h3>
+<p>1、动态RAM的集成度要远高于静态RAM</p>
+<p>2、动态RAM行列地址按先后顺序输送，奸商了芯片引脚，封装尺寸也减少</p>
+<p>3、动态RAM功耗比静态RAM小</p>
+<p>4、动态RAM价格比静态RAM便宜</p>
+<h2 id="五只读存储器">五、只读存储器</h2>
+<h3 id="51-掩模rom">5.1 掩模ROM</h3>
+<p>出厂状态即为最终状态，用户是无法改变的</p>
+<h3 id="52-prom">5.2 PROM</h3>
+<p>是可以实现一次性编程的只读存储器。熔丝断掉出将读出0，熔丝未断处将读出1</p>
+<h3 id="53-eprom">5.3 EPROM</h3>
+<p>是一种可擦除可编程只读存储器，可以由用户对其所存信息作任意次的改写</p>
+<h2 id="六提高访存速度的措施">六、提高访存速度的措施</h2>
+<h3 id="61-单体多字系统">6.1 单体多字系统</h3>
+<p>可以在一个存取周期内，从同一地址取出多条指令，然后再逐条指令送到CPU执行。如图</p>
+<p><img src="https://img.imgdb.cn/item/604df98b5aedab222c0f41d6.jpg" alt=""></p>
+<h3 id="62-多体并行系统">6.2 多体并行系统</h3>
+<p>并行工作即同时访问N各模块，同时启动，同时读出。</p>
+<h4 id="621-高位交叉编址">6.2.1 高位交叉编址</h4>
+<p>程序按体内地址顺序存放，一个体存满后，再存入下一个体。<strong>高位地址可表示体号，地位地址为体内地址。</strong> 如图</p>
+<p><img src="https://img.imgdb.cn/item/604dfaf85aedab222c0ff7de.png" alt=""></p>
+<h4 id="622-低位交叉编址">6.2.2 低位交叉编址</h4>
+<p>程序连续存放在相邻体中，有交叉存储之称，<strong>低位地址用来表示体号，高位地址为体内地址。在模4交叉编址中，最低两位地址即可判断存储于哪个体</strong> 如图</p>
+<p><img src="https://img.imgdb.cn/item/604dfb935aedab222c104dfe.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>假设每个体的存储字长和数据总线一致，并假设低位交叉的存储器模块数位n存取周期为T，总线传输周期为t，那么采用流水线方式存储时，应该满足$T=nt$,为了保证启动某体后，经$nt$时间再次启动该体时，它的上次存取操作已完成，要求低位交叉存储器的模块数大于或等于n。流水线方式如图。由此可见对于低位交叉的存储器，连续读取n个字所需的时间为： $T+(n-1)t$，若采用高位交叉编址，则连续读取n个字的时间为$nt$</strong></p>
+<p><img src="https://img.imgdb.cn/item/604dfcc05aedab222c10da3f.png" alt=""></p>
+<h2 id="七高速缓冲处理器">七、高速缓冲处理器</h2>
+<h3 id="71-cache的一些常规参数">7.1 Cache的一些常规参数</h3>
+<p>1、在一个程序执行期间，设$N_c$为访问Cache的总命中次数，$N_m$为访问主存的总次数，则命中率h为$h={N_c\over{N_c + N_m}}$</p>
+<p>2、设$t_c$为命中时的Cache访问时间，$t_m$为未命中时主存访问时间，1-h表示未命中率，则Cache-主存系统的平均访问时间$t_a$为$t_a={ht_c+(1-h)t_m}$</p>
+<p>3、Cache-主存系统的平均访问时间$t_a$越接近于$t_c$越好，用e表示访问效率则有$e={t_c\over t_a}*0.01={t_c\over{ht_c+(1-h)t_m}}*0.01$</p>
+<h3 id="72-cache的基本结构">7.2 Cache的基本结构</h3>
+<p><img src="https://img.imgdb.cn/item/604e24e25aedab222c2696ef.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>当CPU想要读取某一存储块时，将经历以下过程，首先对于一个块的块内地址，可以直接对应到Cache中的块内地址，而块号通过地址映射变换机构对应到Cache的块号中，如果这个块命中了Cache，那么就直接访问Cache。如果未命中，那么将要判断这个块是否可以装进Cache中（Cache是否为满），如果无法装进，那么就要通过替换机构启动替换算法将这个块换进Cache中。当然，CPU只能这一次只能从主存中获得这个块了。</strong></p>
+<p><strong>如果CPU要写入一个块，那么就通过两种写法分别有不同的效果，将于下文讲解。</strong></p>
+<h3 id="73-cache的两种写操作">7.3 Cache的两种写操作</h3>
+<h4 id="731-写直达法">7.3.1 写直达法</h4>
+<p>在写操作时，数据既写入Cache又写入主存。它能随时保证主存和Cache的数据始终一致，但增加了访存次数</p>
+<h4 id="732-写回法">7.3.2 写回法</h4>
+<p>即写操作时，只把数据写入Cache而不写入主存，但当Cache数据被替换出去时才写回主存。这个方法不能保证主存和Cache中的数据一致，而且为了识别Cache中的数据是否与主存一致，Cache中的每一块要增设一个标志位。</p>
+<h4 id="733-对于cache写不命中的处理方法">7.3.3 对于Cache写不命中的处理方法</h4>
+<h5 id="7331-写分配法">7.3.3.1 写分配法</h5>
+<p>加载主存中的块到Cache中，然后更新这个Cache块。缺点是每次不命中都需要从主存中读取一块。</p>
+<h5 id="7332-非写分配法">7.3.3.2 非写分配法</h5>
+<p>只写入主存不进行调块</p>
+<h3 id="74-cache的改进">7.4 Cache的改进</h3>
+<h4 id="741-单一缓存和两级缓存">7.4.1 单一缓存和两级缓存</h4>
+<p>单一缓存&ndash;在CPU和主存之间只设一个缓存（与CPU制作在同一个芯片内，片内缓存），能够提高外部总线的利用率。</p>
+<p>片外缓存&ndash;比主存动态RAM和ROM的存取速度更快，而且不使用系统总线作为传输路径，使用一个独立的数据路径。</p>
+<h4 id="742-统一缓存和分立缓存">7.4.2 统一缓存和分立缓存</h4>
+<p>统一缓存&ndash;指令和数据都存放在统一缓存内的Cache</p>
+<p>分立缓存&ndash;指令和数据分别存放在两个缓存中，一个称为指令Cache，一个称为数据Cache。</p>
+<h2 id="八cache-主存地址映射">八、Cache-主存地址映射</h2>
+<h3 id="81-直接映射">8.1 直接映射</h3>
+<p>直接映射结构如图所示</p>
+<p><img src="https://img.imgdb.cn/item/604f32c15aedab222ca05ac4.png" alt=""></p>
+<p>对应的地址结构如图</p>
+<p><img src="https://img.imgdb.cn/item/604f32f05aedab222ca071af.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>这种方式的有点时实现简单，只需利用主存地址的某些位直接判断，即可确定所需字块是否在缓存中。缺点是不够灵活，每个主存块只能固定的对应某个缓存块，即使缓存内还空着许多位置也不能占用</strong></p>
+<h3 id="82-全相联映射">8.2 全相联映射</h3>
+<p>全相联映射结构如图所示</p>
+<p><img src="https://img.imgdb.cn/item/604f33db5aedab222ca0e45a.png" alt=""></p>
+<p>对应地址结构如图</p>
+<p><img src="https://img.imgdb.cn/item/604f33f55aedab222ca0ef73.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>这种映射方式允许主存中每一字块映射到Cache中的热河一块位置上，也可以从已被占满的Cache中替换出任一旧字块。这种方式灵活，命中率也更高，缩小了块冲突率。但是所需的逻辑电路较多，成本较高。（这种映射中，标记应包括主存的区号以及对应的Cache行号）</strong></p>
+<h3 id="83-组相联映射">8.3 组相联映射</h3>
+<p>组相联映射结构如图所示</p>
+<p><img src="https://img.imgdb.cn/item/604f34ef5aedab222ca16617.png" alt=""></p>
+<p>组相联地址结构如图</p>
+<p><img src="https://img.imgdb.cn/item/604f35115aedab222ca17b33.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>是直接映射和全相联映射的折中，主存中的每个区的每个字块可以对应到Cache中的每个组，而每个区呈倍数关系的块又可以映射到对应组中的任意一个块。若每组有n个块，称为n路组相联映射。当n为1时是直接映射方式，当n为块数时为全相联映射方式。（其中标记应该包括主存中每个区的地址以及在每个组中的哪一块的地址）</strong></p>
+
+                    </div>
+                    
+                    
+
+                    
+
+                    
+<div class="flex flex-col md:flex-row md:justify-between -mx-2 mt-4 px-2 pt-4 border-t">
+    <div>
+        
+    </div>
+    <div class="md:text-right mt-4 md:mt-0">
+        
+        <span class="block font-bold">下一页</span>
+        <a href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F/" class="block">指令系统</a>
+        
+    </div>
+</div>
+
+                    
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div class="sticky top-16 z-10 hidden lg:block px-6 py-4  bg-secondary-bg pt-16 -mt-16 ">
+    <span class="text-lg font-semibold">本页内容</span>
+</div>
+<div class="sticky-toc hidden lg:block px-6 pb-6  pt-10 -mt-10 border-l ">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一存储器分类">一、存储器分类</a>
+      <ul>
+        <li><a href="#11-按存储介质分类">1.1 按存储介质分类</a>
+          <ul>
+            <li><a href="#111-半导体存储器">1.1.1 半导体存储器</a></li>
+            <li><a href="#112-磁表面存储器">1.1.2 磁表面存储器</a></li>
+            <li><a href="#113-磁芯存储器">1.1.3 磁芯存储器</a></li>
+            <li><a href="#114-光盘存储器">1.1.4 光盘存储器</a></li>
+          </ul>
+        </li>
+        <li><a href="#12-按存储方式分类">1.2 按存储方式分类</a>
+          <ul>
+            <li><a href="#121-随机存储器ram">1.2.1 随机存储器（RAM）</a></li>
+            <li><a href="#122-只读存储器rom">1.2.2 只读存储器（ROM）</a></li>
+            <li><a href="#123-串行访问存储器">1.2.3 串行访问存储器</a></li>
+          </ul>
+        </li>
+        <li><a href="#13-按作用分类">1.3 按作用分类</a></li>
+      </ul>
+    </li>
+    <li><a href="#二存储器层次结构">二、存储器层次结构</a></li>
+    <li><a href="#三主存储器">三、主存储器</a>
+      <ul>
+        <li><a href="#31-工作原理">3.1 工作原理</a></li>
+        <li><a href="#32-主存的技术指标">3.2 主存的技术指标</a>
+          <ul>
+            <li><a href="#321-存储容量">3.2.1 存储容量</a></li>
+            <li><a href="#322-存储速度">3.2.2 存储速度</a></li>
+            <li><a href="#323-存储器带宽">3.2.3 存储器带宽</a></li>
+          </ul>
+        </li>
+        <li><a href="#33-改善传输速度">3.3 改善传输速度</a></li>
+      </ul>
+    </li>
+    <li><a href="#四半导体存储芯片">四、半导体存储芯片</a>
+      <ul>
+        <li><a href="#41-半导体存储芯片的基本结构">4.1 半导体存储芯片的基本结构</a></li>
+        <li><a href="#42-译码驱动方式">4.2 译码驱动方式</a></li>
+        <li><a href="#43-动态ram的刷新">4.3 动态RAM的刷新</a>
+          <ul>
+            <li><a href="#431-集中刷新">4.3.1 集中刷新</a></li>
+            <li><a href="#432-分散刷新">4.3.2 分散刷新</a></li>
+            <li><a href="#433-异步刷新">4.3.3 异步刷新</a></li>
+          </ul>
+        </li>
+        <li><a href="#44-动态ram与静态ram的比较">4.4 动态RAM与静态RAM的比较</a></li>
+      </ul>
+    </li>
+    <li><a href="#五只读存储器">五、只读存储器</a>
+      <ul>
+        <li><a href="#51-掩模rom">5.1 掩模ROM</a></li>
+        <li><a href="#52-prom">5.2 PROM</a></li>
+        <li><a href="#53-eprom">5.3 EPROM</a></li>
+      </ul>
+    </li>
+    <li><a href="#六提高访存速度的措施">六、提高访存速度的措施</a>
+      <ul>
+        <li><a href="#61-单体多字系统">6.1 单体多字系统</a></li>
+        <li><a href="#62-多体并行系统">6.2 多体并行系统</a>
+          <ul>
+            <li><a href="#621-高位交叉编址">6.2.1 高位交叉编址</a></li>
+            <li><a href="#622-低位交叉编址">6.2.2 低位交叉编址</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#七高速缓冲处理器">七、高速缓冲处理器</a>
+      <ul>
+        <li><a href="#71-cache的一些常规参数">7.1 Cache的一些常规参数</a></li>
+        <li><a href="#72-cache的基本结构">7.2 Cache的基本结构</a></li>
+        <li><a href="#73-cache的两种写操作">7.3 Cache的两种写操作</a>
+          <ul>
+            <li><a href="#731-写直达法">7.3.1 写直达法</a></li>
+            <li><a href="#732-写回法">7.3.2 写回法</a></li>
+            <li><a href="#733-对于cache写不命中的处理方法">7.3.3 对于Cache写不命中的处理方法</a>
+              <ul>
+                <li><a href="#7331-写分配法">7.3.3.1 写分配法</a></li>
+                <li><a href="#7332-非写分配法">7.3.3.2 非写分配法</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#74-cache的改进">7.4 Cache的改进</a>
+          <ul>
+            <li><a href="#741-单一缓存和两级缓存">7.4.1 单一缓存和两级缓存</a></li>
+            <li><a href="#742-统一缓存和分立缓存">7.4.2 统一缓存和分立缓存</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#八cache-主存地址映射">八、Cache-主存地址映射</a>
+      <ul>
+        <li><a href="#81-直接映射">8.1 直接映射</a></li>
+        <li><a href="#82-全相联映射">8.2 全相联映射</a></li>
+        <li><a href="#83-组相联映射">8.3 组相联映射</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        enableStickyToc();
+    });
+</script>
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+    
+  </main>
+  <footer class="pl-scrollbar">
+    <div class="w-full max-w-screen-xl mx-auto"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2021 INKPATTERN &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+  </footer>
+</body>
+
+</html>
