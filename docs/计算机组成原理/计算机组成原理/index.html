@@ -76,7 +76,7 @@
         "@type": "WebPage",
         "@id": "https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"
     },
-    "headline": "存储器 | 计算机组成原理 | INKPATTERN","wordCount":  164 ,
+    "headline": "存储器 | 计算机组成原理 | INKPATTERN","wordCount":  182 ,
     "publisher": {
         "@type": "Person",
         "name": "C. Wang",
@@ -377,13 +377,13 @@
 <p>程序连续存放在相邻体中，有交叉存储之称，<strong>低位地址用来表示体号，高位地址为体内地址。在模4交叉编址中，最低两位地址即可判断存储于哪个体</strong> 如图</p>
 <p><img src="https://img.imgdb.cn/item/604dfb935aedab222c104dfe.png" alt=""></p>
 <p><strong>Note：</strong></p>
-<p>**假设每个体的存储字长和数据总线一致，并假设低位交叉的存储器模块数位n存取周期为T，总线传输周期为t，那么采用流水线方式存储时，应该满足$T=nt$,为了保证启动某体后，经$nt$时间再次启动该体时，它的上次存取操作已完成，要求低位交叉存储器的模块数大于或等于n。流水线方式如图。由此可见对于低位交叉的存储器，连续读取n个字所需的时间为： $T+(n-1)t$，若采用高位交叉编址，则连续读取n个字的时间为$nt$ **</p>
+<p><strong>假设每个体的存储字长和数据总线一致，并假设低位交叉的存储器模块数位n存取周期为T，总线传输周期为t，那么采用流水线方式存储时，应该满足$T=nt$,为了保证启动某体后，经$nt$时间再次启动该体时，它的上次存取操作已完成，要求低位交叉存储器的模块数大于或等于n。流水线方式如图。由此可见对于低位交叉的存储器，连续读取n个字所需的时间为： $T+(n-1)t$，若采用高位交叉编址，则连续读取n个字的时间为$nt$</strong></p>
 <p><img src="https://img.imgdb.cn/item/604dfcc05aedab222c10da3f.png" alt=""></p>
 <h2 id="七高速缓冲处理器">七、高速缓冲处理器</h2>
 <h3 id="71-cache的一些常规参数">7.1 Cache的一些常规参数</h3>
 <p>1、在一个程序执行期间，设$N_c$为访问Cache的总命中次数，$N_m$为访问主存的总次数，则命中率h为$h={N_c\over{N_c + N_m}}$</p>
 <p>2、设$t_c$为命中时的Cache访问时间，$t_m$为未命中时主存访问时间，1-h表示未命中率，则Cache-主存系统的平均访问时间$t_a$为$t_a={ht_c+(1-h)t_m}$</p>
-<p>3、Cache-主存系统的平均访问时间$t_a$越接近于$t_c$越好，用e表示访问效率则有$e={t_c\over t_a}*100%={t_c\over{ht_c+(1-h)t_m}}*100%$</p>
+<p>3、Cache-主存系统的平均访问时间$t_a$越接近于$t_c$越好，用e表示访问效率则有$e={t_c\over t_a}*0.01={t_c\over{ht_c+(1-h)t_m}}*0.01$</p>
 <h3 id="72-cache的基本结构">7.2 Cache的基本结构</h3>
 <p><img src="https://img.imgdb.cn/item/604e24e25aedab222c2696ef.png" alt=""></p>
 <p><strong>Note：</strong></p>
@@ -401,6 +401,28 @@
 <h4 id="742-统一缓存和分立缓存">7.4.2 统一缓存和分立缓存</h4>
 <p>统一缓存&ndash;指令和数据都存放在统一缓存内的Cache</p>
 <p>分立缓存&ndash;指令和数据分别存放在两个缓存中，一个称为指令Cache，一个称为数据Cache。</p>
+<h2 id="八cache-主存地址映射">八、Cache-主存地址映射</h2>
+<h3 id="81-直接映射">8.1 直接映射</h3>
+<p>直接映射结构如图所示</p>
+<p><img src="https://img.imgdb.cn/item/604f32c15aedab222ca05ac4.png" alt=""></p>
+<p>对应的地址结构如图</p>
+<p><img src="https://img.imgdb.cn/item/604f32f05aedab222ca071af.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>这种方式的有点时实现简单，只需利用主存地址的某些位直接判断，即可确定所需字块是否在缓存中。缺点是不够灵活，每个主存块只能固定的对应某个缓存块，即使缓存内还空着许多位置也不能占用</strong></p>
+<h3 id="82-全相联映射">8.2 全相联映射</h3>
+<p>全相联映射结构如图所示</p>
+<p><img src="https://img.imgdb.cn/item/604f33db5aedab222ca0e45a.png" alt=""></p>
+<p>对应地址结构如图</p>
+<p><img src="https://img.imgdb.cn/item/604f33f55aedab222ca0ef73.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>这种映射方式允许主存中每一字块映射到Cache中的热河一块位置上，也可以从已被占满的Cache中替换出任一旧字块。这种方式灵活，命中率也更高，缩小了块冲突率。但是所需的逻辑电路较多，成本较高。（这种映射中，标记应包括主存的区号以及对应的Cache行号）</strong></p>
+<h3 id="83-组相联映射">8.3 组相联映射</h3>
+<p>组相联映射结构如图所示</p>
+<p><img src="https://img.imgdb.cn/item/604f34ef5aedab222ca16617.png" alt=""></p>
+<p>组相联地址结构如图</p>
+<p><img src="https://img.imgdb.cn/item/604f35115aedab222ca17b33.png" alt=""></p>
+<p><strong>Note：</strong></p>
+<p><strong>是直接映射和全相联映射的折中，主存中的每个区的每个字块可以对应到Cache中的每个组，而每个区呈倍数关系的块又可以映射到对应组中的任意一个块。若每组有n个块，称为n路组相联映射。当n为1时是直接映射方式，当n为块数时为全相联映射方式。（其中标记应该包括主存中每个区的地址以及在每个组中的哪一块的地址）</strong></p>
 
                     </div>
                     
@@ -502,6 +524,13 @@
             <li><a href="#742-统一缓存和分立缓存">7.4.2 统一缓存和分立缓存</a></li>
           </ul>
         </li>
+      </ul>
+    </li>
+    <li><a href="#八cache-主存地址映射">八、Cache-主存地址映射</a>
+      <ul>
+        <li><a href="#81-直接映射">8.1 直接映射</a></li>
+        <li><a href="#82-全相联映射">8.2 全相联映射</a></li>
+        <li><a href="#83-组相联映射">8.3 组相联映射</a></li>
       </ul>
     </li>
   </ul>
