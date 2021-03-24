@@ -78,7 +78,7 @@
     },
     "headline": "计算机系统概论 | 计算机组成原理 | INKPATTERN","datePublished": "2021-03-19T00:00:00+00:00",
     "dateModified": "2021-03-19T00:00:00+00:00",
-    "wordCount":  86 ,
+    "wordCount":  108 ,
     "publisher": {
         "@type": "Person",
         "name": "C. Wang",
@@ -395,6 +395,17 @@
 <p>存储器的容量应该包括主存容量和辅存容量。主存容量是指主存中存放二进制代码的总位数。即存储容量=存储单元个数 * 存储字长。MAR的位数反映了存储单元的个数，MDR的位数反映了存储字长。</p>
 <h3 id="53-运算速度">5.3 运算速度</h3>
 <h4 id="531-吞吐量和响应时间">5.3.1 吞吐量和响应时间</h4>
+<p>吞吐量：系统在单位时间内处理请求的数量。 <strong>系统的吞吐量主要取决于主存的存取周期</strong></p>
+<p>响应时间：从用户向计算机发送一个请求，到系统对该请求作出响应并获得所需结果的等待时间。</p>
+<h4 id="532-主频和cpu时钟周期">5.3.2 主频和CPU时钟周期</h4>
+<p>时钟周期：主频的倒数，最小的时间单位，每个动作至少需要1个时钟周期。</p>
+<p>主频：时钟频率，主频越高，完成指令的一个执行步骤所用的时间越短，执行指令的速度越快。</p>
+<h4 id="533-cpiclock-cycle-per-instruction">5.3.3 CPI（Clock cycle Per Instruction）</h4>
+<p>执行一条指令所需的时钟周期数</p>
+<h4 id="534-cpu执行时间">5.3.4 CPU执行时间</h4>
+<p>运行一个程序所花费的时间，CPU执行时间=CPU时钟周期数 / 主频=（指令条数×CPI）/ 主频</p>
+<h4 id="545-mipsmflopsgflops和tflops">5.4.5 MIPS、MFLOPS、GFLOPS和TFLOPS</h4>
+<p>分别是每秒执行多少百万条指令，每秒执行多少百万次浮点运算、每秒执行多少十亿次浮点运算、每秒执行多少万亿次浮点运算。</p>
 
                     </div>
                     
@@ -474,6 +485,10 @@
         <li><a href="#53-运算速度">5.3 运算速度</a>
           <ul>
             <li><a href="#531-吞吐量和响应时间">5.3.1 吞吐量和响应时间</a></li>
+            <li><a href="#532-主频和cpu时钟周期">5.3.2 主频和CPU时钟周期</a></li>
+            <li><a href="#533-cpiclock-cycle-per-instruction">5.3.3 CPI（Clock cycle Per Instruction）</a></li>
+            <li><a href="#534-cpu执行时间">5.3.4 CPU执行时间</a></li>
+            <li><a href="#545-mipsmflopsgflops和tflops">5.4.5 MIPS、MFLOPS、GFLOPS和TFLOPS</a></li>
           </ul>
         </li>
       </ul>
