@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>&amp;copy; 2021 INKPATTERN</copyright>
-    <lastBuildDate>Thu, 25 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://munlelee.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 31 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://munlelee.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>存储器</title>
+      <link>https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%95%E8%AE%BA/</link>
+      <pubDate>Wed, 31 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%95%E8%AE%BA/</guid>
+      <description>计算机组成原理中关于存储的概要内容</description>
+    </item>
+    
     <item>
       <title>系统总线</title>
       <link>https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BA%BF/</link>

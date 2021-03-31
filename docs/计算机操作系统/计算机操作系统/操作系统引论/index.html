@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang='zh' ><meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+<title>存储器 | 计算机组成原理 | INKPATTERN</title>
+<link rel="stylesheet" href="https://munlelee.github.io/css/eureka.min.css">
+<script defer src="https://munlelee.github.io/js/eureka.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/styles/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/highlight.min.js"
+   crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/js/all.min.js"
+   integrity="sha256-uNYoXefWRqv&#43;PsIF/OflNmwtKM4lStn9yrz2gVl6ymo="  crossorigin></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css"
+   integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3&#43;Aro6EYUG4&#43;cU&#43;KJWu/X"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" 
+  integrity="sha384-g7c&#43;Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI&#43;sEnkvrMWph2EDg4"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js"
+   integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC&#43;Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_32x32_fill_q75_box_center.jpg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://munlelee.github.io/images/aim_hu4dfbb22ba325eb049bbc4fcb77ff3378_155831_180x180_fill_q75_box_center.jpg">
+
+<meta name="description"
+  content="计算机组成原理中关于存储的概要内容">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"系列文档",
+      "item":"https://munlelee.github.io/docs/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"计算机组成原理",
+      "item":"https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"},{
+      "@type": "ListItem",
+      "position": 3 ,
+      "name":"存储器",
+      "item":"https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%95%E8%AE%BA/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%95%E8%AE%BA/"
+    },
+    "headline": "存储器 | 计算机组成原理 | INKPATTERN","datePublished": "2021-03-31T00:00:00+00:00",
+    "dateModified": "2021-03-31T00:00:00+00:00",
+    "wordCount":  43 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "C. Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://munlelee.github.io/images/aim.jpg"
+        }
+        },
+    "description": "计算机组成原理中关于存储的概要内容"
+}
+</script><meta property="og:title" content="存储器 | 计算机组成原理 | INKPATTERN" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="https://munlelee.github.io/images/aim.jpg">
+
+
+<meta property="og:url" content="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%95%E8%AE%BA/" />
+
+
+
+
+<meta property="og:description" content="计算机组成原理中关于存储的概要内容" />
+
+
+
+
+<meta property="og:locale" content="zh" />
+
+
+
+
+<meta property="og:site_name" content="INKPATTERN" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2021-03-31T00:00:00&#43;00:00" />
+
+
+<meta property="article:modified_time" content="2021-03-31T00:00:00&#43;00:00" />
+
+
+
+<meta property="article:section" content="docs" />
+
+
+
+
+
+
+
+
+
+
+<meta property="og:see_also" content="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" />
+
+
+
+
+
+<body class="flex flex-col min-h-screen">
+  <header class="fixed flex items-center w-full min-h-16 pl-scrollbar z-50 bg-secondary-bg shadow-sm">
+    <div class="w-full max-w-screen-xl mx-auto"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap p-4">
+    <a href="/" class="mr-6 text-primary-text text-xl font-bold">INKPATTERN</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:flex-grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="text-sm md:flex-grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/authors/example-author/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">关于我</a>
+            <a href="/posts/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">博文</a>
+            <a href="/docs/"
+                class="block mt-4 md:inline-block md:mt-0  text-eureka  hover:text-eureka mr-4">系列文章</a>
+            <a href="/categories/"
+                class="block mt-4 md:inline-block md:mt-0  hover:text-eureka mr-4">分类</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col left-0 md:left-auto right-auto md:right-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            switchMode('Auto')
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script></div>
+  </header>
+  <main class="flex-grow pt-16">
+    <div class="pl-scrollbar">
+      <div class="w-full max-w-screen-xl lg:px-4 xl:px-8 mx-auto">
+
+
+<div class="lg:pt-12">
+    <div class="flex flex-col md:flex-row bg-secondary-bg rounded">
+        <div class="md:w-1/4 lg:w-1/5 border-r">
+            <div class="sticky top-16 pt-6">
+                
+
+
+
+
+
+
+
+
+
+
+<div id="sidebar-title" class="md:hidden mx-4 px-2 pt-4 pb-2 md:border-b text-tertiary-text md:text-primary-text">
+    <span class="font-semibold">目录</span>
+    <i class="fas fa-caret-right ml-1"></i>
+</div>
+
+<div id="sidebar-toc"
+    class="hidden md:block overflow-y-auto mx-6 md:mx-0 pr-6 pt-2 md:max-h-doc-sidebar bg-primary-bg md:bg-transparent">
+    <div class="flex flex-wrap ml-4 -mr-2 p-2 bg-secondary-bg md:bg-primary-bg rounded">
+        <a class=" hover:text-eureka"
+            href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">计算机组成原理</a>
+        
+        
+        
+
+
+    </div>
+    
+<ul class="pl-6">
+    
+    
+    
+    <li class="py-2">
+        <div class="">
+            <a class=" text-eureka  hover:text-eureka"
+                href="https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%95%E8%AE%BA/">存储器</a>
+        </div>
+        
+    </li>
+    
+    
+</ul>
+
+</div>
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="w-full md:w-3/4 lg:w-4/5 pb-8 pt-2 md:pt-8">
+            <div class="w-full lg:w-3/4 pl-6 ml-0 mr-auto">
+                <h1 class="font-bold text-3xl text-primary-text">存储器</h1>
+                <div class="flex flex-wrap flex-row items-center mt-2 text-tertiary-text">
+    <div class="mr-6 my-2">
+        <i class="fas fa-calendar mr-1"></i>
+        <span>2021-03-31</span>
+    </div>
+    <div class="mr-6 my-2">
+        <i class="fas fa-clock mr-1"></i>
+        <span>1分钟阅读时长</span>
+    </div>
+    
+    
+
+    
+    <div class="mr-6 my-2">
+        <i class="fas fa-th-list mr-1"></i>
+        
+        <a href="https://munlelee.github.io/series/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="hover:text-eureka">操作系统</a>
+        
+    </div>
+    
+</div>
+            </div>
+            <div class="flex">
+                <div class="w-full lg:w-3/4 px-6">
+                    
+                    
+                    <div class="content">
+                        <h2 id="一操作系统的目标和作用">一、操作系统的目标和作用</h2>
+<h3 id="11-操作系统的目标">1.1 操作系统的目标</h3>
+<h4 id="111-方便性">1.1.1 方便性</h4>
+<p>系统可以使用编译命令将用户采用高级语言书写的程序翻译成机器代码，或者直接通过OS所提供的各种命令操纵计算机系统。</p>
+<h4 id="112-有效性">1.1.2 有效性</h4>
+<p>第一层含义是提高系统资源的利用率。另一层含义是提高系统的吞吐量。</p>
+<h4 id="113-可扩充性">1.1.3 可扩充性</h4>
+<p>无结构→模块化结构→层次化结构→微内核结构，微内核结构能方便地增添新的功能和模块，以及对原有的功能和模块进行修改，具有可扩充性。</p>
+<h4 id="114-开放性">1.1.4 开放性</h4>
+<p>所谓开放性，是指系统能够遵循世界标准规范，特别试遵循开放系统互连OSI国标标准。</p>
+<h3 id="12-操作系统的作用">1.2 操作系统的作用</h3>
+<h4 id="121-os作为用户与计算机硬件系统之间的接口">1.2.1 OS作为用户与计算机硬件系统之间的接口</h4>
+<p><img src="https://img.imgdb.cn/item/6064862d8322e6675cc7e8fe.png" alt=""></p>
+<p>如图所示，用户通过三种方式使用计算机，即命令方式、系统调用方式和图标-窗口方式。</p>
+<h4 id="122-os作为计算机系统资源的管理者">1.2.2 OS作为计算机系统资源的管理者</h4>
+<p>资源可以分为四类：处理机、存储器、IO设备和文件（数据和程序）</p>
+<p>处理机管理是用于分配和控制处理机；存储器管理主要负责内存的分配与回收；IO设备管理是负责IO设备的分配（回收）与操纵；文件管理是用于实现队文件的存取、共享和保护</p>
+<h4 id="123-os实现了对计算机资源的抽象">1.2.3 OS实现了对计算机资源的抽象</h4>
+<p>对于一台完全无软件的计算机系统（即裸机），它向用户提供的仅是硬件接口（物理接口）。</p>
+<p>对计算机资源的抽象可以由以下构成：物理接口→IO软件→管理文件的软件→面向用户的窗口软件</p>
+<h2 id="二操作系统的发展过程">二、操作系统的发展过程</h2>
+<h3 id="21-未配置操作系统的计算机系统">2.1 未配置操作系统的计算机系统</h3>
+<h4 id="211-人工操作方式">2.1.1 人工操作方式</h4>
+<p>事先穿孔的纸带作为程序和数据输入计算机。缺点：1、用户独占全机。2、CPU等待人工操作</p>
+<h4 id="212-脱机输入输出方式">2.1.2 脱机输入输出方式</h4>
+<p>由外围机将用户程序和数据输入到磁带上，当CPU需要这些程序和数据时，再从磁带上高速的调入内存。反之，则由CPU将数据从内存高速的输入磁带上，再通过外围机将结果通过相应的输出设备输出。</p>
+<p><strong>优点：减少了CPU的空闲时间、提高了IO速度</strong></p>
+<h3 id="22-单道批处理系统">2.2 单道批处理系统</h3>
+<h4 id="221-处理过程">2.2.1 处理过程</h4>
+<p>为了实现对作业的连续处理，需要先把一批作业以脱机方式输入到磁带上，并在系统中配上监督程序，在它的控制下，时这批作业能一个接一个的连续处理。</p>
+<p><img src="https://img.imgdb.cn/item/60648a978322e6675ccd736d.png" style="zoom:80%;" /></p>
+
+                    </div>
+                    
+                    
+
+                    
+
+                    
+                    
+                </div>
+                
+                <div class="hidden lg:block lg:w-1/4">
+                    
+                    <div class="sticky top-16 z-10 hidden lg:block px-6 py-4  bg-secondary-bg pt-16 -mt-16 ">
+    <span class="text-lg font-semibold">本页内容</span>
+</div>
+<div class="sticky-toc hidden lg:block px-6 pb-6  pt-10 -mt-10 border-l ">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#一操作系统的目标和作用">一、操作系统的目标和作用</a>
+      <ul>
+        <li><a href="#11-操作系统的目标">1.1 操作系统的目标</a>
+          <ul>
+            <li><a href="#111-方便性">1.1.1 方便性</a></li>
+            <li><a href="#112-有效性">1.1.2 有效性</a></li>
+            <li><a href="#113-可扩充性">1.1.3 可扩充性</a></li>
+            <li><a href="#114-开放性">1.1.4 开放性</a></li>
+          </ul>
+        </li>
+        <li><a href="#12-操作系统的作用">1.2 操作系统的作用</a>
+          <ul>
+            <li><a href="#121-os作为用户与计算机硬件系统之间的接口">1.2.1 OS作为用户与计算机硬件系统之间的接口</a></li>
+            <li><a href="#122-os作为计算机系统资源的管理者">1.2.2 OS作为计算机系统资源的管理者</a></li>
+            <li><a href="#123-os实现了对计算机资源的抽象">1.2.3 OS实现了对计算机资源的抽象</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#二操作系统的发展过程">二、操作系统的发展过程</a>
+      <ul>
+        <li><a href="#21-未配置操作系统的计算机系统">2.1 未配置操作系统的计算机系统</a>
+          <ul>
+            <li><a href="#211-人工操作方式">2.1.1 人工操作方式</a></li>
+            <li><a href="#212-脱机输入输出方式">2.1.2 脱机输入输出方式</a></li>
+          </ul>
+        </li>
+        <li><a href="#22-单道批处理系统">2.2 单道批处理系统</a>
+          <ul>
+            <li><a href="#221-处理过程">2.2.1 处理过程</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        enableStickyToc();
+    });
+</script>
+                    
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.initHighlightingOnLoad();
+        changeSidebarHeight();
+        switchDocToc();
+    })
+</script>
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+    
+  </main>
+  <footer class="pl-scrollbar">
+    <div class="w-full max-w-screen-xl mx-auto"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2021 INKPATTERN &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+  </footer>
+</body>
+
+</html>

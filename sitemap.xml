@@ -3,18 +3,43 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://munlelee.github.io/authors/</loc>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://munlelee.github.io/</loc>
-    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://munlelee.github.io/series/</loc>
-    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://munlelee.github.io/authors/example-author/</loc>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%BC%95%E8%AE%BA/</loc>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://munlelee.github.io/series/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://munlelee.github.io/docs/</loc>
-    <lastmod>2021-03-25T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2021-03-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -30,16 +55,6 @@
   <url>
     <loc>https://munlelee.github.io/docs/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/</loc>
     <lastmod>2021-03-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://munlelee.github.io/authors/</loc>
-    <lastmod>2021-03-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://munlelee.github.io/authors/example-author/</loc>
-    <lastmod>2021-03-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
