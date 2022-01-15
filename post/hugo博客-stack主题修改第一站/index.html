@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
+1、TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+· 修改站点图标
+· 修改站点名称并使其居中，同时具有一定的间隔。
+·修改选中的样式
+·站点头像居中（虽然本来应该就是居中了。。）
+·添加主页按钮点击不会高亮的问题
+·主页样式的修改
+· 修改左边栏头像大小
+·返回顶部功能的添加
+2、修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
+--zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 3、修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'><title>Hugo博客 | stack主题修改第一站</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
+
+<link rel="stylesheet" href="/scss/style.min.1dc8656ddc657fc4c9e905e2f65b273e89f6f77f635e7340c187a71ddd9295ec.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='Hugo博客 | stack主题修改第一站'>
+<meta property='og:description' content='本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
+1、TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+· 修改站点图标
+· 修改站点名称并使其居中，同时具有一定的间隔。
+·修改选中的样式
+·站点头像居中（虽然本来应该就是居中了。。）
+·添加主页按钮点击不会高亮的问题
+·主页样式的修改
+· 修改左边栏头像大小
+·返回顶部功能的添加
+2、修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
+--zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 3、修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='博客搭建' /><meta property='article:published_time' content='2022-01-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-01-15T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Hugo博客 | stack主题修改第一站">
+<meta name="twitter:description" content="本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
+1、TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+· 修改站点图标
+· 修改站点名称并使其居中，同时具有一定的间隔。
+·修改选中的样式
+·站点头像居中（虽然本来应该就是居中了。。）
+·添加主页按钮点击不会高亮的问题
+·主页样式的修改
+· 修改左边栏头像大小
+·返回顶部功能的添加
+2、修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
+--zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 3、修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AE%9E%E8%B7%B5/" >
+                实践
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/">Hugo博客 | stack主题修改第一站</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 15, 2022</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！</p>
+<h3 id="1to-do">1、TO-DO</h3>
+<p>· 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）</p>
+<p>· 修改站点图标</p>
+<p>· 修改站点名称并使其居中，同时具有一定的间隔。</p>
+<p>·修改选中的样式</p>
+<p>·站点头像居中（虽然本来应该就是居中了。。）</p>
+<p>·添加主页按钮点击不会高亮的问题</p>
+<p>·主页样式的修改</p>
+<p>· 修改左边栏头像大小</p>
+<p>·返回顶部功能的添加</p>
+<h3 id="2修改全站的字体">2、修改全站的字体</h3>
+<p>其实修改字体的方案主题的原作者已经给出，有需要的可以参考<a class="link" href="https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html"  target="_blank" rel="noopener"
+    >修改字体</a>，作为一个中国人，好康的中文永远比好康的英文重要。
+具体做法是在站点根目录中的<code>layouts/partials/head/custom.html</code>中添加如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">style</span>&gt;
+    :<span style="color:#a6e22e">root</span> {
+        --article-font-family: <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span>, <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>base<span style="color:#f92672">-</span>font<span style="color:#f92672">-</span>family);
+    }
+&lt;/<span style="color:#f92672">style</span>&gt;
+&lt;<span style="color:#f92672">script</span>&gt;  <span style="color:#75715e">// 正文自重300，标题字重700
+</span><span style="color:#75715e"></span>		(<span style="color:#66d9ef">function</span> () {
+		    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customFont</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;link&#39;</span>);
+		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;display=swap&#34;</span>;
+		
+		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;text/css&#34;</span>;
+		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">rel</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;stylesheet&#34;</span>;
+		
+		    document.<span style="color:#a6e22e">head</span>.<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">customFont</span>);
+		}());
+&lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><p>以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了<code>hugo-theme-stack/assets/scss/variable.scss</code>文件，具体就是调整了<code>--zh-font-family</code>和<code>--base-font-family</code>的顺序，代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">--zh-font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Hiragino Sans GB&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Droid Sans Fallback&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Microsoft YaHei&#34;</span>;
+<span style="color:#a6e22e">--base-font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span><span style="color:#f92672">,</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sys-font-family)<span style="color:#f92672">,</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>zh-font-family)<span style="color:#f92672">,</span> sans-serif;
+</code></pre></div><h3 id="3修改站点的图标">3、修改站点的图标</h3>
+<p>这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为<code>.ico</code>文件（其它类型的图片文件应该也行），如需转换可以借助<a class="link" href="https://convertio.co/zh/ico-converter/"  target="_blank" rel="noopener"
+    >这个网站</a>。之后将转换后的文件保存在网站根目录的<code>static</code>文件夹中。之后修改主题的配置文件<code>config.yaml</code>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">params</span>:
+    <span style="color:#f92672">mainSections</span>:
+        - <span style="color:#ae81ff">post</span>
+    <span style="color:#f92672">featuredImageField</span>: <span style="color:#ae81ff">image</span>
+    <span style="color:#f92672">rssFullContent</span>: <span style="color:#66d9ef">true</span>
+    <span style="color:#f92672">favicon</span>: <span style="color:#ae81ff">favicon.ico</span>
+</code></pre></div><h3 id="4修改站点名称">4、修改站点名称</h3>
+<p>站点名称对大家来说应该不是什么难事，这里就说说居中以及间隔。这里需要修改主题根目录的<code>assets/scss/partials/siderbar.scss</code>文件。如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.site-name</span> {
+    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>accent-color);
+    <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.8</span><span style="color:#66d9ef">rem</span>;
+    <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 站点名称文本居中
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) {
+        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">rem</span>;
+    }
+}
+
+<span style="color:#a6e22e">.site-description</span> {
+    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>body-text-color);
+    <span style="color:#a6e22e">font-weight</span><span style="color:#f92672">:</span> normal;
+    <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.2</span><span style="color:#66d9ef">rem</span>;
+    <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 站点描述居中
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) {
+        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">rem</span>;
+    }
+}
+</code></pre></div><p>当然如果站点名称之间具有一定的间隔的话，应该是会更美观一点的。方法是在<code>layouts/partials/head/custom.html</code>文件上加入以下代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">style</span>&gt;
+	<span style="color:#f92672">h1</span> {
+		<span style="color:#66d9ef">letter-spacing</span>: <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>;
+	}
+&lt;/<span style="color:#f92672">style</span>&gt;
+</code></pre></div><p>这个代码将会对全站的<code>h1</code>标题进行修改，因此业也会导致其它<code>h1</code>标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要将</p>
+<h3 id="5修改选中的样式">5、修改选中的样式</h3>
+<p>原来作者的选中样式和当前的大多数网站是一样的，给我一种十年前互联网的感觉，于是喜欢深色系的我修改了选中样式。需要在<code>assets/scss/custom.scss</code>文件中加入如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">::selection</span> {
+    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#fff</span>;
+    <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#557697</span>;
+}
+</code></pre></div><h3 id="6站点头像居中">6、站点头像居中</h3>
+<p>这个可能只是心理作用。。
+同样是在<code>assets/scss/partials/siderbar.scss</code>文件中加入修改以下代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.site-avatar</span> {
+    <span style="color:#a6e22e">position</span><span style="color:#f92672">:</span> relative;
+    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;  <span style="color:#75715e">// 站点头像居中
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;  <span style="color:#75715e">// 站点头像居中
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-avatar-size);
+    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-avatar-size);
+
+    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-element-separation);
+}
+</code></pre></div><h3 id="7主页按钮高亮问题">7、主页按钮高亮问题</h3>
+<p>这个虽然不算是什么大问题吧，但是主页不高亮我就觉得很难受。。于是就找到了<code>layouts/partials/sidebar/left.html</code>这个文件。我们可以看到一下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $currentPage := . }}
+{{ range .Site.Menus.main }}
+{{ $active := or (eq $currentPage.Title .Name) (or ($currentPage.HasMenuCurrent &#34;main&#34; .)($currentPage.IsMenuCurrent &#34;main&#34; .)) }}
+</code></pre></div><p>这段代码大概的逻辑就是如果当前的页面是菜单中的页面之一就设定为激活状态，而如果要让主页高亮的话需要加入以下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $siteTitle := .Site.Title }}
+{{ $active := or ($active) (and (eq $currentPage.Title $siteTitle) (eq .Identifier &#34;home&#34;)) }}
+</code></pre></div><p>这样就会使若当前的网站的标题等于网站名称就会令其为激活状态，而之后的<code>Identifier</code>则是为了区分主页页面，否则就会出现点击主页所有页面都是高亮的情况。</p>
+<h3 id="8主页样式的修改">8、主页样式的修改</h3>
+<p>第一次看到这个主题时就对它的主页布局感到不舒服，尤其是在笔记本电脑上挤满了整个屏幕令人难受，于是希望左右两边能够有一定的留白，这样可以美观一些。</p>
+<p>从开发者工具中我们可以得知主页的<code>class</code>是<code>container</code>，经过查找可以知道其样式是在<code>assets/scss/grid.css</code>中定义的。于是可以发现如下这段代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.container</span> {
+    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;
+    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;
+
+    <span style="color:#a6e22e">.left-sidebar</span> {
+        <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>left<span style="color:#f92672">-</span>sidebar-max-width);
+        <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">%</span>;
+    }
+
+    <span style="color:#a6e22e">.right-sidebar</span> {
+        <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>right<span style="color:#f92672">-</span>sidebar-max-width);
+
+        <span style="color:#75715e">/// Display right sidebar when min-width: lg
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
+            <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> block;
+        }
+    }
+
+    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.extended</span> {
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
+            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
+        }
+
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
+            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">%</span>;
+            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
+        }
+
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(xl) {
+            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1536</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">%</span>;
+            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+        }
+    }
+}
+
+</code></pre></div><p>这段代码对左边栏和右边栏进行了最大宽度的限制，这也就是我们要修改的地方。但是这其中的各个<code>@include</code>函数又代表什么呢？我们可以观察<code>asset/scss/breakpoints.scss</code>这个文件，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss">$breakpoints<span style="color:#f92672">:</span> (
+    <span style="color:#a6e22e">sm</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">640</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+    <span style="color:#a6e22e">md</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">768</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+    <span style="color:#a6e22e">lg</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+    <span style="color:#a6e22e">xl</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+    <span style="color:#a6e22e">2xl</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1536</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+);
+
+<span style="color:#66d9ef">@mixin</span><span style="color:#a6e22e"> respond</span>($breakpoint) {
+    <span style="color:#66d9ef">@if</span> <span style="color:#f92672">not</span> <span style="color:#a6e22e">map-has-key</span>($breakpoints<span style="color:#f92672">,</span> $breakpoint) {
+        <span style="color:#66d9ef">@warn</span> <span style="color:#e6db74">&#34;&#39;</span><span style="color:#e6db74">#{</span>$breakpoint<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39; is not a valid breakpoint&#34;</span>;
+    } <span style="color:#66d9ef">@else</span> {
+        <span style="color:#66d9ef">@media</span> (<span style="color:#a6e22e">min-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">map-get</span>($breakpoints<span style="color:#f92672">,</span> $breakpoint)) {
+            <span style="color:#66d9ef">@content</span>;
+        }
+    }
+}
+
+</code></pre></div><p>没有学过<code>css</code>的我也就只能大致看出这是封装了各种屏幕尺寸类似于<code>map</code>，而在笔记本电脑上，屏幕宽度是<code>1024px</code>以上的，因此我们只需要修改<code>@include respond(lg)</code>函数下的样式就可以了。在<code>asset/scss/custom.scss</code>下添加如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.container</span> {
+    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;
+    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;
+
+    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.extended</span> {
+        <span style="color:#75715e">/* range: 768-1024 */</span>
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
+            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
+        }
+
+        <span style="color:#75715e">/* range: 1024-1280 */</span>
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {  <span style="color:#75715e">// 修改主页的三个组件的显示比例
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">22</span><span style="color:#66d9ef">%</span>;
+        }
+    }
+
+    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.compact</span> {
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
+            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">768</span><span style="color:#66d9ef">px</span>;
+        }
+
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
+            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">%</span>;
+        }
+
+        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(xl) {
+            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
+        }
+    }
+}
+
+</code></pre></div><p>至此，主页的修改也告一段落了。以上都是从<a class="link" href="https://xrg.fj.cn/"  target="_blank" rel="noopener"
+    >这位大佬那里学来</a>。</p>
+<h3 id="9修改左侧边栏头像的大小">9、修改左侧边栏头像的大小</h3>
+<p>左侧边栏的元素太多，显得实在有点挤，于是索性修改了一下博客的头像大小。需要在主题根目录下的<code>assets/scss/partials/sidebar.scss</code>文件。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) <span style="color:#a6e22e">{
+</span><span style="color:#a6e22e">--sidebar-avatar-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">125</span><span style="color:#66d9ef">px</span>;  <span style="color:#75715e">// 修改头像大小的代码  
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">--sidebar-element-separation</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+}
+</code></pre></div><h3 id="10返回顶部按钮的添加">10、返回顶部按钮的添加</h3>
+<p>在参考过其它使用这个主题的博主之后发现，如果一篇文章太长，没有返回顶部这个按钮可能会在某些情况下造成体验的不舒适，于是决定加上这个功能。最开始是希望能够在一个页面的右下角添加这个按钮，但是无法解决页面缩放时显示位置与主页面之间的关系的问题，因此决定借助目录放置于目录的下方。</p>
+<p>首先是按钮的函数，参考了<code>slim</code>主题，具体是在<code>layouts/partials/head/script.html</code>中加入如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+
+&lt;<span style="color:#f92672">script</span>&gt;
+    <span style="color:#75715e">// Check to see if the window is top if not then display button
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">$</span>(window).<span style="color:#a6e22e">scroll</span>(<span style="color:#66d9ef">function</span>() {
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">scrollTop</span>()) {
+        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">fadeIn</span>();
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">fadeOut</span>();
+    }
+    });
+
+    <span style="color:#75715e">// Click event to scroll to top
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">click</span>(<span style="color:#66d9ef">function</span>() {
+    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;html, body&#39;</span>).<span style="color:#a6e22e">animate</span>({<span style="color:#a6e22e">scrollTop</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>}, <span style="color:#ae81ff">1000</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+    });
+&lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><p>这段代码可以监听窗口抖动，从而控制按钮的显示和隐藏。</p>
+<p>然后是添加返回顶部的按钮，由于这个按钮需要和文章目录保持一个相对固定的位置，因此需要修改<code>layouts/_default/single.html</code>，在<code>aside</code>标签下加入如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $topImg := resources.Get (&#34;img/top.png&#34;) }}
+{{ $topImg := $topImg.Resize &#34;40x&#34; }}
+&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;back-to-top&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span>&gt;
+    &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $topImg.RelPermalink }}&#34;</span> /&gt;
+&lt;/<span style="color:#f92672">a</span>&gt;
+</code></pre></div><p>利用一张图片作为返回顶部的链接。最后我们需要通过<code>css</code>来为这个按钮添加样式。首先我们需要找到之前提过的<code>custom.scss</code>文件，在文件中加入如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss">#go-top {
+    <span style="color:#a6e22e">bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> none;
+    <span style="color:#a6e22e">position</span><span style="color:#f92672">:</span> absolute;  
+    <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
+        <span style="color:#a6e22e">filter</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">opacity</span>(<span style="color:#ae81ff">60</span><span style="color:#66d9ef">%</span>);  <span style="color:#75715e">// 悬停淡化
+</span><span style="color:#75715e"></span>    }
+</code></pre></div><p>其中<code>bottom</code>值是我觉得可以避免当目录过长时会几乎占满整个屏幕，导致按钮没有地方放的问题。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1to-do">1、TO-DO</a></li>
+        <li><a href="#2修改全站的字体">2、修改全站的字体</a></li>
+        <li><a href="#3修改站点的图标">3、修改站点的图标</a></li>
+        <li><a href="#4修改站点名称">4、修改站点名称</a></li>
+        <li><a href="#5修改选中的样式">5、修改选中的样式</a></li>
+        <li><a href="#6站点头像居中">6、站点头像居中</a></li>
+        <li><a href="#7主页按钮高亮问题">7、主页按钮高亮问题</a></li>
+        <li><a href="#8主页样式的修改">8、主页样式的修改</a></li>
+        <li><a href="#9修改左侧边栏头像的大小">9、修改左侧边栏头像的大小</a></li>
+        <li><a href="#10返回顶部按钮的添加">10、返回顶部按钮的添加</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>

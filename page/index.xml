@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on 墨纹</title>
+    <link>https://MUNLELEE.github.io/page/</link>
+    <description>Recent content in Pages on 墨纹</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 10 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/page/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于我</title>
+      <link>https://MUNLELEE.github.io/page/%E5%85%B3%E4%BA%8E%E6%88%91/</link>
+      <pubDate>Sun, 10 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/page/%E5%85%B3%E4%BA%8E%E6%88%91/</guid>
+      <description>一个来自江南边陲小镇的福建人，四分向往技术，三分向往文学，剩下三分向往未来仅此而已。如果问我最大的愿望是什么，那我希望今后做的每一件事都有意义。
+这个博客是想分享一些我自认为值得或可以分享以及可以留下待日后回看的东西，但更多的我希望能分享生活，我觉得一个21世纪的年轻人的生活应该是充满色彩的，而我也会尽力向着我所想的那个方向去努力。
+ 最后
+本博客得一个高僧所助，终定于此。此刻屏幕前的陌生人，若有缘能于无尽网络之中相遇，那么便读一下这句话吧。
+我们每个人都应是爱的衍生物，而不是添置的必需品。
+你也可以通过munlelee@163.com联系我。</description>
+    </item>
+    
+    <item>
+      <title>分类</title>
+      <link>https://MUNLELEE.github.io/page/categories/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/page/categories/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>搜索</title>
+      <link>https://MUNLELEE.github.io/page/search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/page/search/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

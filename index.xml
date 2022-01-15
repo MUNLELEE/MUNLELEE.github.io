@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>墨纹</title>
+        <link>https://MUNLELEE.github.io/</link>
+        <description>Recent content on 墨纹</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Sat, 15 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Hugo博客 | stack主题修改第一站</title>
+        <link>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</link>
+        <pubDate>Sat, 15 Jan 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</guid>
+        <description>&lt;p&gt;本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！&lt;/p&gt;
+&lt;h3 id=&#34;1to-do&#34;&gt;1、TO-DO&lt;/h3&gt;
+&lt;p&gt;· 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）&lt;/p&gt;
+&lt;p&gt;· 修改站点图标&lt;/p&gt;
+&lt;p&gt;· 修改站点名称并使其居中，同时具有一定的间隔。&lt;/p&gt;
+&lt;p&gt;·修改选中的样式&lt;/p&gt;
+&lt;p&gt;·站点头像居中（虽然本来应该就是居中了。。）&lt;/p&gt;
+&lt;p&gt;·添加主页按钮点击不会高亮的问题&lt;/p&gt;
+&lt;p&gt;·主页样式的修改&lt;/p&gt;
+&lt;p&gt;· 修改左边栏头像大小&lt;/p&gt;
+&lt;p&gt;·返回顶部功能的添加&lt;/p&gt;
+&lt;h3 id=&#34;2修改全站的字体&#34;&gt;2、修改全站的字体&lt;/h3&gt;
+&lt;p&gt;其实修改字体的方案主题的原作者已经给出，有需要的可以参考&lt;a class=&#34;link&#34; href=&#34;https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;修改字体&lt;/a&gt;，作为一个中国人，好康的中文永远比好康的英文重要。
+具体做法是在站点根目录中的&lt;code&gt;layouts/partials/head/custom.html&lt;/code&gt;中添加如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;style&lt;/span&gt;&amp;gt;
+    :&lt;span style=&#34;color:#a6e22e&#34;&gt;root&lt;/span&gt; {
+        --article-font-family: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Noto Serif SC&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;base&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;font&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;family);
+    }
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;style&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;  &lt;span style=&#34;color:#75715e&#34;&gt;// 正文自重300，标题字重700
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; () {
+		    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;customFont&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; document.&lt;span style=&#34;color:#a6e22e&#34;&gt;createElement&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;link&amp;#39;&lt;/span&gt;);
+		    &lt;span style=&#34;color:#a6e22e&#34;&gt;customFont&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;href&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;amp;display=swap&amp;#34;&lt;/span&gt;;
+		
+		    &lt;span style=&#34;color:#a6e22e&#34;&gt;customFont&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;text/css&amp;#34;&lt;/span&gt;;
+		    &lt;span style=&#34;color:#a6e22e&#34;&gt;customFont&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;rel&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;stylesheet&amp;#34;&lt;/span&gt;;
+		
+		    document.&lt;span style=&#34;color:#a6e22e&#34;&gt;head&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;appendChild&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;customFont&lt;/span&gt;);
+		}());
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了&lt;code&gt;hugo-theme-stack/assets/scss/variable.scss&lt;/code&gt;文件，具体就是调整了&lt;code&gt;--zh-font-family&lt;/code&gt;和&lt;code&gt;--base-font-family&lt;/code&gt;的顺序，代码如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;--zh-font-family&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Noto Serif SC&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hiragino Sans GB&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Droid Sans Fallback&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Microsoft YaHei&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;--base-font-family&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Noto Serif SC&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sys-font-family)&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;zh-font-family)&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; sans-serif;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;3修改站点的图标&#34;&gt;3、修改站点的图标&lt;/h3&gt;
+&lt;p&gt;这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为&lt;code&gt;.ico&lt;/code&gt;文件（其它类型的图片文件应该也行），如需转换可以借助&lt;a class=&#34;link&#34; href=&#34;https://convertio.co/zh/ico-converter/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;这个网站&lt;/a&gt;。之后将转换后的文件保存在网站根目录的&lt;code&gt;static&lt;/code&gt;文件夹中。之后修改主题的配置文件&lt;code&gt;config.yaml&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;params&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;mainSections&lt;/span&gt;:
+        - &lt;span style=&#34;color:#ae81ff&#34;&gt;post&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;featuredImageField&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;image&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;rssFullContent&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;favicon&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;favicon.ico&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;4修改站点名称&#34;&gt;4、修改站点名称&lt;/h3&gt;
+&lt;p&gt;站点名称对大家来说应该不是什么难事，这里就说说居中以及间隔。这里需要修改主题根目录的&lt;code&gt;assets/scss/partials/siderbar.scss&lt;/code&gt;文件。如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.site-name&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;accent-color);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;font-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.8&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;text-align&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; center;  &lt;span style=&#34;color:#75715e&#34;&gt;// 站点名称文本居中
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;xl&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;font-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+    }
+}
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;.site-description&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;body-text-color);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;font-weight&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; normal;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;font-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.2&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;text-align&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; center;  &lt;span style=&#34;color:#75715e&#34;&gt;// 站点描述居中
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;xl&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;font-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.6&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当然如果站点名称之间具有一定的间隔的话，应该是会更美观一点的。方法是在&lt;code&gt;layouts/partials/head/custom.html&lt;/code&gt;文件上加入以下代码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;style&lt;/span&gt;&amp;gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt; {
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;letter-spacing&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+	}
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;style&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个代码将会对全站的&lt;code&gt;h1&lt;/code&gt;标题进行修改，因此业也会导致其它&lt;code&gt;h1&lt;/code&gt;标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要将&lt;/p&gt;
+&lt;h3 id=&#34;5修改选中的样式&#34;&gt;5、修改选中的样式&lt;/h3&gt;
+&lt;p&gt;原来作者的选中样式和当前的大多数网站是一样的，给我一种十年前互联网的感觉，于是喜欢深色系的我修改了选中样式。需要在&lt;code&gt;assets/scss/custom.scss&lt;/code&gt;文件中加入如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;::selection&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;#fff&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;background&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;#557697&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;6站点头像居中&#34;&gt;6、站点头像居中&lt;/h3&gt;
+&lt;p&gt;这个可能只是心理作用。。
+同样是在&lt;code&gt;assets/scss/partials/siderbar.scss&lt;/code&gt;文件中加入修改以下代码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.site-avatar&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;position&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; relative;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-left&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; auto;  &lt;span style=&#34;color:#75715e&#34;&gt;// 站点头像居中
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-right&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; auto;  &lt;span style=&#34;color:#75715e&#34;&gt;// 站点头像居中
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sidebar-avatar-size);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sidebar-avatar-size);
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-bottom&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sidebar-element-separation);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;7主页按钮高亮问题&#34;&gt;7、主页按钮高亮问题&lt;/h3&gt;
+&lt;p&gt;这个虽然不算是什么大问题吧，但是主页不高亮我就觉得很难受。。于是就找到了&lt;code&gt;layouts/partials/sidebar/left.html&lt;/code&gt;这个文件。我们可以看到一下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ $currentPage := . }}
+{{ range .Site.Menus.main }}
+{{ $active := or (eq $currentPage.Title .Name) (or ($currentPage.HasMenuCurrent &amp;#34;main&amp;#34; .)($currentPage.IsMenuCurrent &amp;#34;main&amp;#34; .)) }}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这段代码大概的逻辑就是如果当前的页面是菜单中的页面之一就设定为激活状态，而如果要让主页高亮的话需要加入以下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ $siteTitle := .Site.Title }}
+{{ $active := or ($active) (and (eq $currentPage.Title $siteTitle) (eq .Identifier &amp;#34;home&amp;#34;)) }}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样就会使若当前的网站的标题等于网站名称就会令其为激活状态，而之后的&lt;code&gt;Identifier&lt;/code&gt;则是为了区分主页页面，否则就会出现点击主页所有页面都是高亮的情况。&lt;/p&gt;
+&lt;h3 id=&#34;8主页样式的修改&#34;&gt;8、主页样式的修改&lt;/h3&gt;
+&lt;p&gt;第一次看到这个主题时就对它的主页布局感到不舒服，尤其是在笔记本电脑上挤满了整个屏幕令人难受，于是希望左右两边能够有一定的留白，这样可以美观一些。&lt;/p&gt;
+&lt;p&gt;从开发者工具中我们可以得知主页的&lt;code&gt;class&lt;/code&gt;是&lt;code&gt;container&lt;/code&gt;，经过查找可以知道其样式是在&lt;code&gt;assets/scss/grid.css&lt;/code&gt;中定义的。于是可以发现如下这段代码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.container&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-left&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; auto;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-right&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; auto;
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;.left-sidebar&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;left&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;sidebar-max-width);
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-right&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+    }
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;.right-sidebar&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;right&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;sidebar-max-width);
+
+        &lt;span style=&#34;color:#75715e&#34;&gt;/// Display right sidebar when min-width: lg
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(lg) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;display&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; block;
+        }
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.extended&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(md) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--left-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--right-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        }
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(lg) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1280&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--left-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--right-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        }
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(xl) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1536&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--left-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--right-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        }
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这段代码对左边栏和右边栏进行了最大宽度的限制，这也就是我们要修改的地方。但是这其中的各个&lt;code&gt;@include&lt;/code&gt;函数又代表什么呢？我们可以观察&lt;code&gt;asset/scss/breakpoints.scss&lt;/code&gt;这个文件，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;$breakpoints&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; (
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;sm&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;640&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;md&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;768&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;lg&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;xl&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1280&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;2xl&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1536&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+);
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;@mixin&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;($breakpoint) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;@if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;map-has-key&lt;/span&gt;($breakpoints&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; $breakpoint) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@warn&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;#{&lt;/span&gt;$breakpoint&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; is not a valid breakpoint&amp;#34;&lt;/span&gt;;
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;@else&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@media&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;min-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;map-get&lt;/span&gt;($breakpoints&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; $breakpoint)) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;@content&lt;/span&gt;;
+        }
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;没有学过&lt;code&gt;css&lt;/code&gt;的我也就只能大致看出这是封装了各种屏幕尺寸类似于&lt;code&gt;map&lt;/code&gt;，而在笔记本电脑上，屏幕宽度是&lt;code&gt;1024px&lt;/code&gt;以上的，因此我们只需要修改&lt;code&gt;@include respond(lg)&lt;/code&gt;函数下的样式就可以了。在&lt;code&gt;asset/scss/custom.scss&lt;/code&gt;下添加如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.container&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-left&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; auto;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-right&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; auto;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.extended&lt;/span&gt; {
+        &lt;span style=&#34;color:#75715e&#34;&gt;/* range: 768-1024 */&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(md) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--left-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--right-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        }
+
+        &lt;span style=&#34;color:#75715e&#34;&gt;/* range: 1024-1280 */&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(lg) {  &lt;span style=&#34;color:#75715e&#34;&gt;// 修改主页的三个组件的显示比例
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1280&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--left-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--right-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;22&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        }
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.compact&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(md) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--left-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;768&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+        }
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(lg) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;--left-sidebar-max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        }
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(xl) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;max-width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1280&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+        }
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;至此，主页的修改也告一段落了。以上都是从&lt;a class=&#34;link&#34; href=&#34;https://xrg.fj.cn/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;这位大佬那里学来&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;9修改左侧边栏头像的大小&#34;&gt;9、修改左侧边栏头像的大小&lt;/h3&gt;
+&lt;p&gt;左侧边栏的元素太多，显得实在有点挤，于是索性修改了一下博客的头像大小。需要在主题根目录下的&lt;code&gt;assets/scss/partials/sidebar.scss&lt;/code&gt;文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;@include&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt; respond&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;xl&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;{
+&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;--sidebar-avatar-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;125&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// 修改头像大小的代码  
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;--sidebar-element-separation&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;10返回顶部按钮的添加&#34;&gt;10、返回顶部按钮的添加&lt;/h3&gt;
+&lt;p&gt;在参考过其它使用这个主题的博主之后发现，如果一篇文章太长，没有返回顶部这个按钮可能会在某些情况下造成体验的不舒适，于是决定加上这个功能。最开始是希望能够在一个页面的右下角添加这个按钮，但是无法解决页面缩放时显示位置与主页面之间的关系的问题，因此决定借助目录放置于目录的下方。&lt;/p&gt;
+&lt;p&gt;首先是按钮的函数，参考了&lt;code&gt;slim&lt;/code&gt;主题，具体是在&lt;code&gt;layouts/partials/head/script.html&lt;/code&gt;中加入如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Check to see if the window is top if not then display button
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;(window).&lt;span style=&#34;color:#a6e22e&#34;&gt;scroll&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;() {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;scrollTop&lt;/span&gt;()) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;#back-to-top&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;fadeIn&lt;/span&gt;();
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;#back-to-top&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;fadeOut&lt;/span&gt;();
+    }
+    });
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Click event to scroll to top
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;#back-to-top&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;click&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;() {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;html, body&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;animate&lt;/span&gt;({&lt;span style=&#34;color:#a6e22e&#34;&gt;scrollTop&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;}, &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+    });
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这段代码可以监听窗口抖动，从而控制按钮的显示和隐藏。&lt;/p&gt;
+&lt;p&gt;然后是添加返回顶部的按钮，由于这个按钮需要和文章目录保持一个相对固定的位置，因此需要修改&lt;code&gt;layouts/_default/single.html&lt;/code&gt;，在&lt;code&gt;aside&lt;/code&gt;标签下加入如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ $topImg := resources.Get (&amp;#34;img/top.png&amp;#34;) }}
+{{ $topImg := $topImg.Resize &amp;#34;40x&amp;#34; }}
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;a&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;back-to-top&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;#&amp;#34;&lt;/span&gt;&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ $topImg.RelPermalink }}&amp;#34;&lt;/span&gt; /&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;a&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;利用一张图片作为返回顶部的链接。最后我们需要通过&lt;code&gt;css&lt;/code&gt;来为这个按钮添加样式。首先我们需要找到之前提过的&lt;code&gt;custom.scss&lt;/code&gt;文件，在文件中加入如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;#go-top {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;bottom&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;right&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;display&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; none;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;position&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; absolute;  
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;border&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;:hover&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;filter&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;opacity&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;60&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;);  &lt;span style=&#34;color:#75715e&#34;&gt;// 悬停淡化
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其中&lt;code&gt;bottom&lt;/code&gt;值是我觉得可以避免当目录过长时会几乎占满整个屏幕，导致按钮没有地方放的问题。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
