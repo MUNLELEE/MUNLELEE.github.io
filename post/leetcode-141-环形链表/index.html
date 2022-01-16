@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='题目描述 给定一个链表，判断链表中是否有环。
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+如果链表中存在环，则返回 true 。 否则，返回 false 。
+示例  在这里插入图片描述 
+输入：head = [3,2,0,-4], pos = 1输出：true解释：链表中有一个环，其尾部连接到第二个节点。 在这里插入图片描述 
+输入：head = [1,2], pos = 0输出：true解释：链表中有一个环，其尾部连接到第一个节点。 在这里插入图片描述 
+输入：head = [1], pos = -1输出：false解释：链表中没有环。提示 链表中节点的数目范围是 [0, 104]-105 &amp;lt;= Node.val &amp;lt;= 105pos 为 -1 或者链表中的一个 有效索引 。解题想法 这道题在leetcode上属于简单题，但由于第一次遇见这种解法（也由于第一次想错了，根本不是正解）所以就想记录一下。 很明显题目要判断链表中是否有环，于是可以想到如果在链表中有两个指针分别向前跑，当两个指针指向的结点相同的时候便证明链表中有环存在。这个时候就需要一个循环来判断两个指针是否相等。此时条件应该是first !'><title>leetcode 141 环形链表</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/'>
+
+<link rel="stylesheet" href="/scss/style.min.e2d7a4ccabbaf4ae7570b46bd1dbb7a035fa06db8ed400222a42b0a81e9c743d.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='leetcode 141 环形链表'>
+<meta property='og:description' content='题目描述 给定一个链表，判断链表中是否有环。
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+如果链表中存在环，则返回 true 。 否则，返回 false 。
+示例  在这里插入图片描述 
+输入：head = [3,2,0,-4], pos = 1输出：true解释：链表中有一个环，其尾部连接到第二个节点。 在这里插入图片描述 
+输入：head = [1,2], pos = 0输出：true解释：链表中有一个环，其尾部连接到第一个节点。 在这里插入图片描述 
+输入：head = [1], pos = -1输出：false解释：链表中没有环。提示 链表中节点的数目范围是 [0, 104]-105 &amp;lt;= Node.val &amp;lt;= 105pos 为 -1 或者链表中的一个 有效索引 。解题想法 这道题在leetcode上属于简单题，但由于第一次遇见这种解法（也由于第一次想错了，根本不是正解）所以就想记录一下。 很明显题目要判断链表中是否有环，于是可以想到如果在链表中有两个指针分别向前跑，当两个指针指向的结点相同的时候便证明链表中有环存在。这个时候就需要一个循环来判断两个指针是否相等。此时条件应该是first !'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='leetcode' /><meta property='article:published_time' content='2021-01-18T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-01-18T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="leetcode 141 环形链表">
+<meta name="twitter:description" content="题目描述 给定一个链表，判断链表中是否有环。
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+如果链表中存在环，则返回 true 。 否则，返回 false 。
+示例  在这里插入图片描述 
+输入：head = [3,2,0,-4], pos = 1输出：true解释：链表中有一个环，其尾部连接到第二个节点。 在这里插入图片描述 
+输入：head = [1,2], pos = 0输出：true解释：链表中有一个环，其尾部连接到第一个节点。 在这里插入图片描述 
+输入：head = [1], pos = -1输出：false解释：链表中没有环。提示 链表中节点的数目范围是 [0, 104]-105 &amp;lt;= Node.val &amp;lt;= 105pos 为 -1 或者链表中的一个 有效索引 。解题想法 这道题在leetcode上属于简单题，但由于第一次遇见这种解法（也由于第一次想错了，根本不是正解）所以就想记录一下。 很明显题目要判断链表中是否有环，于是可以想到如果在链表中有两个指针分别向前跑，当两个指针指向的结点相同的时候便证明链表中有环存在。这个时候就需要一个循环来判断两个指针是否相等。此时条件应该是first !"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%88%B7%E9%A2%98/" >
+                刷题
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/">leetcode 141 环形链表</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 18, 2021</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="题目描述">题目描述</h2>
+<p>给定一个链表，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 <code>next</code> 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 <code>pos </code>来表示链表尾连接到链表中的位置（索引从 <code>0</code> 开始）。 如果 pos 是 <code>-1</code>，则在该链表中没有环。注意：<code>pos</code> 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 <code>true</code> 。 否则，返回 <code>false</code> 。</p>
+<h2 id="示例">示例</h2>
+<p><figure 
+	>
+	<a href="https://img-blog.csdnimg.cn/img_convert/4a18acda10c1606aa5d1132b9de26d61.png" >
+		<img src="https://img-blog.csdnimg.cn/img_convert/4a18acda10c1606aa5d1132b9de26d61.png"
+			
+			
+			
+			loading="lazy"
+			alt="在这里插入图片描述">
+	</a>
+	
+	<figcaption>在这里插入图片描述</figcaption>
+	
+</figure></p>
+<pre tabindex="0"><code>输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+</code></pre><p><figure 
+	>
+	<a href="https://img-blog.csdnimg.cn/img_convert/1a6fcfc68d7340c39151075f7fa53150.png" >
+		<img src="https://img-blog.csdnimg.cn/img_convert/1a6fcfc68d7340c39151075f7fa53150.png"
+			
+			
+			
+			loading="lazy"
+			alt="在这里插入图片描述">
+	</a>
+	
+	<figcaption>在这里插入图片描述</figcaption>
+	
+</figure></p>
+<pre tabindex="0"><code>输入：head = [1,2], pos = 0
+输出：true
+解释：链表中有一个环，其尾部连接到第一个节点。
+</code></pre><p><figure 
+	>
+	<a href="https://img-blog.csdnimg.cn/img_convert/3039274e08a9385ea77b20a81060ed40.png" >
+		<img src="https://img-blog.csdnimg.cn/img_convert/3039274e08a9385ea77b20a81060ed40.png"
+			
+			
+			
+			loading="lazy"
+			alt="在这里插入图片描述">
+	</a>
+	
+	<figcaption>在这里插入图片描述</figcaption>
+	
+</figure></p>
+<pre tabindex="0"><code>输入：head = [1], pos = -1
+输出：false
+解释：链表中没有环。
+</code></pre><h2 id="提示">提示</h2>
+<pre tabindex="0"><code>链表中节点的数目范围是 [0, 104]
+-105 &lt;= Node.val &lt;= 105
+pos 为 -1 或者链表中的一个 有效索引 。
+</code></pre><h2 id="解题想法">解题想法</h2>
+<p>这道题在leetcode上属于简单题，但由于第一次遇见这种解法（也由于第一次想错了，根本不是正解）所以就想记录一下。
+很明显题目要判断链表中是否有环，于是可以想到如果在链表中有两个指针分别向前跑，当两个指针指向的结点相同的时候便证明链表中有环存在。这个时候就需要一个循环来判断两个指针是否相等。此时条件应该是<code>first != second</code>因此如果我们初始化两个指针在同一个位置，那么将无法进入循环，因此需要将两个指针分别初始化在头结点以及头结点的下一个结点，还要注意的是，<code>first</code>指针的速度应该要快于<code>second</code>指针的速度，这样，当链表中有环时，<code>first</code>指针会先进入环中，并一直在环中循环，而当<code>second</code>指针进入环时，由于<code>first</code>指针速度快，将会在某个循环时刻追上<code>second</code>指针，这样当两个指针重合后就能够判断出链表存在环，下面附上C++代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Definition for singly-linked list.
+</span><span style="color:#75715e"> * struct ListNode {
+</span><span style="color:#75715e"> *     int val;
+</span><span style="color:#75715e"> *     ListNode *next;
+</span><span style="color:#75715e"> *     ListNode(int x) : val(x), next(NULL) {}
+</span><span style="color:#75715e"> * };
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">bool</span> hasCycle(ListNode <span style="color:#f92672">*</span>head) {
+        <span style="color:#66d9ef">if</span> (head <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span> <span style="color:#f92672">||</span> head<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+            <span style="color:#66d9ef">return</span> false;
+        }
+        ListNode <span style="color:#f92672">*</span>first <span style="color:#f92672">=</span> head<span style="color:#f92672">-&gt;</span>next;
+        ListNode <span style="color:#f92672">*</span>second <span style="color:#f92672">=</span> head;
+        <span style="color:#66d9ef">while</span> (first <span style="color:#f92672">!=</span> second) {
+            <span style="color:#66d9ef">if</span> (first <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span> <span style="color:#f92672">||</span> first<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+                <span style="color:#66d9ef">return</span> false;
+            }
+            second <span style="color:#f92672">=</span> second<span style="color:#f92672">-&gt;</span>next;
+            first <span style="color:#f92672">=</span> first<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>next;
+        }
+        <span style="color:#66d9ef">return</span> true;
+    }
+};
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/leetcode/">leetcode</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">leetcode 862 和至少为K的最短子数组</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#题目描述">题目描述</a></li>
+    <li><a href="#示例">示例</a></li>
+    <li><a href="#提示">提示</a></li>
+    <li><a href="#解题想法">解题想法</a></li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>
