@@ -19,7 +19,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 
 <link rel='canonical' href='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
 
-<link rel="stylesheet" href="/scss/style.min.e2d7a4ccabbaf4ae7570b46bd1dbb7a035fa06db8ed400222a42b0a81e9c743d.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/scss/style.min.d7543702bf23db010bce6b0643e5e859cf483679311488e7e2813a108243ccfb.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -508,6 +508,19 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
         }
     }
 }
+</code></pre></div><h3 id="修改相关文章图标-样式">修改相关文章图标 样式</h3>
+<p>在第一次推送到GitHub之后发现，相关文章的推荐标签有点与当前屏幕不相符，于是决定将相关文章的标签的大小调整到与分类的大小差不多大，于是我们依旧在<code>custom.scss</code>文件中追加修改样式的代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.related-contents--wrapper</span> {
+    <span style="color:#a6e22e">.related-contents</span> {
+        <span style="color:#f92672">article</span> {
+            <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">85</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">.article-title</span> {
+                <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">rem</span>;
+            }
+        }
+    }
+}
 </code></pre></div>
 </section>
 
@@ -668,6 +681,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
         <li><a href="#返回顶部按钮的添加">返回顶部按钮的添加</a></li>
         <li><a href="#修改toc样式">修改Toc样式</a></li>
         <li><a href="#修改分类标签样式">修改分类标签样式</a></li>
+        <li><a href="#修改相关文章图标-样式">修改相关文章图标 样式</a></li>
       </ul>
     </li>
   </ul>

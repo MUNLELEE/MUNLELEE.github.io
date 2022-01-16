@@ -338,6 +338,19 @@
         }
     }
 }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;修改相关文章图标-样式&#34;&gt;修改相关文章图标 样式&lt;/h3&gt;
+&lt;p&gt;在第一次推送到GitHub之后发现，相关文章的推荐标签有点与当前屏幕不相符，于是决定将相关文章的标签的大小调整到与分类的大小差不多大，于是我们依旧在&lt;code&gt;custom.scss&lt;/code&gt;文件中追加修改样式的代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.related-contents--wrapper&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;.related-contents&lt;/span&gt; {
+        &lt;span style=&#34;color:#f92672&#34;&gt;article&lt;/span&gt; {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;85&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;.article-title&lt;/span&gt; {
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;font-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.6&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+            }
+        }
+    }
+}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         <item>
