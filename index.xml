@@ -6,7 +6,72 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 18 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 20 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>从上到下打印链表</title>
+        <link>https://MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</link>
+        <pubDate>Thu, 20 Jan 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</guid>
+        <description>&lt;h2 id=&#34;题目描述&#34;&gt;题目描述&lt;/h2&gt;
+&lt;p&gt;从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。&lt;/p&gt;
+&lt;p&gt;例如:
+给定二叉树: &lt;code&gt;[3,9,20,null,null,15,7]&lt;/code&gt;,&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;    3
+   / \
+  9  20
+    /  \
+   15   7
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;返回其层次遍历结果：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[
+  [3],
+  [9,20],
+  [15,7]
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;解题想法&#34;&gt;解题想法&lt;/h2&gt;
+&lt;p&gt;  这道题本身并不是什么难题，也很明显可以看出是一个层序遍历的变种，解决问题的关键就在于如何区分当前层和下一层，最开始是打算使用&lt;code&gt;pair&lt;/code&gt;将每个结点与其相应的层序号对应起来。但在实际写代码时发现有点困难，最后还是去翻了题解，发现了利用空指针作为层与层之间分隔的方法。具体做法就是在第一次入队时再入队一个空指针，之后利用队头元素不为空指针作为内循环的判断，如果队头为空，则表明了已经循环完了一层。而由于二叉树的特点，在使用层序遍历时，遍历完一层也即代表着下一层的非空结点已经完全入队，这时便可以再入队一个空指针作为下一个分隔结点。利用这样的循环就能做到以层为序来打印层序遍历。&lt;/p&gt;
+&lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Definition for a binary tree node.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * struct TreeNode {
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *     int val;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *     TreeNode *left;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *     TreeNode *right;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * };
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; levelOrder(TreeNode&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; root) {
+        vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; res;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (root &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; res;
+        }
+        queue&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;TreeNode&lt;span style=&#34;color:#f92672&#34;&gt;*&amp;gt;&lt;/span&gt; que;  &lt;span style=&#34;color:#75715e&#34;&gt;// 用于层序遍历
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        que.push(root);
+        que.push(NULL);  &lt;span style=&#34;color:#75715e&#34;&gt;// 利用空指针作为每层之间的分隔
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (que.size()) {
+            vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; vtemp;  &lt;span style=&#34;color:#75715e&#34;&gt;// 队列不为空时，就申请空间存储本层数据
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (que.front()) {  &lt;span style=&#34;color:#75715e&#34;&gt;// 用这个条件判断是否属于同一层数据
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;                TreeNode &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;temp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; que.front();
+                vtemp.push_back(temp&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;val);
+                que.pop();
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (temp&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;left) que.push(temp&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;left);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (temp&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;right) que.push(temp&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;right);
+            }
+            &lt;span style=&#34;color:#75715e&#34;&gt;// 退出上面的循环表示已经到了层与层之间的界线
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            que.pop();
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (que.size()) {  &lt;span style=&#34;color:#75715e&#34;&gt;// 如果此时队列非空，则表明不是最后一层
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;                &lt;span style=&#34;color:#75715e&#34;&gt;// 遍历过一层即表示队列中已经保存了下一层，因此需要加入空指针分割
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;                que.push(NULL);
+            }
+            res.push_back(vtemp);
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; res;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>观《时光代理人》、《灵笼》所感</title>
         <link>https://MUNLELEE.github.io/post/%E8%A7%82%E6%97%B6%E5%85%89%E4%BB%A3%E7%90%86%E4%BA%BA%E7%81%B5%E7%AC%BC%E6%89%80%E6%84%9F/</link>
         <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
