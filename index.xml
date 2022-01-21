@@ -250,8 +250,12 @@
 		&lt;span style=&#34;color:#66d9ef&#34;&gt;letter-spacing&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
 	}
 &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;style&lt;/span&gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个代码将会对全站的&lt;code&gt;h1&lt;/code&gt;标题进行修改，因此业也会导致其它&lt;code&gt;h1&lt;/code&gt;标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要将&lt;/p&gt;
-&lt;h3 id=&#34;修改选中的样式&#34;&gt;修改选中的样式&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个代码将会对全站的&lt;code&gt;h1&lt;/code&gt;标题进行修改，因此业也会导致其它&lt;code&gt;h1&lt;/code&gt;标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要在&lt;code&gt;custom.scss&lt;/code&gt;文件中追加如下修改：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.section-term&lt;/span&gt; {
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;font-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.8&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;letter-spacing&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;修改选中的样式&#34;&gt;修改选中的样式&lt;/h3&gt;
 &lt;p&gt;原来作者的选中样式和当前的大多数网站是一样的，给我一种十年前互联网的感觉，于是喜欢深色系的我修改了选中样式。需要在&lt;code&gt;assets/scss/custom.scss&lt;/code&gt;文件中加入如下代码：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;::selection&lt;/span&gt; {
     &lt;span style=&#34;color:#a6e22e&#34;&gt;color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;#fff&lt;/span&gt;;

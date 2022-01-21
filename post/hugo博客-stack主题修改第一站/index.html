@@ -261,8 +261,12 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 		<span style="color:#66d9ef">letter-spacing</span>: <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>;
 	}
 &lt;/<span style="color:#f92672">style</span>&gt;
-</code></pre></div><p>这个代码将会对全站的<code>h1</code>标题进行修改，因此业也会导致其它<code>h1</code>标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要将</p>
-<h3 id="修改选中的样式">修改选中的样式</h3>
+</code></pre></div><p>这个代码将会对全站的<code>h1</code>标题进行修改，因此业也会导致其它<code>h1</code>标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要在<code>custom.scss</code>文件中追加如下修改：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.section-term</span> {
+	<span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.8</span><span style="color:#66d9ef">rem</span>; 
+    <span style="color:#a6e22e">letter-spacing</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span>;
+}
+</code></pre></div><h3 id="修改选中的样式">修改选中的样式</h3>
 <p>原来作者的选中样式和当前的大多数网站是一样的，给我一种十年前互联网的感觉，于是喜欢深色系的我修改了选中样式。需要在<code>assets/scss/custom.scss</code>文件中加入如下代码：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">::selection</span> {
     <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#fff</span>;
