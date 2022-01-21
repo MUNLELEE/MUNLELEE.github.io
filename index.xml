@@ -187,6 +187,7 @@
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 返回顶部功能的添加&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改Toc的样式&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改分类的标签样式&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改滚动条样式&lt;/p&gt;
 &lt;h3 id=&#34;修改全站的字体&#34;&gt;修改全站的字体&lt;/h3&gt;
 &lt;p&gt;其实修改字体的方案主题的原作者已经给出，有需要的可以参考&lt;a class=&#34;link&#34; href=&#34;https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;修改字体&lt;/a&gt;，作为一个中国人，好康的中文永远比好康的英文重要。
@@ -512,6 +513,29 @@
             }
         }
     }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;修改滚动条样式&#34;&gt;修改滚动条样式&lt;/h3&gt;
+&lt;p&gt;当文章的目录太长时便会产生滚动条，而默认的滚动条实在是丑得不想形容。由于不是很想再调试了，于是再次参考&lt;a class=&#34;link&#34; href=&#34;https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/#%E6%BB%9A%E5%8A%A8%E6%9D%A1%E7%BE%8E%E5%8C%96&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;大佬的操作&lt;/a&gt;，而且既然想改滚动条了，索性一步到位直接全改，我们需要在&lt;code&gt;custom.scss&lt;/code&gt;文件中添加如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;html&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;::-webkit-scrollbar&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+      }
+      
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;::-webkit-scrollbar-track&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;background-color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; transparent;
+      }
+      
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;::-webkit-scrollbar-thumb&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;background-color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;#d6dee1&lt;/span&gt;;
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;border-radius&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;border&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt; solid transparent;
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;background-clip&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; content-box;
+      }
+      
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;::-webkit-scrollbar-thumb:hover&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;background-color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;#a8bbbf&lt;/span&gt;;
+      }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>

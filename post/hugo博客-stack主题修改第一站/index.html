@@ -13,13 +13,14 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 返回顶部功能的添加
 · 修改Toc的样式
 · 修改分类的标签样式
+· 修改滚动条样式
 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'><title>Hugo博客 | stack主题修改第一站</title>
 
 <link rel='canonical' href='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
 
-<link rel="stylesheet" href="/scss/style.min.d7543702bf23db010bce6b0643e5e859cf483679311488e7e2813a108243ccfb.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/scss/style.min.46b7c421405c9d19c4301e2dc56652b5a7fa1626d131638d8d7eb490946ac117.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -50,6 +51,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 返回顶部功能的添加
 · 修改Toc的样式
 · 修改分类的标签样式
+· 修改滚动条样式
 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'>
@@ -69,6 +71,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 返回顶部功能的添加
 · 修改Toc的样式
 · 修改分类的标签样式
+· 修改滚动条样式
 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
@@ -195,6 +198,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 <p><strong>·</strong> 返回顶部功能的添加</p>
 <p><strong>·</strong> 修改Toc的样式</p>
 <p><strong>·</strong> 修改分类的标签样式</p>
+<p><strong>·</strong> 修改滚动条样式</p>
 <h3 id="修改全站的字体">修改全站的字体</h3>
 <p>其实修改字体的方案主题的原作者已经给出，有需要的可以参考<a class="link" href="https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html"  target="_blank" rel="noopener"
     >修改字体</a>，作为一个中国人，好康的中文永远比好康的英文重要。
@@ -521,6 +525,29 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
         }
     }
 }
+</code></pre></div><h3 id="修改滚动条样式">修改滚动条样式</h3>
+<p>当文章的目录太长时便会产生滚动条，而默认的滚动条实在是丑得不想形容。由于不是很想再调试了，于是再次参考<a class="link" href="https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/#%E6%BB%9A%E5%8A%A8%E6%9D%A1%E7%BE%8E%E5%8C%96"  target="_blank" rel="noopener"
+    >大佬的操作</a>，而且既然想改滚动条了，索性一步到位直接全改，我们需要在<code>custom.scss</code>文件中添加如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#f92672">html</span> {
+    <span style="color:#a6e22e">::-webkit-scrollbar</span> {
+        <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+      }
+      
+      <span style="color:#a6e22e">::-webkit-scrollbar-track</span> {
+        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> transparent;
+      }
+      
+      <span style="color:#a6e22e">::-webkit-scrollbar-thumb</span> {
+        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#d6dee1</span>;
+        <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> solid transparent;
+        <span style="color:#a6e22e">background-clip</span><span style="color:#f92672">:</span> content-box;
+      }
+      
+      <span style="color:#a6e22e">::-webkit-scrollbar-thumb:hover</span> {
+        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#a8bbbf</span>;
+      }
+}
 </code></pre></div>
 </section>
 
@@ -682,6 +709,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
         <li><a href="#修改toc样式">修改Toc样式</a></li>
         <li><a href="#修改分类标签样式">修改分类标签样式</a></li>
         <li><a href="#修改相关文章图标-样式">修改相关文章图标 样式</a></li>
+        <li><a href="#修改滚动条样式">修改滚动条样式</a></li>
       </ul>
     </li>
   </ul>
