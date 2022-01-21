@@ -6,7 +6,23 @@
     <description>Recent content in 难题集 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 18 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 21 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>leetcode 树的子结构</title>
+      <link>https://MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Fri, 21 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</guid>
+      <description>题目描述 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+例如: 给定的树 A:
+ 3/ \4 5/ \1 2给定的树 B：
+ 4/1返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
+解题想法 树的题目是真的让人头疼。在经过几次暴力解的尝试之后我还是放弃了，最后几组数据总是通过不了。还是去翻了题解，发现又是我最烦的递归（永远的痛）
+1、首先子结构要么是其本身要么在树的左子树或者右子树里，因此在isSubStructure函数中需要判断是本身匹配还是左子树或者是右子树匹配，这是最外层递归。最外层递归中，如果B树（也就是子结构树）为空，那么直接返回false，同理如果A树（要从这棵树中寻找子结构）为空也可以直接返回false 2、对于子结构是否匹配的判断也需要通过递归实现（也就是isContain函数），但具有以下几种情况，其中包含退出递归的条件 （a）、如果当前的B树为空，且At树（也就是从A树种截取出的子树）非空或者空，此时表明B树是A树的一个子结构，因为可以将B树匹配完。 （b）、如果当前的B树非空，但At树为空，说明此时已经遍历过了A树的叶节点，那么B树一定与At树不匹配，可以直接返回false （c）、如果此时At树和B树都不为空，且当前匹配中的结点的值不相等，那么B树一定与At树不匹配，可以直接返回false （d）、如果At树和B树都不为空，且当前匹配中的结点的值相等，那么就继续匹配两棵树当前结点的左结点和右结点（也就是内层的递归）
+代码 /** * Definition for a binary tree node. * struct TreeNode { * int val; * TreeNode *left; * TreeNode *right; * TreeNode(int x) : val(x), left(NULL), right(NULL) {} * }; */ class Solution { public: bool isContain(TreeNode *A, TreeNode *B) { // 递归判断是否包含  // 如果此时B为空树，说明已经递归完了B树，因此是包含的  if (B == NULL) return true; // 如果大树为空，匹配树不是空，那么说明不包含  if (A == NULL) return false; // 如果当前匹配的结点值不相等，那么也是不包含  if (A-&amp;gt;val !</description>
+    </item>
+    
     <item>
       <title>leetcode 862 和至少为K的最短子数组</title>
       <link>https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</link>
