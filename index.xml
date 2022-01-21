@@ -30,11 +30,11 @@
 &lt;h2 id=&#34;解题想法&#34;&gt;解题想法&lt;/h2&gt;
 &lt;p&gt;树的题目是真的让人头疼。在经过几次暴力解的尝试之后我还是放弃了，最后几组数据总是通过不了。还是去翻了题解，发现又是我最烦的递归（永远的痛）&lt;/p&gt;
 &lt;p&gt;1、首先子结构要么是其本身要么在树的左子树或者右子树里，因此在&lt;code&gt;isSubStructure&lt;/code&gt;函数中需要判断是本身匹配还是左子树或者是右子树匹配，这是最外层递归。最外层递归中，如果B树（&lt;em&gt;也就是子结构树&lt;/em&gt;）为空，那么直接返回&lt;code&gt;false&lt;/code&gt;，同理如果A树（&lt;em&gt;要从这棵树中寻找子结构&lt;/em&gt;）为空也可以直接返回&lt;code&gt;false&lt;/code&gt;
-2、对于子结构是否匹配的判断也需要通过递归实现（也就是&lt;code&gt;isContain&lt;/code&gt;函数），但具有以下几种情况，其中包含退出递归的条件
-（a）、如果当前的B树为空，且At树（&lt;em&gt;也就是从A树种截取出的子树&lt;/em&gt;）非空或者空，此时表明B树是A树的一个子结构，因为可以将B树匹配完。
-（b）、如果当前的B树非空，但At树为空，说明此时已经遍历过了A树的叶节点，那么B树一定与At树不匹配，可以直接返回&lt;code&gt;false&lt;/code&gt;
-（c）、如果此时At树和B树都不为空，且当前匹配中的结点的值不相等，那么B树一定与At树不匹配，可以直接返回&lt;code&gt;false&lt;/code&gt;
-（d）、如果At树和B树都不为空，且当前匹配中的结点的值相等，那么就继续匹配两棵树当前结点的左结点和右结点（也就是内层的递归）&lt;/p&gt;
+2、对于子结构是否匹配的判断也需要通过递归实现（也就是&lt;code&gt;isContain&lt;/code&gt;函数），但具有以下几种情况，其中包含退出递归的条件&lt;/p&gt;
+&lt;p&gt;（a）、如果当前的B树为空，且At树（&lt;em&gt;也就是从A树种截取出的子树&lt;/em&gt;）非空或者空，此时表明B树是A树的一个子结构，因为可以将B树匹配完。&lt;/p&gt;
+&lt;p&gt;（b）、如果当前的B树非空，但At树为空，说明此时已经遍历过了A树的叶节点，那么B树一定与At树不匹配，可以直接返回&lt;code&gt;false&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;（c）、如果此时At树和B树都不为空，且当前匹配中的结点的值不相等，那么B树一定与At树不匹配，可以直接返回&lt;code&gt;false&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;（d）、如果At树和B树都不为空，且当前匹配中的结点的值相等，那么就继续匹配两棵树当前结点的左结点和右结点（也就是内层的递归）&lt;/p&gt;
 &lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Definition for a binary tree node.
