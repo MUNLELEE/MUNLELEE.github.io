@@ -6,9 +6,43 @@
     <description>Recent content in Posts on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 21 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 24 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>leetcode 树的子结构</title>
+      <title>LeetCode 最长不含重复字符的子字符串</title>
+      <link>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</link>
+      <pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</guid>
+      <description>题目描述 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+示例
+输入: &amp;quot;abcabcbb&amp;quot;输出: 3 解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。输入: &amp;quot;bbbbb&amp;quot;输出: 1解释: 因为无重复字符的最长子串是 &amp;quot;b&amp;quot;，所以其长度为 1。输入: &amp;quot;pwwkew&amp;quot;输出: 3解释: 因为无重复字符的最长子串是 &amp;quot;wke&amp;quot;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;quot;pwke&amp;quot; 是一个子序列，不是子串。解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
+动态规划 1、状态的定义，本题依旧需要一个一维的动态规划数组，dp[i]则表示以第i个字符为结尾的子字符串可以得到的最长的含不重复字符的子字符串长度。
+2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
+（a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] + 1（即最长长度等于遍历到前一字符的长度 + 1）
+（b）、当$dp[i - 1]&amp;lt;i - pos$时，说明重复的字符应该在当前最长非重复字符子串的区间外，即在这个子串的左边，此时dp[i] = dp[i - 1] + 1，也就是之前的子串再加上当前的字符。
+（c）、当$dp[i - 1]&amp;gt;=i-pos$时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此dp[i] = i - pos，也就是在之前的子串中截取出非重复的部分。
+3、需要一个哈希表用来记录曾经出现过的字符的相对应的索引，每当遍历到一个重复字符时，便要将哈希表中的相应表项更新为当前的索引。
+由以上的分析可以看出，dp[i]只由dp[i - 1]决定，所以可以省略动态规划的数组，采用一个变量进行迭代即可，并求取此变量在这个过程中的最大值。
+双指针法（滑动窗口） 由于滑动窗口的代码写得比较少，当看到题解有滑动窗口时，便又学习了一下。</description>
+    </item>
+    
+    <item>
+      <title>LeetCode 股票的最大利润</title>
+      <link>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</link>
+      <pubDate>Sat, 22 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</guid>
+      <description>题目描述 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
+示例：
+输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)+(n-2)+&amp;hellip;+2+1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
+动态规划思路 1、状态的定义，首先需要声明一个动态规划数组dp，其中dp[i]表示以第i天为最后一天的子数组所能获得的最大利润。
+2、状态转移方程，由于股票只能买卖一次，因此dp[i]（也就是前i天的最大利润），应该是前i-1天的最大利润与第i天卖出股票的利润的最大值，于是就有了$$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$$即为dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))，最终返回dp[n-1]为所求。
+优化 我们还可以进行空间和时间上的优化，时间上，可以借助一个变量cost来维护最小值，这样每次进行状态转移时只需要dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量maxprofit来代替整个动态规划列表，这样状态转移就简化为了maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))
+代码 /*未优化*/ class Solution { public: int maxProfit(vector&amp;lt;int&amp;gt;&amp;amp; prices) { if (prices.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode 树的子结构</title>
       <link>https://MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</link>
       <pubDate>Fri, 21 Jan 2022 00:00:00 +0000</pubDate>
       
@@ -19,7 +53,8 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
  3/ \4 5/ \1 2给定的树 B：
  4/1返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
 解题想法 树的题目是真的让人头疼。在经过几次暴力解的尝试之后我还是放弃了，最后几组数据总是通过不了。还是去翻了题解，发现又是我最烦的递归（永远的痛）
-1、首先子结构要么是其本身要么在树的左子树或者右子树里，因此在isSubStructure函数中需要判断是本身匹配还是左子树或者是右子树匹配，这是最外层递归。最外层递归中，如果B树（也就是子结构树）为空，那么直接返回false，同理如果A树（要从这棵树中寻找子结构）为空也可以直接返回false 2、对于子结构是否匹配的判断也需要通过递归实现（也就是isContain函数），但具有以下几种情况，其中包含退出递归的条件
+1、首先子结构要么是其本身要么在树的左子树或者右子树里，因此在isSubStructure函数中需要判断是本身匹配还是左子树或者是右子树匹配，这是最外层递归。最外层递归中，如果B树（也就是子结构树）为空，那么直接返回false，同理如果A树（要从这棵树中寻找子结构）为空也可以直接返回false
+2、对于子结构是否匹配的判断也需要通过递归实现（也就是isContain函数），但具有以下几种情况，其中包含退出递归的条件
 （a）、如果当前的B树为空，且At树（也就是从A树种截取出的子树）非空或者空，此时表明B树是A树的一个子结构，因为可以将B树匹配完。
 （b）、如果当前的B树非空，但At树为空，说明此时已经遍历过了A树的叶节点，那么B树一定与At树不匹配，可以直接返回false
 （c）、如果此时At树和B树都不为空，且当前匹配中的结点的值不相等，那么B树一定与At树不匹配，可以直接返回false
@@ -28,7 +63,7 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
     </item>
     
     <item>
-      <title>leetcode 从上到下打印链表</title>
+      <title>LeetCode 从上到下打印链表</title>
       <link>https://MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Thu, 20 Jan 2022 00:00:00 +0000</pubDate>
       
@@ -67,7 +102,7 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
       
       <guid>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</guid>
       <description>本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
-TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+自定义的项目 TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
 · 修改站点图标
 · 修改站点名称并使其居中，同时具有一定的间隔。
 · 修改选中的样式
@@ -79,13 +114,13 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
-修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.</description>
     </item>
     
     <item>
-      <title>leetcode 复杂链表的复制</title>
+      <title>LeetCode 复杂链表的复制</title>
       <link>https://MUNLELEE.github.io/post/leetcode-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link>
       <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
       
@@ -98,7 +133,7 @@ class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来
     </item>
     
     <item>
-      <title>leetcode 141 环形链表</title>
+      <title>LeetCode 141 环形链表</title>
       <link>https://MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
@@ -113,7 +148,7 @@ class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来
     </item>
     
     <item>
-      <title>leetcode 862 和至少为K的最短子数组</title>
+      <title>LeetCode 862 和至少为K的最短子数组</title>
       <link>https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       

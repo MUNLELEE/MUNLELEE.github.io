@@ -14,7 +14,7 @@
       
       <guid>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</guid>
       <description>本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
-TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+自定义的项目 TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
 · 修改站点图标
 · 修改站点名称并使其居中，同时具有一定的间隔。
 · 修改选中的样式
@@ -26,7 +26,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
-修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.</description>
     </item>

@@ -6,8 +6,146 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 21 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>leetcode 树的子结构</title>
+        <lastBuildDate>Mon, 24 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>LeetCode 最长不含重复字符的子字符串</title>
+        <link>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</link>
+        <pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</guid>
+        <description>&lt;h2 id=&#34;题目描述&#34;&gt;题目描述&lt;/h2&gt;
+&lt;p&gt;请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。&lt;/p&gt;
+&lt;p&gt;示例&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入: &amp;quot;abcabcbb&amp;quot;
+输出: 3 
+解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入: &amp;quot;bbbbb&amp;quot;
+输出: 1
+解释: 因为无重复字符的最长子串是 &amp;quot;b&amp;quot;，所以其长度为 1。
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入: &amp;quot;pwwkew&amp;quot;
+输出: 3
+解释: 因为无重复字符的最长子串是 &amp;quot;wke&amp;quot;，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，&amp;quot;pwke&amp;quot; 是一个子序列，不是子串。
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;解题想法&#34;&gt;解题想法&lt;/h2&gt;
+&lt;p&gt;这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。&lt;/p&gt;
+&lt;h3 id=&#34;动态规划&#34;&gt;动态规划&lt;/h3&gt;
+&lt;p&gt;1、状态的定义，本题依旧需要一个一维的动态规划数组，&lt;code&gt;dp[i]&lt;/code&gt;则表示以第&lt;code&gt;i&lt;/code&gt;个字符为结尾的子字符串可以得到的最长的含不重复字符的子字符串长度。&lt;/p&gt;
+&lt;p&gt;2、状态转移方程，首先我们需要固定右边界&lt;code&gt;i&lt;/code&gt;，也就是遍历时的索引，设与&lt;code&gt;s[i]&lt;/code&gt;相同且距离最近的字符为&lt;code&gt;s[pos]&lt;/code&gt;（&lt;code&gt;pos&lt;/code&gt;初始化为&lt;code&gt;-1&lt;/code&gt;。此时不重复字符子串长度应该是&lt;code&gt;i - pos&lt;/code&gt;，但是题目所求为最长，因此根据动态规划的思想就有以下的情况&lt;/p&gt;
+&lt;p&gt;（a）、当$pos&amp;lt;0$时，说明在&lt;code&gt;s[i]&lt;/code&gt;的左侧没有与&lt;code&gt;s[i]&lt;/code&gt;相同的字符，那么&lt;code&gt;dp[i] = dp[i - 1] + 1&lt;/code&gt;（即最长长度等于遍历到前一字符的长度 + 1）&lt;/p&gt;
+&lt;p&gt;（b）、当$dp[i - 1]&amp;lt;i - pos$时，说明重复的字符应该在当前最长非重复字符子串的区间外，即在这个子串的左边，此时&lt;code&gt;dp[i] = dp[i - 1] + 1&lt;/code&gt;，也就是之前的子串再加上当前的字符。&lt;/p&gt;
+&lt;p&gt;（c）、当$dp[i - 1]&amp;gt;=i-pos$时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此&lt;code&gt;dp[i] = i - pos&lt;/code&gt;，也就是在之前的子串中截取出非重复的部分。&lt;/p&gt;
+&lt;p&gt;3、需要一个哈希表用来记录曾经出现过的字符的相对应的索引，每当遍历到一个重复字符时，便要将哈希表中的相应表项更新为当前的索引。&lt;/p&gt;
+&lt;p&gt;由以上的分析可以看出，&lt;code&gt;dp[i]&lt;/code&gt;只由&lt;code&gt;dp[i - 1]&lt;/code&gt;决定，所以可以省略动态规划的数组，采用一个变量进行迭代即可，并求取此变量在这个过程中的最大值。&lt;/p&gt;
+&lt;h3 id=&#34;双指针法滑动窗口&#34;&gt;双指针法（滑动窗口）&lt;/h3&gt;
+&lt;p&gt;由于滑动窗口的代码写得比较少，当看到题解有滑动窗口时，便又学习了一下。&lt;/p&gt;
+&lt;p&gt;首先要初始化&lt;code&gt;left = -1&lt;/code&gt;以及&lt;code&gt;right = 0&lt;/code&gt;两个指针，利用right指针进行遍历，并根据是否有重复的字符，以及是否为最长的子字符串来更改&lt;code&gt;left&lt;/code&gt;指针的位置。这种做法依旧需要一个哈希表来存储字符对应的索引。这样就会有以下两种情况。&lt;/p&gt;
+&lt;p&gt;（a）、当&lt;code&gt;right&lt;/code&gt;指针对应的字符在哈希表中不存在时，可以直接增加&lt;code&gt;right&lt;/code&gt;指针的值，且子字符串长度为&lt;code&gt;right - left&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;（b）、若&lt;code&gt;right&lt;/code&gt;指针对应的字符在哈希表中存在，那么需要将&lt;code&gt;left&lt;/code&gt;更改为当前的&lt;code&gt;left&lt;/code&gt;指针与哈希表中对应索引的最大值（这里很重要，如果没有取两者之间的最大值那么虽然可以避免在左右两个端点处重复，但可能会导致在字符串内存在重复字符）。&lt;/p&gt;
+&lt;p&gt;在每次更新最长字符串的值之前都要更新哈希表中的相应表项。&lt;/p&gt;
+&lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*动态规划*/&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; lengthOfLongestSubstring(string s) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;s.size()) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (s.size() &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// 优先判断两种特殊情况
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; res &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; s.size();
+        unordered_map&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; um;  &lt;span style=&#34;color:#75715e&#34;&gt;// 用于存储字符的索引位置
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; temp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// temp用来存储上一次的dp值
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; pos;  &lt;span style=&#34;color:#75715e&#34;&gt;// 用来获取是否有当前字符的索引
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (um.count(s[i])) pos &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; um[s[i]];
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; pos &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+            um[s[i]] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i;  &lt;span style=&#34;color:#75715e&#34;&gt;// 更新哈希表的索引
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            temp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; pos) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; temp &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; temp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; pos);
+            res &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; max(res, temp);
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; res;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*滑动窗口*/&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; lengthOfLongestSubstring(string s) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;s.size()) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (s.size() &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// 优先判断两种特殊情况
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        unordered_map&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; um;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; left &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; s.size();
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; res &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; right &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; right &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; len; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;right) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (um.count(s[right])) {  &lt;span style=&#34;color:#75715e&#34;&gt;// 表明这时候已经出现的重复的字符
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;                &lt;span style=&#34;color:#75715e&#34;&gt;// 这时候需要移动左指针
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;                left &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; max(left, um[s[right]]);  &lt;span style=&#34;color:#75715e&#34;&gt;// 如果不取两者最大，那么会可能会导致字符串内重复
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            }
+            um[s[right]] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; right;  &lt;span style=&#34;color:#75715e&#34;&gt;// 更新索引
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            res &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; max(res, right &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; left);
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; res;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
+        <title>LeetCode 股票的最大利润</title>
+        <link>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</link>
+        <pubDate>Sat, 22 Jan 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</guid>
+        <description>&lt;h2 id=&#34;题目描述&#34;&gt;题目描述&lt;/h2&gt;
+&lt;p&gt;假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？&lt;/p&gt;
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入: [7,1,5,3,6,4]
+输出: 5
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+     注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入: [7,6,4,3,1]
+输出: 0
+解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;解题想法&#34;&gt;解题想法&lt;/h2&gt;
+&lt;p&gt;这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)+(n-2)+&amp;hellip;+2+1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。&lt;/p&gt;
+&lt;h3 id=&#34;动态规划思路&#34;&gt;动态规划思路&lt;/h3&gt;
+&lt;p&gt;1、状态的定义，首先需要声明一个动态规划数组&lt;code&gt;dp&lt;/code&gt;，其中&lt;code&gt;dp[i]&lt;/code&gt;表示以第&lt;code&gt;i&lt;/code&gt;天为最后一天的子数组所能获得的最大利润。&lt;/p&gt;
+&lt;p&gt;2、状态转移方程，由于股票只能买卖一次，因此&lt;code&gt;dp[i]&lt;/code&gt;（也就是前&lt;code&gt;i&lt;/code&gt;天的最大利润），应该是前&lt;code&gt;i-1&lt;/code&gt;天的最大利润与第&lt;code&gt;i&lt;/code&gt;天卖出股票的利润的最大值，于是就有了$$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$$即为&lt;code&gt;dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))&lt;/code&gt;，最终返回&lt;code&gt;dp[n-1]&lt;/code&gt;为所求。&lt;/p&gt;
+&lt;h3 id=&#34;优化&#34;&gt;优化&lt;/h3&gt;
+&lt;p&gt;我们还可以进行空间和时间上的优化，时间上，可以借助一个变量&lt;code&gt;cost&lt;/code&gt;来维护最小值，这样每次进行状态转移时只需要&lt;code&gt;dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))&lt;/code&gt;，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量&lt;code&gt;maxprofit&lt;/code&gt;来代替整个动态规划列表，这样状态转移就简化为了&lt;code&gt;maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*未优化*/&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; maxProfit(vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;amp;&lt;/span&gt; prices) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (prices.empty()) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        }
+        array&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;100004&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; dp {};
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; cost &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; prices[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;];
+        dp[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; 
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; prices.size(); &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (prices[i] &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; cost) {
+                cost &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; prices[i];
+            }
+            dp[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; max(dp[i &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;], prices[i] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; cost);
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; dp[prices.size() &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;];
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*优化后*/&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; maxProfit(vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;amp;&lt;/span&gt; prices) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (prices.empty()) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; cost &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; prices[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;], maxprofit &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; prices.size(); &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (prices[i] &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; cost) {
+                cost &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; prices[i];
+            }
+            maxprofit &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; max(maxprofit, prices[i] &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; cost);
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; maxprofit;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
+        <title>LeetCode 树的子结构</title>
         <link>https://MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</link>
         <pubDate>Fri, 21 Jan 2022 00:00:00 +0000</pubDate>
         
@@ -29,8 +167,8 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。&lt;/p&gt;
 &lt;h2 id=&#34;解题想法&#34;&gt;解题想法&lt;/h2&gt;
 &lt;p&gt;树的题目是真的让人头疼。在经过几次暴力解的尝试之后我还是放弃了，最后几组数据总是通过不了。还是去翻了题解，发现又是我最烦的递归（永远的痛）&lt;/p&gt;
-&lt;p&gt;1、首先子结构要么是其本身要么在树的左子树或者右子树里，因此在&lt;code&gt;isSubStructure&lt;/code&gt;函数中需要判断是本身匹配还是左子树或者是右子树匹配，这是最外层递归。最外层递归中，如果B树（&lt;em&gt;也就是子结构树&lt;/em&gt;）为空，那么直接返回&lt;code&gt;false&lt;/code&gt;，同理如果A树（&lt;em&gt;要从这棵树中寻找子结构&lt;/em&gt;）为空也可以直接返回&lt;code&gt;false&lt;/code&gt;
-2、对于子结构是否匹配的判断也需要通过递归实现（也就是&lt;code&gt;isContain&lt;/code&gt;函数），但具有以下几种情况，其中包含退出递归的条件&lt;/p&gt;
+&lt;p&gt;1、首先子结构要么是其本身要么在树的左子树或者右子树里，因此在&lt;code&gt;isSubStructure&lt;/code&gt;函数中需要判断是本身匹配还是左子树或者是右子树匹配，这是最外层递归。最外层递归中，如果B树（&lt;em&gt;也就是子结构树&lt;/em&gt;）为空，那么直接返回&lt;code&gt;false&lt;/code&gt;，同理如果A树（&lt;em&gt;要从这棵树中寻找子结构&lt;/em&gt;）为空也可以直接返回&lt;code&gt;false&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;2、对于子结构是否匹配的判断也需要通过递归实现（也就是&lt;code&gt;isContain&lt;/code&gt;函数），但具有以下几种情况，其中包含退出递归的条件&lt;/p&gt;
 &lt;p&gt;（a）、如果当前的B树为空，且At树（&lt;em&gt;也就是从A树种截取出的子树&lt;/em&gt;）非空或者空，此时表明B树是A树的一个子结构，因为可以将B树匹配完。&lt;/p&gt;
 &lt;p&gt;（b）、如果当前的B树非空，但At树为空，说明此时已经遍历过了A树的叶节点，那么B树一定与At树不匹配，可以直接返回&lt;code&gt;false&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;（c）、如果此时At树和B树都不为空，且当前匹配中的结点的值不相等，那么B树一定与At树不匹配，可以直接返回&lt;code&gt;false&lt;/code&gt;&lt;/p&gt;
@@ -68,7 +206,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         <item>
-        <title>leetcode 从上到下打印链表</title>
+        <title>LeetCode 从上到下打印链表</title>
         <link>https://MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</link>
         <pubDate>Thu, 20 Jan 2022 00:00:00 +0000</pubDate>
         
@@ -175,6 +313,7 @@
         
         <guid>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</guid>
         <description>&lt;p&gt;本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！&lt;/p&gt;
+&lt;h2 id=&#34;自定义的项目&#34;&gt;自定义的项目&lt;/h2&gt;
 &lt;h3 id=&#34;to-do&#34;&gt;TO-DO&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改站点图标&lt;/p&gt;
@@ -188,6 +327,7 @@
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改Toc的样式&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改分类的标签样式&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改滚动条样式&lt;/p&gt;
+&lt;h2 id=&#34;具体修改&#34;&gt;具体修改&lt;/h2&gt;
 &lt;h3 id=&#34;修改全站的字体&#34;&gt;修改全站的字体&lt;/h3&gt;
 &lt;p&gt;其实修改字体的方案主题的原作者已经给出，有需要的可以参考&lt;a class=&#34;link&#34; href=&#34;https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;修改字体&lt;/a&gt;，作为一个中国人，好康的中文永远比好康的英文重要。
@@ -475,6 +615,38 @@
         }
     }
 }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;追加了一些修改，在使用了一段时间后发现，每个目录项前面的小点在一定程度上占了空间，挤压了目录字，导致每个目录项容易换行，以及在&lt;code&gt;margin&lt;/code&gt;和&lt;code&gt;padding&lt;/code&gt;上还可以有缩减的空间，于是在&lt;code&gt;custom.scss&lt;/code&gt;文件上做了以下修改（删了一些无用代码，注释了小点，并修改了一些间距）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.widget--toc&lt;/span&gt; {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// display:inline-block;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;font-size&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+
+    #TableOfContents {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;overflow-x&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; auto;
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;max-height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;70&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;vh&lt;/span&gt;;
+        &lt;span style=&#34;color:#f92672&#34;&gt;ol&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;ul&lt;/span&gt; {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;list-style-type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; none;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;margin&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; 
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;padding&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        }
+        &lt;span style=&#34;color:#75715e&#34;&gt;// &amp;amp; &amp;gt; ul {
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;//     padding: 0 1em;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// }
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;li&lt;/span&gt; {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;margin&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;padding&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;; 
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;ol&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;ul&lt;/span&gt; {
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-top&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;padding-left&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-bottom&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;li&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;:last-child&lt;/span&gt; {
+                    &lt;span style=&#34;color:#a6e22e&#34;&gt;margin-bottom&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+                }
+            }
+        }
+    }
+}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;修改分类标签样式&#34;&gt;修改分类标签样式&lt;/h3&gt;
 &lt;p&gt;这个stack主题属实是有点迷，一样的主题推送到GitHub居然能产生不同的效果，无奈的我只能又去修改原先又大又丑的分类标签，根据我个人的喜好，将标签修改为小巧一点，放弃了原来的图片修饰，相关的代码写于&lt;code&gt;custom.scss&lt;/code&gt;文件中：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;.subsection-list&lt;/span&gt; {
@@ -544,7 +716,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         <item>
-        <title>leetcode 复杂链表的复制</title>
+        <title>LeetCode 复杂链表的复制</title>
         <link>https://MUNLELEE.github.io/post/leetcode-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link>
         <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
         
@@ -590,7 +762,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         <item>
-        <title>leetcode 141 环形链表</title>
+        <title>LeetCode 141 环形链表</title>
         <link>https://MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link>
         <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
         
@@ -687,7 +859,7 @@ pos 为 -1 或者链表中的一个 有效索引 。
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         <item>
-        <title>leetcode 862 和至少为K的最短子数组</title>
+        <title>LeetCode 862 和至少为K的最短子数组</title>
         <link>https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</link>
         <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
         

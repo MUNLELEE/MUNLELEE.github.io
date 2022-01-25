@@ -2,7 +2,7 @@
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
-TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+自定义的项目 TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
 · 修改站点图标
 · 修改站点名称并使其居中，同时具有一定的间隔。
 · 修改选中的样式
@@ -14,13 +14,13 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
-修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'><title>Hugo博客 | stack主题修改第一站</title>
 
 <link rel='canonical' href='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
 
-<link rel="stylesheet" href="/scss/style.min.46b7c421405c9d19c4301e2dc56652b5a7fa1626d131638d8d7eb490946ac117.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -40,7 +40,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 </script>
 <meta property='og:title' content='Hugo博客 | stack主题修改第一站'>
 <meta property='og:description' content='本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
-TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+自定义的项目 TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
 · 修改站点图标
 · 修改站点名称并使其居中，同时具有一定的间隔。
 · 修改选中的样式
@@ -52,7 +52,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
-修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'>
 <meta property='og:url' content='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
@@ -60,7 +60,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='博客搭建' /><meta property='article:published_time' content='2022-01-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-01-15T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="Hugo博客 | stack主题修改第一站">
 <meta name="twitter:description" content="本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
-TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
+自定义的项目 TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
 · 修改站点图标
 · 修改站点名称并使其居中，同时具有一定的间隔。
 · 修改选中的样式
@@ -72,7 +72,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
-修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
+具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
     :root {
@@ -186,6 +186,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 
     <section class="article-content">
     <p>本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！</p>
+<h2 id="自定义的项目">自定义的项目</h2>
 <h3 id="to-do">TO-DO</h3>
 <p><strong>·</strong> 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）</p>
 <p><strong>·</strong> 修改站点图标</p>
@@ -199,6 +200,7 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
 <p><strong>·</strong> 修改Toc的样式</p>
 <p><strong>·</strong> 修改分类的标签样式</p>
 <p><strong>·</strong> 修改滚动条样式</p>
+<h2 id="具体修改">具体修改</h2>
 <h3 id="修改全站的字体">修改全站的字体</h3>
 <p>其实修改字体的方案主题的原作者已经给出，有需要的可以参考<a class="link" href="https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html"  target="_blank" rel="noopener"
     >修改字体</a>，作为一个中国人，好康的中文永远比好康的英文重要。
@@ -486,6 +488,38 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
         }
     }
 }
+</code></pre></div><p>追加了一些修改，在使用了一段时间后发现，每个目录项前面的小点在一定程度上占了空间，挤压了目录字，导致每个目录项容易换行，以及在<code>margin</code>和<code>padding</code>上还可以有缩减的空间，于是在<code>custom.scss</code>文件上做了以下修改（删了一些无用代码，注释了小点，并修改了一些间距）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.widget--toc</span> {
+    <span style="color:#75715e">// display:inline-block;
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+
+    #TableOfContents {
+        <span style="color:#a6e22e">overflow-x</span><span style="color:#f92672">:</span> auto;
+        <span style="color:#a6e22e">max-height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">70</span><span style="color:#66d9ef">vh</span>;
+        <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
+        <span style="color:#f92672">ul</span> {
+            <span style="color:#a6e22e">list-style-type</span><span style="color:#f92672">:</span> none;
+            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>; 
+            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+        }
+        <span style="color:#75715e">// &amp; &gt; ul {
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//     padding: 0 1em;
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// }
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">li</span> {
+            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>; 
+            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
+            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ul</span> {
+                <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+                <span style="color:#a6e22e">padding-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">8</span><span style="color:#66d9ef">px</span>;
+                <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>;
+                <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">li</span><span style="color:#a6e22e">:last-child</span> {
+                    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+                }
+            }
+        }
+    }
+}
 </code></pre></div><h3 id="修改分类标签样式">修改分类标签样式</h3>
 <p>这个stack主题属实是有点迷，一样的主题推送到GitHub居然能产生不同的效果，无奈的我只能又去修改原先又大又丑的分类标签，根据我个人的喜好，将标签修改为小巧一点，放弃了原来的图片修饰，相关的代码写于<code>custom.scss</code>文件中：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.subsection-list</span> {
@@ -698,9 +732,13 @@ TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦�
                 <div class="widget--toc">
                     <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#自定义的项目">自定义的项目</a>
       <ul>
         <li><a href="#to-do">TO-DO</a></li>
+      </ul>
+    </li>
+    <li><a href="#具体修改">具体修改</a>
+      <ul>
         <li><a href="#修改全站的字体">修改全站的字体</a></li>
         <li><a href="#修改站点的图标">修改站点的图标</a></li>
         <li><a href="#修改站点名称">修改站点名称</a></li>
