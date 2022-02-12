@@ -14,6 +14,7 @@
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
+· 使文章支持数学公式编辑
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'><title>Hugo博客 | stack主题修改第一站</title>
@@ -52,6 +53,7 @@
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
+· 使文章支持数学公式编辑
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'>
@@ -72,6 +74,7 @@
 · 修改Toc的样式
 · 修改分类的标签样式
 · 修改滚动条样式
+· 使文章支持数学公式编辑
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
@@ -200,6 +203,7 @@
 <p><strong>·</strong> 修改Toc的样式</p>
 <p><strong>·</strong> 修改分类的标签样式</p>
 <p><strong>·</strong> 修改滚动条样式</p>
+<p><strong>·</strong> 使文章支持数学公式编辑</p>
 <h2 id="具体修改">具体修改</h2>
 <h3 id="修改全站的字体">修改全站的字体</h3>
 <p>其实修改字体的方案主题的原作者已经给出，有需要的可以参考<a class="link" href="https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html"  target="_blank" rel="noopener"
@@ -586,7 +590,19 @@
         <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#a8bbbf</span>;
       }
 }
-</code></pre></div>
+</code></pre></div><h3 id="支持数学公式编辑">支持数学公式编辑</h3>
+<p>在一次使用了markdown内联的$LaTeX$公式发现部署上去之后没有反应时，便一直想使文章能够支持数学公式的编辑。于是在时隔多日之后终于有了解决办法。</p>
+<p>我们需要在主题根目录的<code>/layouts/partials</code>创建<code>math.html</code>文件，之后在这个文件中加入如下代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ if or .Params.math .Site.Params.math }}
+{{ partial &#34;math.html&#34; . }}
+{{ end }}
+
+&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>&gt;
+&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">defer</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">defer</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>
+    <span style="color:#a6e22e">onload</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;renderMathInElement(document.body);&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><p>这段代码能够自动渲染数学公式，当然这样还是不够的，我们还需要在每篇文章的markdown的<strong>header</strong>加上<code>math=&quot;true&quot;</code>的选择字段。</p>
+
 </section>
 
 
@@ -752,6 +768,7 @@
         <li><a href="#修改分类标签样式">修改分类标签样式</a></li>
         <li><a href="#修改相关文章图标-样式">修改相关文章图标 样式</a></li>
         <li><a href="#修改滚动条样式">修改滚动条样式</a></li>
+        <li><a href="#支持数学公式编辑">支持数学公式编辑</a></li>
       </ul>
     </li>
   </ul>

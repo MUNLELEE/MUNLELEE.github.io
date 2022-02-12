@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='题目描述 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+例如，在下面的 3×4 的矩阵中包含单词 &amp;ldquo;ABCCED&amp;rdquo;（单词中的字母已标出）。
+ 
+示例：
+输入：board = [[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;E&amp;quot;],[&amp;quot;S&amp;quot;,&amp;quot;F&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;S&amp;quot;],[&amp;quot;A&amp;quot;,&amp;quot;D&amp;quot;,&amp;quot;E&amp;quot;,&amp;quot;E&amp;quot;]], word = &amp;quot;ABCCED&amp;quot;输出：true输入：board = [[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],[&amp;quot;c&amp;quot;,&amp;quot;d&amp;quot;]], word = &amp;quot;abcd&amp;quot;输出：false解题想法 这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。
+**DFS：**即是暴力遍历矩阵的所有元素，来搜索一条可行的路径，通过递归，可以在一条路径中搜索到底，最后回溯到之前已经匹配的节点。
+**剪枝：**在DFS过程中如果当前的矩阵字符与字符串字符不等，可以直接回溯。或者路径已经访问过，可以直接跳过。
+DFS解析 1、递归终止条件：
+（a）、返回true，当匹配到字符串的最后一个字符时，可以直接返回true（至于为什么可以这样返回，参看代码注释）
+（b）、返回false，如果矩阵的索引越界，当前矩阵的字符和字符串的字符不匹配，当前元素已经访问过了直接返回false
+2、递归过程
+（a）、选定当前元素，将当前元素标记为空字符，表明当前元素已经访问过，防止走回头路。
+（b）、搜索下一个元素，向四个方向分别匹配字符，如果有一个方向可以匹配就继续递归这个方向的DFS算法，并返回true，否则返回false
+（c）、还原当前元素，需要在DFS算法退出之前，将空字符还原为原来的字符，用于回溯时重新寻找路径，否则回溯将找不到正确路径。
+代码 class Solution { public: bool exist(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt;&amp;amp; board, string word) { rows = board.size(); cols = board[0].size(); for (int i = 0; i &amp;lt; rows; &#43;&#43;i) { for (int j = 0; j &amp;lt; cols; &#43;&#43;j) { if (dfs(board, word, i, j, 0)) return true; } } return false; } private: int rows, cols; // k为单词索引  bool dfs(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt; &amp;amp;board, string word, int i, int j, int k) { // 如果越界或者字符不相等，就停止递归  if (i &amp;gt;= rows || i &amp;lt; 0 || j &amp;gt;= cols || j &amp;lt; 0 || board[i][j] !'><title>LeetCode 矩阵中的路径</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/'>
+
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='LeetCode 矩阵中的路径'>
+<meta property='og:description' content='题目描述 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+例如，在下面的 3×4 的矩阵中包含单词 &amp;ldquo;ABCCED&amp;rdquo;（单词中的字母已标出）。
+ 
+示例：
+输入：board = [[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;E&amp;quot;],[&amp;quot;S&amp;quot;,&amp;quot;F&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;S&amp;quot;],[&amp;quot;A&amp;quot;,&amp;quot;D&amp;quot;,&amp;quot;E&amp;quot;,&amp;quot;E&amp;quot;]], word = &amp;quot;ABCCED&amp;quot;输出：true输入：board = [[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],[&amp;quot;c&amp;quot;,&amp;quot;d&amp;quot;]], word = &amp;quot;abcd&amp;quot;输出：false解题想法 这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。
+**DFS：**即是暴力遍历矩阵的所有元素，来搜索一条可行的路径，通过递归，可以在一条路径中搜索到底，最后回溯到之前已经匹配的节点。
+**剪枝：**在DFS过程中如果当前的矩阵字符与字符串字符不等，可以直接回溯。或者路径已经访问过，可以直接跳过。
+DFS解析 1、递归终止条件：
+（a）、返回true，当匹配到字符串的最后一个字符时，可以直接返回true（至于为什么可以这样返回，参看代码注释）
+（b）、返回false，如果矩阵的索引越界，当前矩阵的字符和字符串的字符不匹配，当前元素已经访问过了直接返回false
+2、递归过程
+（a）、选定当前元素，将当前元素标记为空字符，表明当前元素已经访问过，防止走回头路。
+（b）、搜索下一个元素，向四个方向分别匹配字符，如果有一个方向可以匹配就继续递归这个方向的DFS算法，并返回true，否则返回false
+（c）、还原当前元素，需要在DFS算法退出之前，将空字符还原为原来的字符，用于回溯时重新寻找路径，否则回溯将找不到正确路径。
+代码 class Solution { public: bool exist(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt;&amp;amp; board, string word) { rows = board.size(); cols = board[0].size(); for (int i = 0; i &amp;lt; rows; &#43;&#43;i) { for (int j = 0; j &amp;lt; cols; &#43;&#43;j) { if (dfs(board, word, i, j, 0)) return true; } } return false; } private: int rows, cols; // k为单词索引  bool dfs(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt; &amp;amp;board, string word, int i, int j, int k) { // 如果越界或者字符不相等，就停止递归  if (i &amp;gt;= rows || i &amp;lt; 0 || j &amp;gt;= cols || j &amp;lt; 0 || board[i][j] !'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='LeetCode' /><meta property='article:tag' content='难题集' /><meta property='article:published_time' content='2022-01-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-01-29T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="LeetCode 矩阵中的路径">
+<meta name="twitter:description" content="题目描述 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+例如，在下面的 3×4 的矩阵中包含单词 &amp;ldquo;ABCCED&amp;rdquo;（单词中的字母已标出）。
+ 
+示例：
+输入：board = [[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;E&amp;quot;],[&amp;quot;S&amp;quot;,&amp;quot;F&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;S&amp;quot;],[&amp;quot;A&amp;quot;,&amp;quot;D&amp;quot;,&amp;quot;E&amp;quot;,&amp;quot;E&amp;quot;]], word = &amp;quot;ABCCED&amp;quot;输出：true输入：board = [[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],[&amp;quot;c&amp;quot;,&amp;quot;d&amp;quot;]], word = &amp;quot;abcd&amp;quot;输出：false解题想法 这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。
+**DFS：**即是暴力遍历矩阵的所有元素，来搜索一条可行的路径，通过递归，可以在一条路径中搜索到底，最后回溯到之前已经匹配的节点。
+**剪枝：**在DFS过程中如果当前的矩阵字符与字符串字符不等，可以直接回溯。或者路径已经访问过，可以直接跳过。
+DFS解析 1、递归终止条件：
+（a）、返回true，当匹配到字符串的最后一个字符时，可以直接返回true（至于为什么可以这样返回，参看代码注释）
+（b）、返回false，如果矩阵的索引越界，当前矩阵的字符和字符串的字符不匹配，当前元素已经访问过了直接返回false
+2、递归过程
+（a）、选定当前元素，将当前元素标记为空字符，表明当前元素已经访问过，防止走回头路。
+（b）、搜索下一个元素，向四个方向分别匹配字符，如果有一个方向可以匹配就继续递归这个方向的DFS算法，并返回true，否则返回false
+（c）、还原当前元素，需要在DFS算法退出之前，将空字符还原为原来的字符，用于回溯时重新寻找路径，否则回溯将找不到正确路径。
+代码 class Solution { public: bool exist(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt;&amp;amp; board, string word) { rows = board.size(); cols = board[0].size(); for (int i = 0; i &amp;lt; rows; &#43;&#43;i) { for (int j = 0; j &amp;lt; cols; &#43;&#43;j) { if (dfs(board, word, i, j, 0)) return true; } } return false; } private: int rows, cols; // k为单词索引  bool dfs(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt; &amp;amp;board, string word, int i, int j, int k) { // 如果越界或者字符不相等，就停止递归  if (i &amp;gt;= rows || i &amp;lt; 0 || j &amp;gt;= cols || j &amp;lt; 0 || board[i][j] !"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">LeetCode 矩阵中的路径</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jan 29, 2022</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="题目描述">题目描述</h2>
+<p>给定一个 <code>m x n</code> 二维字符网格 <code>board</code> 和一个字符串单词 <code>word</code> 。如果 <code>word</code> 存在于网格中，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>
+<p>单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。</p>
+<p>例如，在下面的 3×4 的矩阵中包含单词 &ldquo;ABCCED&rdquo;（单词中的字母已标出）。</p>
+<p><figure 
+	>
+	<a href="https://assets.leetcode.com/uploads/2020/11/04/word2.jpg" >
+		<img src="https://assets.leetcode.com/uploads/2020/11/04/word2.jpg"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>示例：</strong></p>
+<pre tabindex="0"><code>输入：board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCCED&quot;
+输出：true
+</code></pre><pre tabindex="0"><code>输入：board = [[&quot;a&quot;,&quot;b&quot;],[&quot;c&quot;,&quot;d&quot;]], word = &quot;abcd&quot;
+输出：false
+</code></pre><h2 id="解题想法">解题想法</h2>
+<p>这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。</p>
+<p>**DFS：**即是暴力遍历矩阵的所有元素，来搜索一条可行的路径，通过递归，可以在一条路径中搜索到底，最后回溯到之前已经匹配的节点。</p>
+<p>**剪枝：**在DFS过程中如果当前的矩阵字符与字符串字符不等，可以直接回溯。或者路径已经访问过，可以直接跳过。</p>
+<h3 id="dfs解析">DFS解析</h3>
+<p>1、递归终止条件：</p>
+<p>（a）、返回true，当匹配到字符串的最后一个字符时，可以直接返回true（至于为什么可以这样返回，参看代码注释）</p>
+<p>（b）、返回false，如果矩阵的索引越界，当前矩阵的字符和字符串的字符不匹配，当前元素已经访问过了直接返回false</p>
+<p>2、递归过程</p>
+<p>（a）、选定当前元素，将当前元素标记为<strong>空字符</strong>，表明当前元素已经访问过，防止走回头路。</p>
+<p>（b）、搜索下一个元素，向四个方向分别匹配字符，如果有一个方向可以匹配就继续递归这个方向的DFS算法，并返回true，否则返回false</p>
+<p>（c）、还原当前元素，需要在DFS算法退出之前，将<strong>空字符</strong>还原为原来的字符，用于回溯时重新寻找路径，否则回溯将找不到正确路径。</p>
+<h2 id="代码">代码</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">bool</span> exist(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;&amp;</span> board, string word) {
+        rows <span style="color:#f92672">=</span> board.size();
+        cols <span style="color:#f92672">=</span> board[<span style="color:#ae81ff">0</span>].size();
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> rows; <span style="color:#f92672">++</span>i) {
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> cols; <span style="color:#f92672">++</span>j) {
+                <span style="color:#66d9ef">if</span> (dfs(board, word, i, j, <span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">return</span> true;
+            }
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> rows, cols;
+    <span style="color:#75715e">// k为单词索引
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">dfs</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#f92672">&amp;</span>board, string word, <span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">int</span> j, <span style="color:#66d9ef">int</span> k) {
+        <span style="color:#75715e">// 如果越界或者字符不相等，就停止递归
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&gt;=</span> rows <span style="color:#f92672">||</span> i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> j <span style="color:#f92672">&gt;=</span> cols <span style="color:#f92672">||</span> j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> board[i][j] <span style="color:#f92672">!=</span> word[k]) 
+            <span style="color:#66d9ef">return</span> false;
+        <span style="color:#75715e">// 当进入这个判断条件时，会先判断是否相等，因此只要走到最后一个字符就可以返回true
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (k <span style="color:#f92672">==</span> word.size() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span> true;
+        <span style="color:#75715e">// 将访问过的字符设为一个特殊字符，防止走回头路
+</span><span style="color:#75715e"></span>        board[i][j] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;\0&#39;</span>;
+        array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">4</span><span style="color:#f92672">&gt;</span> dx{<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>};
+        array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">4</span><span style="color:#f92672">&gt;</span> dy{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>};
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> idx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; idx <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>idx) {
+            <span style="color:#66d9ef">if</span> (dfs(board, word, i <span style="color:#f92672">+</span> dx[idx], j <span style="color:#f92672">+</span> dy[idx], k <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)) {
+                <span style="color:#66d9ef">return</span> true;
+            }
+        }
+        <span style="color:#75715e">// 在退出dfs之前要恢复board，否则回溯将无法找到正确路径
+</span><span style="color:#75715e"></span>        board[i][j] <span style="color:#f92672">=</span> word[k]; 
+        <span style="color:#66d9ef">return</span> false;
+    }
+};
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/leetcode/">LeetCode</a>
+        
+            <a href="/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/">难题集</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeetCode 股票的最大利润</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeetCode 树的子结构</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeetCode 862 和至少为K的最短子数组</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#题目描述">题目描述</a></li>
+    <li><a href="#解题想法">解题想法</a>
+      <ul>
+        <li><a href="#dfs解析">DFS解析</a></li>
+      </ul>
+    </li>
+    <li><a href="#代码">代码</a></li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>

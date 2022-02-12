@@ -6,7 +6,291 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 24 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 02 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>春招 | 知识点留档</title>
+        <link>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
+        <pubDate>Wed, 02 Feb 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
+        <description>&lt;p&gt;春节已然过去了，处于人生的又一个十字路口且充满后顾之忧的我决定开始准备春招，时间看着是比较紧的，我也不知道自己最后能够准备到什么程度。&lt;/p&gt;
+&lt;h2 id=&#34;1重载隐藏重写覆盖三者的区别&#34;&gt;1、重载、隐藏、重写（覆盖）三者的区别&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;重载：&lt;strong&gt;是指同一可访问区内被声明的几个具有&lt;/strong&gt;不同参数列&lt;/strong&gt;*（参数的类型、个数、顺序不同）的同名函数，根据参数列表确定调用哪个函数。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;隐藏：&lt;strong&gt;指的是派生类类型的对象、指针引用访问基类和派生类&lt;/strong&gt;都有&lt;/strong&gt;的同名函数时**（只要求同名，不管参数列表是否相同）**，访问的是派生类的函数，即隐藏了基类的同名函数。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;重写（覆盖）：&lt;strong&gt;是&lt;/strong&gt;指派生类&lt;/strong&gt;中存在重新定义的函数。其函数名，参数列表，返回值类型，所有都必须同基类中被重写的函数一致。只有函数体不同（花括号内），派生类调用时会调用派生类的重写函数，不会调用被重写函数。重写的基类中被重写的函数必须有virtual修饰。&lt;/p&gt;
+&lt;p&gt;此外，重载的参数不同，函数体不同；隐藏的参数可以不同，函数体不同；重写或覆盖仅仅函数体不同。&lt;/p&gt;
+&lt;h3 id=&#34;三者更为深入的一些问题&#34;&gt;三者更为深入的一些问题&lt;/h3&gt;
+&lt;h4 id=&#34;11-重载为什么改变参数就可以实现调用不同函数&#34;&gt;1.1 重载为什么改变参数就可以实现调用不同函数？&lt;/h4&gt;
+&lt;p&gt;因为C++在编译的时候会对函数进行重命名，保证函数命名的唯一性，而函数的参数列表不同便会导致函数被命名为不同的函数。&lt;/p&gt;
+&lt;h4 id=&#34;12-构造函数可以被重载吗析构函数呢&#34;&gt;1.2 构造函数可以被重载吗？析构函数呢？&lt;/h4&gt;
+&lt;p&gt;构造函数可以被重载，因为可以存在有参和无参的构造函数；析构函数不能被重载，因为析构函数只能有一个并且不带参数。&lt;/p&gt;
+&lt;h2 id=&#34;2new和malloc的区别&#34;&gt;2、new和malloc的区别&lt;/h2&gt;
+&lt;p&gt;据说是C++的经典问题，在综合了网络上的一些博文后，得出以下几点不同。&lt;/p&gt;
+&lt;p&gt;（1）、&lt;strong&gt;申请内存所在区域。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;操作符从自由存储区*（不仅可以是堆还可以是静态存储区）*上为对象动态分配内存，而&lt;code&gt;malloc&lt;/code&gt;从堆上分配内存，这块区域是操作系统维护的一块特殊内存，用于程序动态分配。&lt;/p&gt;
+&lt;p&gt;（2）、&lt;strong&gt;返回类型。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;操作符返回的是对象类型指针，不需要进行强制转换；&lt;code&gt;malloc&lt;/code&gt;内存分配成功则是返回&lt;code&gt;void*&lt;/code&gt;，需要通过强制类型转换成指定类型。&lt;/p&gt;
+&lt;p&gt;（3）、&lt;strong&gt;内存分配失败时的返回值。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;内存分配失败时，会抛出&lt;code&gt;bad_alloc&lt;/code&gt;异常，不会返回&lt;code&gt;NULL&lt;/code&gt;，&lt;code&gt;malloc&lt;/code&gt;分配内存失败时返回&lt;code&gt;NULL&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;（4）、**是否需要指定内存大小。**使用&lt;code&gt;new&lt;/code&gt;操作符时进行内存分配时无需指定内存块的大小，使用&lt;code&gt;malloc&lt;/code&gt;需要显式的指定内存的大小。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt; {...}
+A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; A;
+A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (A&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)malloc(&lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(A));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（5）、**是否调用构造函数。**使用&lt;code&gt;new&lt;/code&gt;操作符分配对象内存时经历如下的几个步骤：&lt;/p&gt;
+&lt;p&gt;· 调用&lt;code&gt;operator new&lt;/code&gt;函数（数组是&lt;code&gt;operator new[]&lt;/code&gt;）来分配内存空间&lt;/p&gt;
+&lt;p&gt;· 编译器运行相应的构造函数创建对象，并赋初值&lt;/p&gt;
+&lt;p&gt;· 返回指向这个对象的指针&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;delete&lt;/code&gt;操作符释放内存空间时会经历如下步骤：&lt;/p&gt;
+&lt;p&gt;· 调用对象的析构函数&lt;/p&gt;
+&lt;p&gt;· 编译器调用&lt;code&gt;operator delete&lt;/code&gt;（&lt;code&gt;operator delete[]&lt;/code&gt;）释放内存空间&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;malloc&lt;/code&gt;分配内存则不会调用构造函数&lt;/p&gt;
+&lt;p&gt;（6）、**对数组的处理。**C++提供了&lt;code&gt;new []&lt;/code&gt;和&lt;code&gt;delete []&lt;/code&gt;来专门处理数组类型，而malloc需要自己指定数组的大小&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-C++&#34; data-lang=&#34;C++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)malloc(&lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;// 分配一个十个int大小的数组
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（7）、**是否能够重新分配内存。**使用&lt;code&gt;malloc&lt;/code&gt;分配内存后，如果在使用过程中发现内存不足，可以使用&lt;code&gt;realloc&lt;/code&gt;函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。&lt;code&gt;new&lt;/code&gt;没有扩充内存的配套操作&lt;/p&gt;
+&lt;p&gt;（8）、&lt;strong&gt;客户处理内存分配不足。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;会有异常机制，而&lt;code&gt;malloc&lt;/code&gt;只能返回&lt;code&gt;NULL&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;3虚函数&#34;&gt;3、虚函数&lt;/h2&gt;
+&lt;p&gt;虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成&lt;strong&gt;运行时决议&lt;/strong&gt;，与传统的编译时决定有本质区别。&lt;/p&gt;
+&lt;p&gt;虚函数的实现是由两个部分组成的，虚函数指针和虚函数表。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;31虚函数指针&#34;&gt;3.1、虚函数指针&lt;/h4&gt;
+&lt;p&gt;本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。只有拥有虚函数的类才会拥有虚函数指针，只有拥有虚函数的类才会拥有虚函数指针，每个虚函数也都会对应一个虚函数指针。&lt;/p&gt;
+&lt;h4 id=&#34;32ab两个类类中有虚函数c继承ab有几张虚函数表&#34;&gt;3.2、A、B两个类，类中有虚函数。C继承AB，有几张虚函数表？&lt;/h4&gt;
+&lt;p&gt;两张，多继承就会有多个虚函数表，因为每个父类的虚函数是不同的，指针也是不同的。如果公用一张虚函数表，就分不清子类到底实例化的哪个基类函数。&lt;/p&gt;
+&lt;h4 id=&#34;33虚构函数可以是虚函数吗&#34;&gt;3.3、虚构函数可以是虚函数吗？&lt;/h4&gt;
+&lt;p&gt;析构函数必须是虚函数。因为如果不是虚函数，&lt;strong&gt;当在主函数中用父类的指针new出一个子类对象，最后析构的时候，只会调用父类析构函数而不会调用子类析构函数。而且如果不为虚函数，父类指针就不会调用子类成员函数。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;4什么是多态机制&#34;&gt;4、什么是多态机制&lt;/h2&gt;
+&lt;p&gt;面向对象的三大特征：封装，继承，多态。&lt;/p&gt;
+&lt;p&gt;多态就是说同一个名字的函数可以有多种不同的功能。分为编译时的多态和运行时的多态。编译时的多态就是函数重载，包括运算符重载，编译时根据实参确定调用哪个函数。&lt;strong&gt;运行时的多态则和虚函数、继承有关。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;深入&#34;&gt;深入&lt;/h3&gt;
+&lt;h4 id=&#34;31多态底层的实现机制&#34;&gt;3.1、多态底层的实现机制&lt;/h4&gt;
+&lt;p&gt;利用虚函数表，先构建一个基类，然后在&lt;strong&gt;基类的构造函数中会建立虚函数表&lt;/strong&gt;，也就是一个储存虚函数地址的数组，内存地址的前四个字节保存指向虚函数表的指针，然后当多个子类继承父类之后，主函数中可以通过父类指针调用子类的继承函数。&lt;/p&gt;
+&lt;p&gt;虚函数表属于类，也属于它的子类等各种派生类。虚函数表由编译器在编译时生成，保存在&lt;code&gt;.rdata&lt;/code&gt;只读数据段。&lt;/p&gt;
+&lt;h4 id=&#34;32父类构造函数中是否可以调用虚函数&#34;&gt;3.2、父类构造函数中是否可以调用虚函数&lt;/h4&gt;
+&lt;p&gt;可以。不过调用会屏蔽多态机制，最终会把基类中的该虚函数作为普通函数调用，而不会调用派生类中的被重写的函数。这是因为在定义子类对象的时候，会先调用父类的构造函数，&lt;strong&gt;而此时虚函数表以及子类函数还没有被初始化，为了避免调用到未初始化的内存&lt;/strong&gt;，C++标准规范中规定了在这种情况下，**即在构造子类时调用父类的构造函数，而父类的构造函数中又调用了虚成员函数，这个虚成员函数即使被子类重写，也不允许发生多态的行为。**所以使用的是静态绑定，调用了父类的函数。&lt;/p&gt;
+&lt;h4 id=&#34;33构造函数可以是虚函数吗&#34;&gt;3.3、构造函数可以是虚函数吗？&lt;/h4&gt;
+&lt;p&gt;不可以，因为虚函数存在的**唯一目的就是为了多态。**而子类并不继承父类的构造函数，所以没有使父类构造函数变成虚函数的必要。另一方面，构造函数为类对象初始化了内存空间，里面保存了指向虚函数的指针，如果构造函数是虚函数，导致没有实例化对象，也就没有内存空间，更不会有虚函数。&lt;/p&gt;
+&lt;h4 id=&#34;34静态函数可以是虚函数吗&#34;&gt;3.4、静态函数可以是虚函数吗？&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;static&lt;/code&gt;成员不属于任何类对象或实例，所以即使给&lt;code&gt;static&lt;/code&gt;函数加上&lt;code&gt;virtual&lt;/code&gt;也是没有任何意义的。&lt;/li&gt;
+&lt;li&gt;静态与非静态成员函数之间有一个主要区别。那就是静态成员函数&lt;strong&gt;没有&lt;code&gt;this&lt;/code&gt;指针&lt;/strong&gt;，所以无法访问&lt;code&gt;vptr&lt;/code&gt;，进而不能访问虚函数表&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;5指针和引用的区别&#34;&gt;5、指针和引用的区别&lt;/h2&gt;
+&lt;p&gt;**指针：**指针是一个变量，用于保存另一个变量的地址，指针需要用&lt;code&gt;*&lt;/code&gt;来进行解引用，以获取它指向的内存地址上的内容。&lt;/p&gt;
+&lt;p&gt;**引用：**引用是一个已经存在的变量的别名，但引用也是通过存储变量的地址来实现对变量的修改的&lt;/p&gt;
+&lt;p&gt;两者的区别：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;引用必须&lt;strong&gt;定义时初始化&lt;/strong&gt;，不能像指针一样，指针可以定义后视情况初始化&lt;/li&gt;
+&lt;li&gt;引用本身、就不能改变指向因此不存在引用常量（&lt;code&gt;int &amp;amp;const r = a&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;指针可以有多级，但是引用只能有一级&lt;/li&gt;
+&lt;li&gt;指针的&lt;code&gt;++&lt;/code&gt;、&lt;code&gt;--&lt;/code&gt;代表下一个数据，而引用的&lt;code&gt;++&lt;/code&gt;、&lt;code&gt;--&lt;/code&gt;则代表数据本身的修改。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sizeof(引用)&lt;/code&gt;得到的是所指向的变量（对象）的大小，而&lt;code&gt;sizeof(指针)&lt;/code&gt;得到的是指针本身的大小&lt;/li&gt;
+&lt;li&gt;当指针和引用作为函数参数的时候，指针传递参数会生成一个临时变量，引用传递的参数不会产生一个临时变量。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;6static关键字&#34;&gt;6、static关键字&lt;/h2&gt;
+&lt;h3 id=&#34;面向过程的static&#34;&gt;面向过程的static&lt;/h3&gt;
+&lt;p&gt;（1）、&lt;strong&gt;函数中的静态变量。&lt;strong&gt;当变量声明为&lt;code&gt;static&lt;/code&gt;时，其空间在程序的生命周期内分配，被存放在&lt;/strong&gt;全局数据区&lt;/strong&gt;。即使多次调用此函数，静态变量的空间也只&lt;strong&gt;分配一次&lt;/strong&gt;，前一次调用的变量值通过下一次调用传递。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;静态变量和全局变量的存储区域是一起的，一旦静态区的内存被分配，静态区的内存直到程序全部结束之后才会被释放。&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&#34;面向对象的static&#34;&gt;面向对象的static&lt;/h3&gt;
+&lt;p&gt;（1）、&lt;strong&gt;类中的静态变量。&lt;strong&gt;声明为&lt;code&gt;static&lt;/code&gt;的变量只能被初始化一次，而且&lt;/strong&gt;必须初始化&lt;/strong&gt;，且类中的静态变量由&lt;strong&gt;对象共享&lt;/strong&gt;，类中的静态成员变量必须在类内声明，在类外定义（&lt;code&gt;const&lt;/code&gt;修饰可以直接定义）。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; num;  &lt;span style=&#34;color:#75715e&#34;&gt;// 类内声明
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; num_2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// const可以在声明时就初始化
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; A&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;num &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// 类外初始化
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;) {
+    A a;
+    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; a.num; &lt;span style=&#34;color:#75715e&#34;&gt;// 输出10
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; A&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;num; &lt;span style=&#34;color:#75715e&#34;&gt;// 输出10
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（2）、**类中的静态成员函数。**静态成员函数不依赖于类的对象。允许使用&lt;code&gt;.&lt;/code&gt;和类名来调用静态成员函数。&lt;strong&gt;静态成员函数只能访问静态成员变量或其它静态成员函数。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;此外还有以下特点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;static成员变量不占用对象的内存，而是在所有对象之外开辟内存&lt;/li&gt;
+&lt;li&gt;static成员变量的内存既不是在声明类时分配，也不是在创建对象时分配，而是在&lt;strong&gt;类外初始化时分配&lt;/strong&gt;，即没有在类外初始化的静态成员变量不能使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;7const关键字&#34;&gt;7、const关键字&lt;/h2&gt;
+&lt;p&gt;作用：被其修饰的值不能改变，是只读变量。必须在定义时就赋初值。&lt;/p&gt;
+&lt;p&gt;const关键字还可以用来修饰指针，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; p; &lt;span style=&#34;color:#75715e&#34;&gt;// 常量指针
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; p; &lt;span style=&#34;color:#75715e&#34;&gt;// 指针常量 
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;常量指针&#34;&gt;常量指针&lt;/h3&gt;
+&lt;p&gt;也称为底层const，指针指向的值被指针限定住，不能通过指针改变指向的值。但此时可以修改指针的指向。&lt;/p&gt;
+&lt;h3 id=&#34;指针常量&#34;&gt;指针常量&lt;/h3&gt;
+&lt;p&gt;也称为顶层const，指针指向的地址不能修改，并且&lt;strong&gt;声明时必须初始化&lt;/strong&gt;，但是指针指向的地址的内容可以通过指针修改。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>LeetCode 二叉搜索树与双向链表</title>
+        <link>https://MUNLELEE.github.io/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</link>
+        <pubDate>Mon, 31 Jan 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</guid>
+        <description>&lt;h2 id=&#34;题目描述&#34;&gt;题目描述&lt;/h2&gt;
+&lt;p&gt;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。&lt;/p&gt;
+&lt;p&gt;为了让您更好地理解问题，以下面的二叉搜索树为例：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://assets.leetcode.com/uploads/2018/10/12/bstdlloriginalbst.png&#34; &gt;
+		&lt;img src=&#34;https://assets.leetcode.com/uploads/2018/10/12/bstdlloriginalbst.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;我们希望将这个二叉搜索树转化为双向循环链表。链表中的每个节点都有一个前驱和后继指针。对于双向循环链表，第一个节点的前驱是最后一个节点，最后一个节点的后继是第一个节点。&lt;/p&gt;
+&lt;p&gt;下图展示了上面的二叉搜索树转化成的链表。“head” 表示指向链表中有最小元素的节点&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://assets.leetcode.com/uploads/2018/10/12/bstdllreturndll.png&#34; &gt;
+		&lt;img src=&#34;https://assets.leetcode.com/uploads/2018/10/12/bstdllreturndll.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;特别地，我们希望可以就地完成转换操作。当转化完成以后，树中节点的左指针需要指向前驱，树中节点的右指针需要指向后继。还需要返回链表中的第一个节点的指针。&lt;/p&gt;
+&lt;h2 id=&#34;解题想法&#34;&gt;解题想法&lt;/h2&gt;
+&lt;p&gt;题目给出的是一棵二叉搜索树，而要我们整理成一个升序的双向链表，可以很自然的想到二叉搜索树的中序遍历即为升序序列。面对双向链表，我们还需要建立相邻结点之间的关系，因此需要设置前驱结点&lt;code&gt;pre&lt;/code&gt;和当前结点&lt;code&gt;cur&lt;/code&gt;两个指针来组织结点之间的关系。（具体即为&lt;code&gt;pre-&amp;gt;right = cur&lt;/code&gt;和&lt;code&gt;cur-&amp;gt;left = pre&lt;/code&gt;），最后则是连接头结点和尾结点。&lt;/p&gt;
+&lt;h3 id=&#34;中序遍历流程&#34;&gt;中序遍历流程&lt;/h3&gt;
+&lt;p&gt;令&lt;code&gt;recur&lt;/code&gt;为中序遍历函数&lt;/p&gt;
+&lt;p&gt;1、终止条件：当&lt;code&gt;cur&lt;/code&gt;结点为空时，直接返回，说明此时已经越过了叶节点&lt;/p&gt;
+&lt;p&gt;2、递归左子树，&lt;code&gt;recur（cur-&amp;gt;left）&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;3、构建相邻结点之间的关系&lt;/p&gt;
+&lt;p&gt;（a）、如果&lt;code&gt;pre&lt;/code&gt;指针为空，说明当前访问的结点为中序遍历的第一个结点，也就是双向链表的头结点，此时将当前结点&lt;code&gt;cur&lt;/code&gt;赋值给&lt;code&gt;head&lt;/code&gt;指针。&lt;/p&gt;
+&lt;p&gt;（b）、如果&lt;code&gt;pre&lt;/code&gt;指针非空，需要建立两个结点之间的关系，即&lt;code&gt;pre-&amp;gt;right = cur&lt;/code&gt;和&lt;code&gt;cur-&amp;gt;left = pre&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;（c）、更新前驱结点&lt;code&gt;pre&lt;/code&gt;，即&lt;code&gt;pre = cur&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;4、递归右子树，&lt;code&gt;recur（cur-&amp;gt;right）&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;最后在执行函数中，需要利用&lt;code&gt;head&lt;/code&gt;和&lt;code&gt;pre&lt;/code&gt;指针建立双向链表的头尾关系，即&lt;code&gt;head-&amp;gt;left = pre&lt;/code&gt;，&lt;code&gt;pre-&amp;gt;right = head&lt;/code&gt;，因为当递归完二叉搜索树时，&lt;code&gt;pre&lt;/code&gt;会指向中序的最后一个元素。&lt;/p&gt;
+&lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Definition for a Node.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;class Node {
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;public:
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    int val;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    Node* left;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    Node* right;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    Node() {}
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    Node(int _val) {
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        val = _val;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        left = NULL;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        right = NULL;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    }
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    Node(int _val, Node* _left, Node* _right) {
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        val = _val;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        left = _left;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;        right = _right;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;    }
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;};
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;*/&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    Node &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;head, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;pre;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;recur&lt;/span&gt;(Node &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;root) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (root &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+        recur(root&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;left);
+        &lt;span style=&#34;color:#75715e&#34;&gt;// 如果pre为空，说明当前访问的是头结点
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (pre) pre&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;right &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; root;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; head &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; root;
+        root&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;left &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pre;
+        &lt;span style=&#34;color:#75715e&#34;&gt;// 修改当前的结点为前驱结点
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        pre &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; root;
+        recur(root&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;right);
+    }
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    Node&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; treeToDoublyList(Node&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; root) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (root &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+        recur(root);
+        head&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;left &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pre;
+        pre&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;right &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; head;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; head;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
+        <title>LeetCode 矩阵中的路径</title>
+        <link>https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</link>
+        <pubDate>Sat, 29 Jan 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</guid>
+        <description>&lt;h2 id=&#34;题目描述&#34;&gt;题目描述&lt;/h2&gt;
+&lt;p&gt;给定一个 &lt;code&gt;m x n&lt;/code&gt; 二维字符网格 &lt;code&gt;board&lt;/code&gt; 和一个字符串单词 &lt;code&gt;word&lt;/code&gt; 。如果 &lt;code&gt;word&lt;/code&gt; 存在于网格中，返回 &lt;code&gt;true&lt;/code&gt; ；否则，返回 &lt;code&gt;false&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。&lt;/p&gt;
+&lt;p&gt;例如，在下面的 3×4 的矩阵中包含单词 &amp;ldquo;ABCCED&amp;rdquo;（单词中的字母已标出）。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://assets.leetcode.com/uploads/2020/11/04/word2.jpg&#34; &gt;
+		&lt;img src=&#34;https://assets.leetcode.com/uploads/2020/11/04/word2.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入：board = [[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;E&amp;quot;],[&amp;quot;S&amp;quot;,&amp;quot;F&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;S&amp;quot;],[&amp;quot;A&amp;quot;,&amp;quot;D&amp;quot;,&amp;quot;E&amp;quot;,&amp;quot;E&amp;quot;]], word = &amp;quot;ABCCED&amp;quot;
+输出：true
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入：board = [[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],[&amp;quot;c&amp;quot;,&amp;quot;d&amp;quot;]], word = &amp;quot;abcd&amp;quot;
+输出：false
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;解题想法&#34;&gt;解题想法&lt;/h2&gt;
+&lt;p&gt;这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。&lt;/p&gt;
+&lt;p&gt;**DFS：**即是暴力遍历矩阵的所有元素，来搜索一条可行的路径，通过递归，可以在一条路径中搜索到底，最后回溯到之前已经匹配的节点。&lt;/p&gt;
+&lt;p&gt;**剪枝：**在DFS过程中如果当前的矩阵字符与字符串字符不等，可以直接回溯。或者路径已经访问过，可以直接跳过。&lt;/p&gt;
+&lt;h3 id=&#34;dfs解析&#34;&gt;DFS解析&lt;/h3&gt;
+&lt;p&gt;1、递归终止条件：&lt;/p&gt;
+&lt;p&gt;（a）、返回true，当匹配到字符串的最后一个字符时，可以直接返回true（至于为什么可以这样返回，参看代码注释）&lt;/p&gt;
+&lt;p&gt;（b）、返回false，如果矩阵的索引越界，当前矩阵的字符和字符串的字符不匹配，当前元素已经访问过了直接返回false&lt;/p&gt;
+&lt;p&gt;2、递归过程&lt;/p&gt;
+&lt;p&gt;（a）、选定当前元素，将当前元素标记为&lt;strong&gt;空字符&lt;/strong&gt;，表明当前元素已经访问过，防止走回头路。&lt;/p&gt;
+&lt;p&gt;（b）、搜索下一个元素，向四个方向分别匹配字符，如果有一个方向可以匹配就继续递归这个方向的DFS算法，并返回true，否则返回false&lt;/p&gt;
+&lt;p&gt;（c）、还原当前元素，需要在DFS算法退出之前，将&lt;strong&gt;空字符&lt;/strong&gt;还原为原来的字符，用于回溯时重新寻找路径，否则回溯将找不到正确路径。&lt;/p&gt;
+&lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; exist(vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;amp;&lt;/span&gt; board, string word) {
+        rows &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; board.size();
+        cols &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; board[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].size();
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; rows; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; cols; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;j) {
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (dfs(board, word, i, j, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; true;
+            }
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; false;
+    }
+&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; rows, cols;
+    &lt;span style=&#34;color:#75715e&#34;&gt;// k为单词索引
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dfs&lt;/span&gt;(vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;vector&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;board, string word, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; j, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; k) {
+        &lt;span style=&#34;color:#75715e&#34;&gt;// 如果越界或者字符不相等，就停止递归
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; rows &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; cols &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; board[i][j] &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; word[k]) 
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; false;
+        &lt;span style=&#34;color:#75715e&#34;&gt;// 当进入这个判断条件时，会先判断是否相等，因此只要走到最后一个字符就可以返回true
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (k &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; word.size() &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; true;
+        &lt;span style=&#34;color:#75715e&#34;&gt;// 将访问过的字符设为一个特殊字符，防止走回头路
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        board[i][j] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\0&amp;#39;&lt;/span&gt;;
+        array&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; dx{&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;};
+        array&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; dy{&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;};
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; idx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; idx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;idx) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (dfs(board, word, i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; dx[idx], j &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; dy[idx], k &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)) {
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; true;
+            }
+        }
+        &lt;span style=&#34;color:#75715e&#34;&gt;// 在退出dfs之前要恢复board，否则回溯将无法找到正确路径
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        board[i][j] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; word[k]; 
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; false;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>LeetCode 最长不含重复字符的子字符串</title>
         <link>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</link>
         <pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate>
@@ -14,7 +298,7 @@
         <guid>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</guid>
         <description>&lt;h2 id=&#34;题目描述&#34;&gt;题目描述&lt;/h2&gt;
 &lt;p&gt;请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。&lt;/p&gt;
-&lt;p&gt;示例&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例&lt;/strong&gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入: &amp;quot;abcabcbb&amp;quot;
 输出: 3 
 解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。
@@ -32,7 +316,7 @@
 &lt;p&gt;2、状态转移方程，首先我们需要固定右边界&lt;code&gt;i&lt;/code&gt;，也就是遍历时的索引，设与&lt;code&gt;s[i]&lt;/code&gt;相同且距离最近的字符为&lt;code&gt;s[pos]&lt;/code&gt;（&lt;code&gt;pos&lt;/code&gt;初始化为&lt;code&gt;-1&lt;/code&gt;。此时不重复字符子串长度应该是&lt;code&gt;i - pos&lt;/code&gt;，但是题目所求为最长，因此根据动态规划的思想就有以下的情况&lt;/p&gt;
 &lt;p&gt;（a）、当$pos&amp;lt;0$时，说明在&lt;code&gt;s[i]&lt;/code&gt;的左侧没有与&lt;code&gt;s[i]&lt;/code&gt;相同的字符，那么&lt;code&gt;dp[i] = dp[i - 1] + 1&lt;/code&gt;（即最长长度等于遍历到前一字符的长度 + 1）&lt;/p&gt;
 &lt;p&gt;（b）、当$dp[i - 1]&amp;lt;i - pos$时，说明重复的字符应该在当前最长非重复字符子串的区间外，即在这个子串的左边，此时&lt;code&gt;dp[i] = dp[i - 1] + 1&lt;/code&gt;，也就是之前的子串再加上当前的字符。&lt;/p&gt;
-&lt;p&gt;（c）、当$dp[i - 1]&amp;gt;=i-pos$时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此&lt;code&gt;dp[i] = i - pos&lt;/code&gt;，也就是在之前的子串中截取出非重复的部分。&lt;/p&gt;
+&lt;p&gt;（c）、当$dp[i - 1]&amp;gt;=i-pos$​时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此&lt;code&gt;dp[i] = i - pos&lt;/code&gt;，也就是在之前的子串中截取出非重复的部分。&lt;/p&gt;
 &lt;p&gt;3、需要一个哈希表用来记录曾经出现过的字符的相对应的索引，每当遍历到一个重复字符时，便要将哈希表中的相应表项更新为当前的索引。&lt;/p&gt;
 &lt;p&gt;由以上的分析可以看出，&lt;code&gt;dp[i]&lt;/code&gt;只由&lt;code&gt;dp[i - 1]&lt;/code&gt;决定，所以可以省略动态规划的数组，采用一个变量进行迭代即可，并求取此变量在这个过程中的最大值。&lt;/p&gt;
 &lt;h3 id=&#34;双指针法滑动窗口&#34;&gt;双指针法（滑动窗口）&lt;/h3&gt;
@@ -92,7 +376,7 @@
         <guid>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</guid>
         <description>&lt;h2 id=&#34;题目描述&#34;&gt;题目描述&lt;/h2&gt;
 &lt;p&gt;假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？&lt;/p&gt;
-&lt;p&gt;示例：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例：&lt;/strong&gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;输入: [7,1,5,3,6,4]
 输出: 5
 解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
@@ -104,7 +388,7 @@
 &lt;p&gt;这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)+(n-2)+&amp;hellip;+2+1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。&lt;/p&gt;
 &lt;h3 id=&#34;动态规划思路&#34;&gt;动态规划思路&lt;/h3&gt;
 &lt;p&gt;1、状态的定义，首先需要声明一个动态规划数组&lt;code&gt;dp&lt;/code&gt;，其中&lt;code&gt;dp[i]&lt;/code&gt;表示以第&lt;code&gt;i&lt;/code&gt;天为最后一天的子数组所能获得的最大利润。&lt;/p&gt;
-&lt;p&gt;2、状态转移方程，由于股票只能买卖一次，因此&lt;code&gt;dp[i]&lt;/code&gt;（也就是前&lt;code&gt;i&lt;/code&gt;天的最大利润），应该是前&lt;code&gt;i-1&lt;/code&gt;天的最大利润与第&lt;code&gt;i&lt;/code&gt;天卖出股票的利润的最大值，于是就有了$$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$$即为&lt;code&gt;dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))&lt;/code&gt;，最终返回&lt;code&gt;dp[n-1]&lt;/code&gt;为所求。&lt;/p&gt;
+&lt;p&gt;2、状态转移方程，由于股票只能买卖一次，因此&lt;code&gt;dp[i]&lt;/code&gt;（也就是前&lt;code&gt;i&lt;/code&gt;天的最大利润），应该是前&lt;code&gt;i-1&lt;/code&gt;天的最大利润与第&lt;code&gt;i&lt;/code&gt;天卖出股票的利润的最大值，于是就有了$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$即为&lt;code&gt;dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))&lt;/code&gt;，最终返回&lt;code&gt;dp[n-1]&lt;/code&gt;为所求。&lt;/p&gt;
 &lt;h3 id=&#34;优化&#34;&gt;优化&lt;/h3&gt;
 &lt;p&gt;我们还可以进行空间和时间上的优化，时间上，可以借助一个变量&lt;code&gt;cost&lt;/code&gt;来维护最小值，这样每次进行状态转移时只需要&lt;code&gt;dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))&lt;/code&gt;，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量&lt;code&gt;maxprofit&lt;/code&gt;来代替整个动态规划列表，这样状态转移就简化为了&lt;code&gt;maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
@@ -327,6 +611,7 @@
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改Toc的样式&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改分类的标签样式&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 修改滚动条样式&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;·&lt;/strong&gt; 使文章支持数学公式编辑&lt;/p&gt;
 &lt;h2 id=&#34;具体修改&#34;&gt;具体修改&lt;/h2&gt;
 &lt;h3 id=&#34;修改全站的字体&#34;&gt;修改全站的字体&lt;/h3&gt;
 &lt;p&gt;其实修改字体的方案主题的原作者已经给出，有需要的可以参考&lt;a class=&#34;link&#34; href=&#34;https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
@@ -713,7 +998,19 @@
         &lt;span style=&#34;color:#a6e22e&#34;&gt;background-color&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;#a8bbbf&lt;/span&gt;;
       }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;支持数学公式编辑&#34;&gt;支持数学公式编辑&lt;/h3&gt;
+&lt;p&gt;在一次使用了markdown内联的$LaTeX$公式发现部署上去之后没有反应时，便一直想使文章能够支持数学公式的编辑。于是在时隔多日之后终于有了解决办法。&lt;/p&gt;
+&lt;p&gt;我们需要在主题根目录的&lt;code&gt;/layouts/partials&lt;/code&gt;创建&lt;code&gt;math.html&lt;/code&gt;文件，之后在这个文件中加入如下代码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;{{ if or .Params.math .Site.Params.math }}
+{{ partial &amp;#34;math.html&amp;#34; . }}
+{{ end }}
+
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;link&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rel&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;stylesheet&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;integrity&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;crossorigin&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;anonymous&amp;#34;&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;integrity&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;crossorigin&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;anonymous&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;integrity&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;crossorigin&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;anonymous&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;onload&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;renderMathInElement(document.body);&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这段代码能够自动渲染数学公式，当然这样还是不够的，我们还需要在每篇文章的markdown的&lt;strong&gt;header&lt;/strong&gt;加上&lt;code&gt;math=&amp;quot;true&amp;quot;&lt;/code&gt;的选择字段。&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>LeetCode 复杂链表的复制</title>

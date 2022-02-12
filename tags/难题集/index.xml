@@ -6,7 +6,31 @@
     <description>Recent content in 难题集 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 22 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 29 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LeetCode 矩阵中的路径</title>
+      <link>https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</link>
+      <pubDate>Sat, 29 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</guid>
+      <description>题目描述 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+例如，在下面的 3×4 的矩阵中包含单词 &amp;ldquo;ABCCED&amp;rdquo;（单词中的字母已标出）。
+ 
+示例：
+输入：board = [[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;E&amp;quot;],[&amp;quot;S&amp;quot;,&amp;quot;F&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;S&amp;quot;],[&amp;quot;A&amp;quot;,&amp;quot;D&amp;quot;,&amp;quot;E&amp;quot;,&amp;quot;E&amp;quot;]], word = &amp;quot;ABCCED&amp;quot;输出：true输入：board = [[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],[&amp;quot;c&amp;quot;,&amp;quot;d&amp;quot;]], word = &amp;quot;abcd&amp;quot;输出：false解题想法 这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。
+**DFS：**即是暴力遍历矩阵的所有元素，来搜索一条可行的路径，通过递归，可以在一条路径中搜索到底，最后回溯到之前已经匹配的节点。
+**剪枝：**在DFS过程中如果当前的矩阵字符与字符串字符不等，可以直接回溯。或者路径已经访问过，可以直接跳过。
+DFS解析 1、递归终止条件：
+（a）、返回true，当匹配到字符串的最后一个字符时，可以直接返回true（至于为什么可以这样返回，参看代码注释）
+（b）、返回false，如果矩阵的索引越界，当前矩阵的字符和字符串的字符不匹配，当前元素已经访问过了直接返回false
+2、递归过程
+（a）、选定当前元素，将当前元素标记为空字符，表明当前元素已经访问过，防止走回头路。
+（b）、搜索下一个元素，向四个方向分别匹配字符，如果有一个方向可以匹配就继续递归这个方向的DFS算法，并返回true，否则返回false
+（c）、还原当前元素，需要在DFS算法退出之前，将空字符还原为原来的字符，用于回溯时重新寻找路径，否则回溯将找不到正确路径。
+代码 class Solution { public: bool exist(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt;&amp;amp; board, string word) { rows = board.size(); cols = board[0].size(); for (int i = 0; i &amp;lt; rows; ++i) { for (int j = 0; j &amp;lt; cols; ++j) { if (dfs(board, word, i, j, 0)) return true; } } return false; } private: int rows, cols; // k为单词索引  bool dfs(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt; &amp;amp;board, string word, int i, int j, int k) { // 如果越界或者字符不相等，就停止递归  if (i &amp;gt;= rows || i &amp;lt; 0 || j &amp;gt;= cols || j &amp;lt; 0 || board[i][j] !</description>
+    </item>
+    
     <item>
       <title>LeetCode 股票的最大利润</title>
       <link>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</link>
@@ -17,7 +41,7 @@
 示例：
 输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)+(n-2)+&amp;hellip;+2+1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
 动态规划思路 1、状态的定义，首先需要声明一个动态规划数组dp，其中dp[i]表示以第i天为最后一天的子数组所能获得的最大利润。
-2、状态转移方程，由于股票只能买卖一次，因此dp[i]（也就是前i天的最大利润），应该是前i-1天的最大利润与第i天卖出股票的利润的最大值，于是就有了$$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$$即为dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))，最终返回dp[n-1]为所求。
+2、状态转移方程，由于股票只能买卖一次，因此dp[i]（也就是前i天的最大利润），应该是前i-1天的最大利润与第i天卖出股票的利润的最大值，于是就有了$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$即为dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))，最终返回dp[n-1]为所求。
 优化 我们还可以进行空间和时间上的优化，时间上，可以借助一个变量cost来维护最小值，这样每次进行状态转移时只需要dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量maxprofit来代替整个动态规划列表，这样状态转移就简化为了maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))
 代码 /*未优化*/ class Solution { public: int maxProfit(vector&amp;lt;int&amp;gt;&amp;amp; prices) { if (prices.</description>
     </item>

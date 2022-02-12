@@ -8,7 +8,7 @@
 2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
 （a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] &#43; 1（即最长长度等于遍历到前一字符的长度 &#43; 1）
 （b）、当$dp[i - 1]&amp;lt;i - pos$时，说明重复的字符应该在当前最长非重复字符子串的区间外，即在这个子串的左边，此时dp[i] = dp[i - 1] &#43; 1，也就是之前的子串再加上当前的字符。
-（c）、当$dp[i - 1]&amp;gt;=i-pos$时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此dp[i] = i - pos，也就是在之前的子串中截取出非重复的部分。
+（c）、当$dp[i - 1]&amp;gt;=i-pos$​时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此dp[i] = i - pos，也就是在之前的子串中截取出非重复的部分。
 3、需要一个哈希表用来记录曾经出现过的字符的相对应的索引，每当遍历到一个重复字符时，便要将哈希表中的相应表项更新为当前的索引。
 由以上的分析可以看出，dp[i]只由dp[i - 1]决定，所以可以省略动态规划的数组，采用一个变量进行迭代即可，并求取此变量在这个过程中的最大值。
 双指针法（滑动窗口） 由于滑动窗口的代码写得比较少，当看到题解有滑动窗口时，便又学习了一下。'><title>LeetCode 最长不含重复字符的子字符串</title>
@@ -41,7 +41,7 @@
 2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
 （a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] &#43; 1（即最长长度等于遍历到前一字符的长度 &#43; 1）
 （b）、当$dp[i - 1]&amp;lt;i - pos$时，说明重复的字符应该在当前最长非重复字符子串的区间外，即在这个子串的左边，此时dp[i] = dp[i - 1] &#43; 1，也就是之前的子串再加上当前的字符。
-（c）、当$dp[i - 1]&amp;gt;=i-pos$时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此dp[i] = i - pos，也就是在之前的子串中截取出非重复的部分。
+（c）、当$dp[i - 1]&amp;gt;=i-pos$​时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此dp[i] = i - pos，也就是在之前的子串中截取出非重复的部分。
 3、需要一个哈希表用来记录曾经出现过的字符的相对应的索引，每当遍历到一个重复字符时，便要将哈希表中的相应表项更新为当前的索引。
 由以上的分析可以看出，dp[i]只由dp[i - 1]决定，所以可以省略动态规划的数组，采用一个变量进行迭代即可，并求取此变量在这个过程中的最大值。
 双指针法（滑动窗口） 由于滑动窗口的代码写得比较少，当看到题解有滑动窗口时，便又学习了一下。'>
@@ -56,7 +56,7 @@
 2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
 （a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] &#43; 1（即最长长度等于遍历到前一字符的长度 &#43; 1）
 （b）、当$dp[i - 1]&amp;lt;i - pos$时，说明重复的字符应该在当前最长非重复字符子串的区间外，即在这个子串的左边，此时dp[i] = dp[i - 1] &#43; 1，也就是之前的子串再加上当前的字符。
-（c）、当$dp[i - 1]&amp;gt;=i-pos$时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此dp[i] = i - pos，也就是在之前的子串中截取出非重复的部分。
+（c）、当$dp[i - 1]&amp;gt;=i-pos$​时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此dp[i] = i - pos，也就是在之前的子串中截取出非重复的部分。
 3、需要一个哈希表用来记录曾经出现过的字符的相对应的索引，每当遍历到一个重复字符时，便要将哈希表中的相应表项更新为当前的索引。
 由以上的分析可以看出，dp[i]只由dp[i - 1]决定，所以可以省略动态规划的数组，采用一个变量进行迭代即可，并求取此变量在这个过程中的最大值。
 双指针法（滑动窗口） 由于滑动窗口的代码写得比较少，当看到题解有滑动窗口时，便又学习了一下。"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
@@ -133,8 +133,8 @@
     
     <header class="article-category">
         
-            <a href="/categories/%E5%88%B7%E9%A2%98/" >
-                刷题
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
             </a>
         
     </header>
@@ -172,7 +172,7 @@
     <section class="article-content">
     <h2 id="题目描述">题目描述</h2>
 <p>请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。</p>
-<p>示例</p>
+<p><strong>示例</strong></p>
 <pre tabindex="0"><code>输入: &quot;abcabcbb&quot;
 输出: 3 
 解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。
@@ -190,7 +190,7 @@
 <p>2、状态转移方程，首先我们需要固定右边界<code>i</code>，也就是遍历时的索引，设与<code>s[i]</code>相同且距离最近的字符为<code>s[pos]</code>（<code>pos</code>初始化为<code>-1</code>。此时不重复字符子串长度应该是<code>i - pos</code>，但是题目所求为最长，因此根据动态规划的思想就有以下的情况</p>
 <p>（a）、当$pos&lt;0$时，说明在<code>s[i]</code>的左侧没有与<code>s[i]</code>相同的字符，那么<code>dp[i] = dp[i - 1] + 1</code>（即最长长度等于遍历到前一字符的长度 + 1）</p>
 <p>（b）、当$dp[i - 1]&lt;i - pos$时，说明重复的字符应该在当前最长非重复字符子串的区间外，即在这个子串的左边，此时<code>dp[i] = dp[i - 1] + 1</code>，也就是之前的子串再加上当前的字符。</p>
-<p>（c）、当$dp[i - 1]&gt;=i-pos$时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此<code>dp[i] = i - pos</code>，也就是在之前的子串中截取出非重复的部分。</p>
+<p>（c）、当$dp[i - 1]&gt;=i-pos$​时，说明此时重复的字符应该在当前最长的非重复字符子串的区间内，因此<code>dp[i] = i - pos</code>，也就是在之前的子串中截取出非重复的部分。</p>
 <p>3、需要一个哈希表用来记录曾经出现过的字符的相对应的索引，每当遍历到一个重复字符时，便要将哈希表中的相应表项更新为当前的索引。</p>
 <p>由以上的分析可以看出，<code>dp[i]</code>只由<code>dp[i - 1]</code>决定，所以可以省略动态规划的数组，采用一个变量进行迭代即可，并求取此变量在这个过程中的最大值。</p>
 <h3 id="双指针法滑动窗口">双指针法（滑动窗口）</h3>
@@ -257,6 +257,29 @@
 
 
     
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
 </article>
 
     
@@ -270,36 +293,36 @@
                 
                     
 <article class="">
+    <a href="/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeetCode 二叉搜索树与双向链表</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeetCode 矩阵中的路径</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
     <a href="/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/">
         
         
 
         <div class="article-details">
             <h2 class="article-title">LeetCode 股票的最大利润</h2>
-        </div>
-    </a>
-</article>
-                
-                    
-<article class="">
-    <a href="/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">LeetCode 树的子结构</h2>
-        </div>
-    </a>
-</article>
-                
-                    
-<article class="">
-    <a href="/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">LeetCode 从上到下打印链表</h2>
         </div>
     </a>
 </article>
