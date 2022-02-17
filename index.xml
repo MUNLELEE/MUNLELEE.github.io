@@ -6,7 +6,164 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 02 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>应用层协议——HTTP</title>
+        <link>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
+        <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
+        <description>&lt;h2 id=&#34;http协议概述&#34;&gt;HTTP协议概述&lt;/h2&gt;
+&lt;h3 id=&#34;概况&#34;&gt;概况&lt;/h3&gt;
+&lt;p&gt;Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。&lt;/p&gt;
+&lt;p&gt;HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 &lt;strong&gt;使用TCP作为它的支撑运输协议&lt;/strong&gt; 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 &lt;strong&gt;套接字接口&lt;/strong&gt; 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/620cf0272ab3f51d91719a50.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/620cf0272ab3f51d91719a50.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 &lt;strong&gt;无状态协议&lt;/strong&gt; ，如果需要保存客户的登录信息，则 &lt;em&gt;需要引入相关技术来记录状态，如Cookie&lt;/em&gt; 。&lt;/p&gt;
+&lt;h3 id=&#34;持续和非持续连接&#34;&gt;持续和非持续连接&lt;/h3&gt;
+&lt;p&gt;在实际情况中，客户可能会发出一系列请求并且服务器会对每个请求进行响应。而这种客户-服务器的交互是经过TCP进行的，因此这些请求是经过单独的TCP连接还是经过相同的TCP连接就是这种交互方式的关键问题。也因此诞生了持续和非持续的HTTP连接。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;非持续连接：&lt;/strong&gt; 使用非持续连接，每个TCP连接在服务器 &lt;strong&gt;发送一个对象后就关闭&lt;/strong&gt; （对象即HTML文件以及网页图像等），每个TCP连接只传输一个请求报文和一个响应报文。&lt;/p&gt;
+&lt;p&gt;非持续连接有以下缺点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。&lt;/li&gt;
+&lt;li&gt;每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;持续连接：&lt;/strong&gt; 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。&lt;/p&gt;
+&lt;h3 id=&#34;http连接流程&#34;&gt;HTTP连接流程&lt;/h3&gt;
+&lt;p&gt;（1）、 &lt;strong&gt;客户端连接到Web服务器。&lt;/strong&gt; 一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80端口），建立一个TCP套接字连接。&lt;/p&gt;
+&lt;p&gt;（2）、 &lt;strong&gt;发送HTTP请求。&lt;/strong&gt; 通过TCP套接字，客户端向HTTP服务器发送一个文本的请求报文。&lt;/p&gt;
+&lt;p&gt;（3）、 &lt;strong&gt;服务器接受请求并返回HTTP响应。&lt;/strong&gt; Web服务器解析请求，定位请求资源。服务器将资源副本写到TCP套接字，由客户端读取。&lt;/p&gt;
+&lt;p&gt;（4）、 &lt;strong&gt;释放TCP连接。&lt;/strong&gt; 若connection模式为close，则服务器主动关闭TCP连接，客户端被动关闭TCP连接并释放。反之若为keepalive，则TCP连接会保持一段时间，在这段时间内可以继续接受请求和响应。&lt;/p&gt;
+&lt;p&gt;（5）、 &lt;strong&gt;客户端浏览器解析HTML内容。&lt;/strong&gt; 客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取相应的HTML，根据HTML语法对其进行格式化，并在浏览器窗口显示。&lt;/p&gt;
+&lt;h2 id=&#34;http报文&#34;&gt;HTTP报文&lt;/h2&gt;
+&lt;h3 id=&#34;http请求报文&#34;&gt;HTTP请求报文&lt;/h3&gt;
+&lt;p&gt;请求报文格式如下图。其中第一行称为 &lt;strong&gt;请求行&lt;/strong&gt; ，其后继的行称为 &lt;strong&gt;首部行&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;请求行有三个字段：方法字段、URL字段和HTTP版本字段。方法字段可以区包括GET、POST、HEAD、PUT和DELETE。这些请求方法将会在下文讲述。&lt;/p&gt;
+&lt;p&gt;首部行则会包含Host字段，Connection字段以及User-agent字段等。分别指明了对象所在的主机、是否使用持续连接以及用户代理（发送请求的浏览器类型）。其中Host首部行则是Web代理高速缓存所要求的。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/620cfc842ab3f51d91860c6e.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/620cfc842ab3f51d91860c6e.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;http响应报文&#34;&gt;HTTP响应报文&lt;/h3&gt;
+&lt;p&gt;响应报文的格式如下图。分为 &lt;strong&gt;状态行&lt;/strong&gt; ， &lt;strong&gt;首部行&lt;/strong&gt; 以及 &lt;strong&gt;实体体&lt;/strong&gt; 三个部分。实体体为报文的主要部分，为所请求的对象本身。同样在首部行会包含一些字段。例如：Date：指示发送该报文的日期和时间；Server：指示发送的服务器；Last-Modified：最后修改的日期和时间等。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/620cfbbc2ab3f51d9184bfb8.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/620cfbbc2ab3f51d9184bfb8.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;http状态码&#34;&gt;HTTP状态码&lt;/h2&gt;
+&lt;p&gt;由上述HTTP响应报文可以得出，在状态行中包含状态码字段，这个字段将指示请求的结果。可以将状态码分为以下几类：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1xx： &lt;strong&gt;指示信息&lt;/strong&gt; ，表示请求已接收，继续处理&lt;/li&gt;
+&lt;li&gt;2xx： &lt;strong&gt;成功&lt;/strong&gt; ，表示请求已被成功接收、理解、接受&lt;/li&gt;
+&lt;li&gt;3xx： &lt;strong&gt;重定向&lt;/strong&gt; ，要完成请求必须进行进一步的操作&lt;/li&gt;
+&lt;li&gt;4xx： &lt;strong&gt;客户端错误&lt;/strong&gt; ，请求有语法错误或请求无法实现&lt;/li&gt;
+&lt;li&gt;5xx： &lt;strong&gt;服务器端错误&lt;/strong&gt; ，服务器未能实现合法请求&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常见的状态码如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;200 OK：请求成功，信息在返回的响应报文中。&lt;/li&gt;
+&lt;li&gt;301 Moved Permanently：请求的对象已经被永久转移了，新的URL定义在响应报文的Location：首部行中。客户软件将自动获取新的URL&lt;/li&gt;
+&lt;li&gt;400 Bad Request：一个通用的差错代码，指示该请求不能被服务器理解。&lt;/li&gt;
+&lt;li&gt;404 Not Found：被请求的文档不在服务器上。&lt;/li&gt;
+&lt;li&gt;505 HTTP Version Not Supported：服务器不支持请求报文使用的HTTP协议版本。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;更多的状态码及其对应短语可以参考&lt;a class=&#34;link&#34; href=&#34;https://www.runoob.com/http/http-status-codes.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;此网址&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;http请求方法&#34;&gt;HTTP请求方法&lt;/h2&gt;
+&lt;p&gt;HTTP1.0定义了三种请求方法：GET、POST和HEAD。&lt;/p&gt;
+&lt;p&gt;HTTP1.1新增了五种请求方法：OPTIONS、PUT、DELETE、TRACE和CONNECT方法&lt;/p&gt;
+&lt;p&gt;每种方法的特点如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GET。&lt;/strong&gt;  请求指定的页面信息，并返回实体主体。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;HEAD。&lt;/strong&gt; 类似于GET请求，只不过返回的响应中没有主体内容，用于获取报头。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;POST。&lt;/strong&gt; 向指定资源提交提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PUT。&lt;/strong&gt; 从客户端向服务器传送的数据取代指定的文档的内容。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DELETE。&lt;/strong&gt; 请求服务器删除指定的页面。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CONNECT。&lt;/strong&gt; HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OPTIONS。&lt;/strong&gt; 允许客户端查看服务器的性能。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;TRACE。&lt;/strong&gt; 回显服务器收到的请求，主要用于测试或诊断。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;get和post请求的区别&#34;&gt;GET和POST请求的区别&lt;/h3&gt;
+&lt;p&gt;（1）、 &lt;strong&gt;GET提交：&lt;/strong&gt; 请求的数据会附在URL之后（就是把数据放置在HTTP协议头中），以&lt;code&gt;?&lt;/code&gt;分割URL和传输数据，多个参数用&lt;code&gt;&amp;amp;&lt;/code&gt;连接；例如：&lt;code&gt;login.action?name=hyddd&amp;amp;password=idontknow&amp;amp;verify=%E4%BD%A0%E5%A5%BD&lt;/code&gt;。如果数据是英文字母/数字，原样发送，如果是空格，转换为&lt;code&gt;+&lt;/code&gt;，如果是中文/其他字符，则直接把字符串用BASE64加密，得出如： %E4%BD%A0%E5%A5%BD，其中％XX中的XX为该符号以16进制表示的ASCII。 &lt;strong&gt;POST提交：&lt;/strong&gt; 把提交的数据放置在是HTTP包的包体中。&lt;/p&gt;
+&lt;p&gt;也即 &lt;strong&gt;GET提交的数据会在地址栏中显示出来，而POST提交，地址栏不会改变&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;（2）、传输数据的大小：首先 &lt;strong&gt;HTTP协议没有对传输的数据大小进行限制，HTTP协议规范也没有对URL长度进行限制&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;而在实际的开发中：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;GET：&lt;/strong&gt; 特定浏览器和服务器对URL长度有限制，例如：IE对URL长度的限制是2083字节(2K+35)。对于其他浏览器，如Netscape、FireFox等，理论上没有长度限制，其限制取决于操作系统的支持。因此对于GET提交时，传输数据就会受到URL长度的限制。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;POST：&lt;/strong&gt; 由于不是通过URL传值，理论上数据不受限。但实际各个WEB服务器会规定对POST提交数据大小进行限制，Apache、IIS6都有各自的配置。&lt;/p&gt;
+&lt;p&gt;（3）、安全性&lt;/p&gt;
+&lt;p&gt;POST的安全性要比GET的安全性高。比如：通过GET提交数据，用户名和密码将明文出现在URL上，因为登录页面有可能被浏览器缓存；其他人查看浏览器的历史纪录，那么别人就可以拿到你的账号和密码了，除此之外，使用GET提交数据还可能会造成Cross-site request forgery攻击&lt;/p&gt;
+&lt;h2 id=&#34;https&#34;&gt;HTTPS&lt;/h2&gt;
+&lt;h3 id=&#34;http的不足&#34;&gt;HTTP的不足&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;通信使用明文（不加密），内容可能会被窃听&lt;/li&gt;
+&lt;li&gt;不验证通信方的身份，因此有可能遭遇伪装&lt;/li&gt;
+&lt;li&gt;无法证明报文的完整性，所以有可能已遭篡改&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;https介绍&#34;&gt;HTTPS介绍&lt;/h3&gt;
+&lt;p&gt;HTTP协议中没有加密机制，但可以通过和SSL（Secure Socket Layer， &lt;strong&gt;安全套接层&lt;/strong&gt; ）或TLS（Transport Layer Security， &lt;strong&gt;安全传输协议&lt;/strong&gt; ）的组合使用，加密HTTP通信内容。属于通信加密，即在整个通信线路中加密。如图&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/620da6e52ab3f51d916d0424.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/620da6e52ab3f51d916d0424.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;HTTPS采用 &lt;strong&gt;共享密钥加密（对称）&lt;/strong&gt; 和 &lt;strong&gt;公开密钥加密（非对称）&lt;/strong&gt; 两者并用的混合加密机制，若密钥能够实现安全交换，那么有可能仅考虑使用公开密钥来加密通信。但是公开密钥加密相对于共享密钥加密处理速度较慢。因此可以在交换密钥阶段使用 &lt;strong&gt;公开密钥&lt;/strong&gt; 加密方式，之后建立通信交换报文阶段则使用 &lt;strong&gt;共享密钥&lt;/strong&gt; 加密方式。&lt;/p&gt;
+&lt;p&gt;HTTPS握手流程简单描述如下：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/620dabdc2ab3f51d917398df.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/620dabdc2ab3f51d917398df.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;（1）、浏览器将自己支持的一套加密规则发送给网站 &lt;em&gt;（服务器获得浏览器公钥）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;（2）、网站从中选出一组加密算法与HASH算法，并将自己的身份信息以证书的形式发回给浏览器。证书里面包含了网站地址，加密公钥等信息 &lt;em&gt;（浏览器获得服务器公钥）&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;（3）、获得网站证书后浏览器需要进行以下操作&lt;/p&gt;
+&lt;p&gt;（a）、验证证书的合法性（颁发证书的机构是否合法，证书中包含的网站地址是否与正在访问的地址一致等），如果证书受信任，则浏览器栏里面会显示一个小锁头，否则会给出证书不受信的提示。&lt;/p&gt;
+&lt;p&gt;（b）、如果证书受信任，或者是用户接受了不受信的证书，浏览器会生成一串随机数的密码（接下来通信的密钥），并用证书中提供的公钥加密（共享密钥加密）。&lt;/p&gt;
+&lt;p&gt;（c）、使用约定好的HASH计算握手消息，并使用生成的随机数对消息进行加密，最后将之前生成的所有信息发送给网站。&lt;/p&gt;
+&lt;p&gt;（4）、网站接受浏览器发来的数据之后要做以下的操作：&lt;/p&gt;
+&lt;p&gt;（a）、使用自己的私钥将信息解密取出密码，使用密码解密浏览器发来的握手消息，并验证HASH是否与浏览器发来的一致。&lt;/p&gt;
+&lt;p&gt;（b）、使用密码加密一段握手消息，发送给浏览器。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>春招 | 知识点留档</title>
         <link>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
         <pubDate>Wed, 02 Feb 2022 00:00:00 +0000</pubDate>
@@ -14,8 +171,8 @@
         <guid>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
         <description>&lt;p&gt;春节已然过去了，处于人生的又一个十字路口且充满后顾之忧的我决定开始准备春招，时间看着是比较紧的，我也不知道自己最后能够准备到什么程度。&lt;/p&gt;
 &lt;h2 id=&#34;1重载隐藏重写覆盖三者的区别&#34;&gt;1、重载、隐藏、重写（覆盖）三者的区别&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;重载：&lt;strong&gt;是指同一可访问区内被声明的几个具有&lt;/strong&gt;不同参数列&lt;/strong&gt;*（参数的类型、个数、顺序不同）的同名函数，根据参数列表确定调用哪个函数。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;隐藏：&lt;strong&gt;指的是派生类类型的对象、指针引用访问基类和派生类&lt;/strong&gt;都有&lt;/strong&gt;的同名函数时**（只要求同名，不管参数列表是否相同）**，访问的是派生类的函数，即隐藏了基类的同名函数。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;重载：&lt;strong&gt;是指同一可访问区内被声明的几个具有&lt;/strong&gt;不同参数列&lt;/strong&gt;（参数的类型、个数、顺序不同）的同名函数，根据参数列表确定调用哪个函数。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;隐藏：&lt;strong&gt;指的是派生类类型的对象、指针引用访问基类和派生类&lt;/strong&gt;都有&lt;/strong&gt;的同名函数时 &lt;em&gt;（只要求同名，不管参数列表是否相同）&lt;/em&gt;，访问的是派生类的函数，即隐藏了基类的同名函数。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;重写（覆盖）：&lt;strong&gt;是&lt;/strong&gt;指派生类&lt;/strong&gt;中存在重新定义的函数。其函数名，参数列表，返回值类型，所有都必须同基类中被重写的函数一致。只有函数体不同（花括号内），派生类调用时会调用派生类的重写函数，不会调用被重写函数。重写的基类中被重写的函数必须有virtual修饰。&lt;/p&gt;
 &lt;p&gt;此外，重载的参数不同，函数体不同；隐藏的参数可以不同，函数体不同；重写或覆盖仅仅函数体不同。&lt;/p&gt;
 &lt;h3 id=&#34;三者更为深入的一些问题&#34;&gt;三者更为深入的一些问题&lt;/h3&gt;
@@ -28,11 +185,11 @@
 &lt;p&gt;（1）、&lt;strong&gt;申请内存所在区域。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;操作符从自由存储区*（不仅可以是堆还可以是静态存储区）*上为对象动态分配内存，而&lt;code&gt;malloc&lt;/code&gt;从堆上分配内存，这块区域是操作系统维护的一块特殊内存，用于程序动态分配。&lt;/p&gt;
 &lt;p&gt;（2）、&lt;strong&gt;返回类型。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;操作符返回的是对象类型指针，不需要进行强制转换；&lt;code&gt;malloc&lt;/code&gt;内存分配成功则是返回&lt;code&gt;void*&lt;/code&gt;，需要通过强制类型转换成指定类型。&lt;/p&gt;
 &lt;p&gt;（3）、&lt;strong&gt;内存分配失败时的返回值。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;内存分配失败时，会抛出&lt;code&gt;bad_alloc&lt;/code&gt;异常，不会返回&lt;code&gt;NULL&lt;/code&gt;，&lt;code&gt;malloc&lt;/code&gt;分配内存失败时返回&lt;code&gt;NULL&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;（4）、**是否需要指定内存大小。**使用&lt;code&gt;new&lt;/code&gt;操作符时进行内存分配时无需指定内存块的大小，使用&lt;code&gt;malloc&lt;/code&gt;需要显式的指定内存的大小。&lt;/p&gt;
+&lt;p&gt;（4）、&lt;strong&gt;是否需要指定内存大小。&lt;/strong&gt; 使用&lt;code&gt;new&lt;/code&gt;操作符时进行内存分配时无需指定内存块的大小，使用&lt;code&gt;malloc&lt;/code&gt;需要显式的指定内存的大小。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt; {...}
 A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; A;
 A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (A&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)malloc(&lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(A));
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（5）、**是否调用构造函数。**使用&lt;code&gt;new&lt;/code&gt;操作符分配对象内存时经历如下的几个步骤：&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（5）、&lt;strong&gt;是否调用构造函数。&lt;/strong&gt; 使用&lt;code&gt;new&lt;/code&gt;操作符分配对象内存时经历如下的几个步骤：&lt;/p&gt;
 &lt;p&gt;· 调用&lt;code&gt;operator new&lt;/code&gt;函数（数组是&lt;code&gt;operator new[]&lt;/code&gt;）来分配内存空间&lt;/p&gt;
 &lt;p&gt;· 编译器运行相应的构造函数创建对象，并赋初值&lt;/p&gt;
 &lt;p&gt;· 返回指向这个对象的指针&lt;/p&gt;
@@ -40,19 +197,19 @@ A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#3
 &lt;p&gt;· 调用对象的析构函数&lt;/p&gt;
 &lt;p&gt;· 编译器调用&lt;code&gt;operator delete&lt;/code&gt;（&lt;code&gt;operator delete[]&lt;/code&gt;）释放内存空间&lt;/p&gt;
 &lt;p&gt;使用&lt;code&gt;malloc&lt;/code&gt;分配内存则不会调用构造函数&lt;/p&gt;
-&lt;p&gt;（6）、**对数组的处理。**C++提供了&lt;code&gt;new []&lt;/code&gt;和&lt;code&gt;delete []&lt;/code&gt;来专门处理数组类型，而malloc需要自己指定数组的大小&lt;/p&gt;
+&lt;p&gt;（6）、&lt;strong&gt;对数组的处理。&lt;/strong&gt; C++提供了&lt;code&gt;new []&lt;/code&gt;和&lt;code&gt;delete []&lt;/code&gt;来专门处理数组类型，而malloc需要自己指定数组的大小&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-C++&#34; data-lang=&#34;C++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)malloc(&lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;// 分配一个十个int大小的数组
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（7）、**是否能够重新分配内存。**使用&lt;code&gt;malloc&lt;/code&gt;分配内存后，如果在使用过程中发现内存不足，可以使用&lt;code&gt;realloc&lt;/code&gt;函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。&lt;code&gt;new&lt;/code&gt;没有扩充内存的配套操作&lt;/p&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（7）、&lt;strong&gt;是否能够重新分配内存。&lt;/strong&gt; 使用&lt;code&gt;malloc&lt;/code&gt;分配内存后，如果在使用过程中发现内存不足，可以使用&lt;code&gt;realloc&lt;/code&gt;函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。&lt;code&gt;new&lt;/code&gt;没有扩充内存的配套操作&lt;/p&gt;
 &lt;p&gt;（8）、&lt;strong&gt;客户处理内存分配不足。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;会有异常机制，而&lt;code&gt;malloc&lt;/code&gt;只能返回&lt;code&gt;NULL&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id=&#34;3虚函数&#34;&gt;3、虚函数&lt;/h2&gt;
 &lt;p&gt;虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成&lt;strong&gt;运行时决议&lt;/strong&gt;，与传统的编译时决定有本质区别。&lt;/p&gt;
 &lt;p&gt;虚函数的实现是由两个部分组成的，虚函数指针和虚函数表。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。&lt;/strong&gt;&lt;/p&gt;
-&lt;h4 id=&#34;31虚函数指针&#34;&gt;3.1、虚函数指针&lt;/h4&gt;
+&lt;h3 id=&#34;31虚函数指针&#34;&gt;3.1、虚函数指针&lt;/h3&gt;
 &lt;p&gt;本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。只有拥有虚函数的类才会拥有虚函数指针，只有拥有虚函数的类才会拥有虚函数指针，每个虚函数也都会对应一个虚函数指针。&lt;/p&gt;
-&lt;h4 id=&#34;32ab两个类类中有虚函数c继承ab有几张虚函数表&#34;&gt;3.2、A、B两个类，类中有虚函数。C继承AB，有几张虚函数表？&lt;/h4&gt;
+&lt;h3 id=&#34;32ab两个类类中有虚函数c继承ab有几张虚函数表&#34;&gt;3.2、A、B两个类，类中有虚函数。C继承AB，有几张虚函数表？&lt;/h3&gt;
 &lt;p&gt;两张，多继承就会有多个虚函数表，因为每个父类的虚函数是不同的，指针也是不同的。如果公用一张虚函数表，就分不清子类到底实例化的哪个基类函数。&lt;/p&gt;
-&lt;h4 id=&#34;33虚构函数可以是虚函数吗&#34;&gt;3.3、虚构函数可以是虚函数吗？&lt;/h4&gt;
+&lt;h3 id=&#34;33虚构函数可以是虚函数吗&#34;&gt;3.3、虚构函数可以是虚函数吗？&lt;/h3&gt;
 &lt;p&gt;析构函数必须是虚函数。因为如果不是虚函数，&lt;strong&gt;当在主函数中用父类的指针new出一个子类对象，最后析构的时候，只会调用父类析构函数而不会调用子类析构函数。而且如果不为虚函数，父类指针就不会调用子类成员函数。&lt;/strong&gt;&lt;/p&gt;
 &lt;h2 id=&#34;4什么是多态机制&#34;&gt;4、什么是多态机制&lt;/h2&gt;
 &lt;p&gt;面向对象的三大特征：封装，继承，多态。&lt;/p&gt;
@@ -64,15 +221,15 @@ A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#3
 &lt;h4 id=&#34;32父类构造函数中是否可以调用虚函数&#34;&gt;3.2、父类构造函数中是否可以调用虚函数&lt;/h4&gt;
 &lt;p&gt;可以。不过调用会屏蔽多态机制，最终会把基类中的该虚函数作为普通函数调用，而不会调用派生类中的被重写的函数。这是因为在定义子类对象的时候，会先调用父类的构造函数，&lt;strong&gt;而此时虚函数表以及子类函数还没有被初始化，为了避免调用到未初始化的内存&lt;/strong&gt;，C++标准规范中规定了在这种情况下，**即在构造子类时调用父类的构造函数，而父类的构造函数中又调用了虚成员函数，这个虚成员函数即使被子类重写，也不允许发生多态的行为。**所以使用的是静态绑定，调用了父类的函数。&lt;/p&gt;
 &lt;h4 id=&#34;33构造函数可以是虚函数吗&#34;&gt;3.3、构造函数可以是虚函数吗？&lt;/h4&gt;
-&lt;p&gt;不可以，因为虚函数存在的**唯一目的就是为了多态。**而子类并不继承父类的构造函数，所以没有使父类构造函数变成虚函数的必要。另一方面，构造函数为类对象初始化了内存空间，里面保存了指向虚函数的指针，如果构造函数是虚函数，导致没有实例化对象，也就没有内存空间，更不会有虚函数。&lt;/p&gt;
+&lt;p&gt;不可以，因为虚函数存在的 &lt;strong&gt;唯一目的就是为了多态。&lt;/strong&gt; 而子类并不继承父类的构造函数，所以没有使父类构造函数变成虚函数的必要。另一方面，构造函数为类对象初始化了内存空间，里面保存了指向虚函数的指针，如果构造函数是虚函数，导致没有实例化对象，也就没有内存空间，更不会有虚函数。&lt;/p&gt;
 &lt;h4 id=&#34;34静态函数可以是虚函数吗&#34;&gt;3.4、静态函数可以是虚函数吗？&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;static&lt;/code&gt;成员不属于任何类对象或实例，所以即使给&lt;code&gt;static&lt;/code&gt;函数加上&lt;code&gt;virtual&lt;/code&gt;也是没有任何意义的。&lt;/li&gt;
 &lt;li&gt;静态与非静态成员函数之间有一个主要区别。那就是静态成员函数&lt;strong&gt;没有&lt;code&gt;this&lt;/code&gt;指针&lt;/strong&gt;，所以无法访问&lt;code&gt;vptr&lt;/code&gt;，进而不能访问虚函数表&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;5指针和引用的区别&#34;&gt;5、指针和引用的区别&lt;/h2&gt;
-&lt;p&gt;**指针：**指针是一个变量，用于保存另一个变量的地址，指针需要用&lt;code&gt;*&lt;/code&gt;来进行解引用，以获取它指向的内存地址上的内容。&lt;/p&gt;
-&lt;p&gt;**引用：**引用是一个已经存在的变量的别名，但引用也是通过存储变量的地址来实现对变量的修改的&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;指针：&lt;/strong&gt; 指针是一个变量，用于保存另一个变量的地址，指针需要用&lt;code&gt;*&lt;/code&gt;来进行解引用，以获取它指向的内存地址上的内容。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;引用：&lt;/strong&gt; 引用是一个已经存在的变量的别名，但引用也是通过存储变量的地址来实现对变量的修改的&lt;/p&gt;
 &lt;p&gt;两者的区别：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;引用必须&lt;strong&gt;定义时初始化&lt;/strong&gt;，不能像指针一样，指针可以定义后视情况初始化&lt;/li&gt;
@@ -99,7 +256,7 @@ A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#3
     cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; a.num; &lt;span style=&#34;color:#75715e&#34;&gt;// 输出10
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; A&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;num; &lt;span style=&#34;color:#75715e&#34;&gt;// 输出10
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（2）、**类中的静态成员函数。**静态成员函数不依赖于类的对象。允许使用&lt;code&gt;.&lt;/code&gt;和类名来调用静态成员函数。&lt;strong&gt;静态成员函数只能访问静态成员变量或其它静态成员函数。&lt;/strong&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;（2）、&lt;strong&gt;类中的静态成员函数。&lt;/strong&gt; 静态成员函数不依赖于类的对象。允许使用&lt;code&gt;.&lt;/code&gt;和类名来调用静态成员函数。&lt;strong&gt;静态成员函数只能访问静态成员变量或其它静态成员函数。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;此外还有以下特点&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;static成员变量不占用对象的内存，而是在所有对象之外开辟内存&lt;/li&gt;
@@ -111,9 +268,68 @@ A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#3
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; p; &lt;span style=&#34;color:#75715e&#34;&gt;// 常量指针
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; p; &lt;span style=&#34;color:#75715e&#34;&gt;// 指针常量 
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;常量指针&#34;&gt;常量指针&lt;/h3&gt;
-&lt;p&gt;也称为底层const，指针指向的值被指针限定住，不能通过指针改变指向的值。但此时可以修改指针的指向。&lt;/p&gt;
+&lt;p&gt;底层const，指针指向的值被指针限定住，不能通过指针改变指向的值。但此时可以修改指针的指向。&lt;/p&gt;
 &lt;h3 id=&#34;指针常量&#34;&gt;指针常量&lt;/h3&gt;
-&lt;p&gt;也称为顶层const，指针指向的地址不能修改，并且&lt;strong&gt;声明时必须初始化&lt;/strong&gt;，但是指针指向的地址的内容可以通过指针修改。&lt;/p&gt;
+&lt;p&gt;顶层const，指针指向的地址不能修改，并且&lt;strong&gt;声明时必须初始化&lt;/strong&gt;，但是指针指向的地址的内容可以通过指针修改。&lt;/p&gt;
+&lt;h2 id=&#34;8stl专题&#34;&gt;8、STL专题&lt;/h2&gt;
+&lt;h3 id=&#34;1vector&#34;&gt;（1）、vector&lt;/h3&gt;
+&lt;p&gt;可变大小的数组， &lt;strong&gt;支持快速随机访问，在尾部之外的位置插入或删除元素可能很慢&lt;/strong&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;底层原理&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;底层为动态数组，包括三个迭代器，&lt;code&gt;begin&lt;/code&gt;和&lt;code&gt;end&lt;/code&gt;是已经被使用的空间范围，&lt;code&gt;end_of_storage&lt;/code&gt;是整块连续空间包括备用空间的尾部。&lt;/p&gt;
+&lt;p&gt;当空间不够装下数据时，会&lt;strong&gt;自动申请另一片更大的空间&lt;/strong&gt;（1.5倍或者2倍），然后把原来的数据拷贝到新的内存空间，接着释放原来的内存空间，而当释放或者删除vector里面的数据时（&lt;code&gt;v.clear()&lt;/code&gt;），其存储空间不释放，仅仅是清空了里面的数据。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;reserve和resize的区别&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;reserve：&lt;/strong&gt; 是直接扩充到已经确定的大小，可以减少开辟、释放空间的问题，提高效率。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;resize：&lt;/strong&gt; 可以改变有效空间的大小，因此&lt;code&gt;capacity&lt;/code&gt;的大小也会随之改变。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;size和capacity的区别&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;size表示当前vector中有多少个元素，而capacity函数表示它已经分配的内存中可以容纳多少元素。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;vector元素是否可以是引用&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;vector的底层实现要求连续的 &lt;strong&gt;对象排列&lt;/strong&gt; ， &lt;strong&gt;引用并非对象&lt;/strong&gt; ，没有实际地址，因此元素不能是引用。&lt;/p&gt;
+&lt;h3 id=&#34;2list&#34;&gt;（2）、list&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;底层原理&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;list底层是一个&lt;strong&gt;双向链表&lt;/strong&gt;，以结点为单位存放数据，结点的地址在内存中不一定连续，每次插入或删除一个元素，就配置或释放一个元素空间，&lt;strong&gt;不支持随机存取&lt;/strong&gt;，适合需要大量的插入和删除操作的数据结构。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;一些函数操作：&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;list.unique()  &lt;span style=&#34;color:#75715e&#34;&gt;// 移除数值相同的连续元素
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;list.sort()  &lt;span style=&#34;color:#75715e&#34;&gt;// 对list进行排序，通常可以和上面的函数连用
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;3deque&#34;&gt;（3）、deque&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;底层原理&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;deque是一个双向开口的连续性空间（双端队列），在头尾两端插入都有理想的时间复杂度。但是&lt;strong&gt;整个空间并不是连续的，而是一段一段的&lt;/strong&gt;，为了维护其整体连续的假象，并提供随机存取的接口。设计了一个中控器，用来记录deque内部每一段连续空间的地址。类似于数据结构中的map。对象的&lt;code&gt;key&lt;/code&gt;值为地址，而&lt;code&gt;value&lt;/code&gt;则是对应的连续的地址空间。是一个动态数组，一旦需要扩容，就是在&lt;strong&gt;首尾配置一段定量连续空间。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;4setmapmultisetmultimap&#34;&gt;（4）、set、map、multiset、multimap&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;底层原理&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这些容器的底层实现都是&lt;strong&gt;红黑树&lt;/strong&gt;。由于采用红黑树实现，因此在插入和删除时，都需要&lt;strong&gt;寻找结点&lt;/strong&gt;，因此会损失一定的效率。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;关于红黑树：&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;1、每个结点是红色或者是黑色&lt;/p&gt;
+&lt;p&gt;2、根结点是黑色的&lt;/p&gt;
+&lt;p&gt;3、每个叶结点是黑的&lt;/p&gt;
+&lt;p&gt;4、如果一个结点是红的，那么它的两个孩子结点都是黑色&lt;/p&gt;
+&lt;p&gt;5、每个结点到其子孙结点的所有路径上包含相同数目的黑色结点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;容器特点&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;set与multiset容器会根据特定的排序准则&lt;strong&gt;自动将元素排序&lt;/strong&gt;，set中元素&lt;strong&gt;不允许重复&lt;/strong&gt;，multiset中&lt;strong&gt;元素允许重复&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;map与multimap容器则是以&lt;code&gt;key&lt;/code&gt;和&lt;code&gt;value&lt;/code&gt;组成的&lt;code&gt;pair&lt;/code&gt;作为元素，根据key的排序准则，自动将元素排序，在map中&lt;code&gt;key&lt;/code&gt;值&lt;strong&gt;不允许重复&lt;/strong&gt;，而multimap中key值&lt;strong&gt;可以重复&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;5unordered_mapunordered_set&#34;&gt;（5）、unordered_map、unordered_set&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;底层原理&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;底层是一个&lt;strong&gt;防冗余&lt;/strong&gt;的哈希表（采用除留余数法）。能够尽可能的降低数据的存储和查找的时间，若产生哈希冲突，一般采用&lt;strong&gt;拉链法&lt;/strong&gt;来解决冲突&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;与map、set相比&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;查找速度比map、set快，通常为常数级别，但会&lt;strong&gt;消耗较多的内存&lt;/strong&gt;，且构造速度较慢。&lt;/p&gt;
 </description>
         </item>
         <item>

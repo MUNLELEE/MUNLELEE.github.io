@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
+HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
+ 
+由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。
+持续和非持续连接 在实际情况中，客户可能会发出一系列请求并且服务器会对每个请求进行响应。而这种客户-服务器的交互是经过TCP进行的，因此这些请求是经过单独的TCP连接还是经过相同的TCP连接就是这种交互方式的关键问题。也因此诞生了持续和非持续的HTTP连接。
+非持续连接： 使用非持续连接，每个TCP连接在服务器 发送一个对象后就关闭 （对象即HTML文件以及网页图像等），每个TCP连接只传输一个请求报文和一个响应报文。
+非持续连接有以下缺点：
+ 必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。 每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受.  持续连接： 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。
+HTTP连接流程 （1）、 客户端连接到Web服务器。 一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80端口），建立一个TCP套接字连接。
+（2）、 发送HTTP请求。 通过TCP套接字，客户端向HTTP服务器发送一个文本的请求报文。
+（3）、 服务器接受请求并返回HTTP响应。 Web服务器解析请求，定位请求资源。服务器将资源副本写到TCP套接字，由客户端读取。
+（4）、 释放TCP连接。 若connection模式为close，则服务器主动关闭TCP连接，客户端被动关闭TCP连接并释放。反之若为keepalive，则TCP连接会保持一段时间，在这段时间内可以继续接受请求和响应。
+（5）、 客户端浏览器解析HTML内容。 客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取相应的HTML，根据HTML语法对其进行格式化，并在浏览器窗口显示。
+HTTP报文 HTTP请求报文 请求报文格式如下图。其中第一行称为 请求行 ，其后继的行称为 首部行 。
+请求行有三个字段：方法字段、URL字段和HTTP版本字段。方法字段可以区包括GET、POST、HEAD、PUT和DELETE。这些请求方法将会在下文讲述。
+首部行则会包含Host字段，Connection字段以及User-agent字段等。分别指明了对象所在的主机、是否使用持续连接以及用户代理（发送请求的浏览器类型）。其中Host首部行则是Web代理高速缓存所要求的。
+ 
+HTTP响应报文 响应报文的格式如下图。分为 状态行 ， 首部行 以及 实体体 三个部分。实体体为报文的主要部分，为所请求的对象本身。同样在首部行会包含一些字段。例如：Date：指示发送该报文的日期和时间；Server：指示发送的服务器；Last-Modified：最后修改的日期和时间等。
+ 
+HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状态码字段，这个字段将指示请求的结果。可以将状态码分为以下几类：
+ 1xx： 指示信息 ，表示请求已接收，继续处理 2xx： 成功 ，表示请求已被成功接收、理解、接受 3xx： 重定向 ，要完成请求必须进行进一步的操作 4xx： 客户端错误 ，请求有语法错误或请求无法实现 5xx： 服务器端错误 ，服务器未能实现合法请求  常见的状态码如下：'><title>应用层协议——HTTP</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/'>
+
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='应用层协议——HTTP'>
+<meta property='og:description' content='HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
+HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
+ 
+由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。
+持续和非持续连接 在实际情况中，客户可能会发出一系列请求并且服务器会对每个请求进行响应。而这种客户-服务器的交互是经过TCP进行的，因此这些请求是经过单独的TCP连接还是经过相同的TCP连接就是这种交互方式的关键问题。也因此诞生了持续和非持续的HTTP连接。
+非持续连接： 使用非持续连接，每个TCP连接在服务器 发送一个对象后就关闭 （对象即HTML文件以及网页图像等），每个TCP连接只传输一个请求报文和一个响应报文。
+非持续连接有以下缺点：
+ 必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。 每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受.  持续连接： 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。
+HTTP连接流程 （1）、 客户端连接到Web服务器。 一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80端口），建立一个TCP套接字连接。
+（2）、 发送HTTP请求。 通过TCP套接字，客户端向HTTP服务器发送一个文本的请求报文。
+（3）、 服务器接受请求并返回HTTP响应。 Web服务器解析请求，定位请求资源。服务器将资源副本写到TCP套接字，由客户端读取。
+（4）、 释放TCP连接。 若connection模式为close，则服务器主动关闭TCP连接，客户端被动关闭TCP连接并释放。反之若为keepalive，则TCP连接会保持一段时间，在这段时间内可以继续接受请求和响应。
+（5）、 客户端浏览器解析HTML内容。 客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取相应的HTML，根据HTML语法对其进行格式化，并在浏览器窗口显示。
+HTTP报文 HTTP请求报文 请求报文格式如下图。其中第一行称为 请求行 ，其后继的行称为 首部行 。
+请求行有三个字段：方法字段、URL字段和HTTP版本字段。方法字段可以区包括GET、POST、HEAD、PUT和DELETE。这些请求方法将会在下文讲述。
+首部行则会包含Host字段，Connection字段以及User-agent字段等。分别指明了对象所在的主机、是否使用持续连接以及用户代理（发送请求的浏览器类型）。其中Host首部行则是Web代理高速缓存所要求的。
+ 
+HTTP响应报文 响应报文的格式如下图。分为 状态行 ， 首部行 以及 实体体 三个部分。实体体为报文的主要部分，为所请求的对象本身。同样在首部行会包含一些字段。例如：Date：指示发送该报文的日期和时间；Server：指示发送的服务器；Last-Modified：最后修改的日期和时间等。
+ 
+HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状态码字段，这个字段将指示请求的结果。可以将状态码分为以下几类：
+ 1xx： 指示信息 ，表示请求已接收，继续处理 2xx： 成功 ，表示请求已被成功接收、理解、接受 3xx： 重定向 ，要完成请求必须进行进一步的操作 4xx： 客户端错误 ，请求有语法错误或请求无法实现 5xx： 服务器端错误 ，服务器未能实现合法请求  常见的状态码如下：'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='春招' /><meta property='article:tag' content='计算机网络' /><meta property='article:published_time' content='2022-02-14T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-02-14T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="应用层协议——HTTP">
+<meta name="twitter:description" content="HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
+HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
+ 
+由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。
+持续和非持续连接 在实际情况中，客户可能会发出一系列请求并且服务器会对每个请求进行响应。而这种客户-服务器的交互是经过TCP进行的，因此这些请求是经过单独的TCP连接还是经过相同的TCP连接就是这种交互方式的关键问题。也因此诞生了持续和非持续的HTTP连接。
+非持续连接： 使用非持续连接，每个TCP连接在服务器 发送一个对象后就关闭 （对象即HTML文件以及网页图像等），每个TCP连接只传输一个请求报文和一个响应报文。
+非持续连接有以下缺点：
+ 必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。 每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受.  持续连接： 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。
+HTTP连接流程 （1）、 客户端连接到Web服务器。 一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80端口），建立一个TCP套接字连接。
+（2）、 发送HTTP请求。 通过TCP套接字，客户端向HTTP服务器发送一个文本的请求报文。
+（3）、 服务器接受请求并返回HTTP响应。 Web服务器解析请求，定位请求资源。服务器将资源副本写到TCP套接字，由客户端读取。
+（4）、 释放TCP连接。 若connection模式为close，则服务器主动关闭TCP连接，客户端被动关闭TCP连接并释放。反之若为keepalive，则TCP连接会保持一段时间，在这段时间内可以继续接受请求和响应。
+（5）、 客户端浏览器解析HTML内容。 客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取相应的HTML，根据HTML语法对其进行格式化，并在浏览器窗口显示。
+HTTP报文 HTTP请求报文 请求报文格式如下图。其中第一行称为 请求行 ，其后继的行称为 首部行 。
+请求行有三个字段：方法字段、URL字段和HTTP版本字段。方法字段可以区包括GET、POST、HEAD、PUT和DELETE。这些请求方法将会在下文讲述。
+首部行则会包含Host字段，Connection字段以及User-agent字段等。分别指明了对象所在的主机、是否使用持续连接以及用户代理（发送请求的浏览器类型）。其中Host首部行则是Web代理高速缓存所要求的。
+ 
+HTTP响应报文 响应报文的格式如下图。分为 状态行 ， 首部行 以及 实体体 三个部分。实体体为报文的主要部分，为所请求的对象本身。同样在首部行会包含一些字段。例如：Date：指示发送该报文的日期和时间；Server：指示发送的服务器；Last-Modified：最后修改的日期和时间等。
+ 
+HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状态码字段，这个字段将指示请求的结果。可以将状态码分为以下几类：
+ 1xx： 指示信息 ，表示请求已接收，继续处理 2xx： 成功 ，表示请求已被成功接收、理解、接受 3xx： 重定向 ，要完成请求必须进行进一步的操作 4xx： 客户端错误 ，请求有语法错误或请求无法实现 5xx： 服务器端错误 ，服务器未能实现合法请求  常见的状态码如下："><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/">应用层协议——HTTP</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 14, 2022</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="http协议概述">HTTP协议概述</h2>
+<h3 id="概况">概况</h3>
+<p>Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。</p>
+<p>HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 <strong>使用TCP作为它的支撑运输协议</strong> 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 <strong>套接字接口</strong> 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/620cf0272ab3f51d91719a50.png" >
+		<img src="https://pic.imgdb.cn/item/620cf0272ab3f51d91719a50.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 <strong>无状态协议</strong> ，如果需要保存客户的登录信息，则 <em>需要引入相关技术来记录状态，如Cookie</em> 。</p>
+<h3 id="持续和非持续连接">持续和非持续连接</h3>
+<p>在实际情况中，客户可能会发出一系列请求并且服务器会对每个请求进行响应。而这种客户-服务器的交互是经过TCP进行的，因此这些请求是经过单独的TCP连接还是经过相同的TCP连接就是这种交互方式的关键问题。也因此诞生了持续和非持续的HTTP连接。</p>
+<p><strong>非持续连接：</strong> 使用非持续连接，每个TCP连接在服务器 <strong>发送一个对象后就关闭</strong> （对象即HTML文件以及网页图像等），每个TCP连接只传输一个请求报文和一个响应报文。</p>
+<p>非持续连接有以下缺点：</p>
+<ul>
+<li>必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。</li>
+<li>每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受.</li>
+</ul>
+<p><strong>持续连接：</strong> 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。</p>
+<h3 id="http连接流程">HTTP连接流程</h3>
+<p>（1）、 <strong>客户端连接到Web服务器。</strong> 一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80端口），建立一个TCP套接字连接。</p>
+<p>（2）、 <strong>发送HTTP请求。</strong> 通过TCP套接字，客户端向HTTP服务器发送一个文本的请求报文。</p>
+<p>（3）、 <strong>服务器接受请求并返回HTTP响应。</strong> Web服务器解析请求，定位请求资源。服务器将资源副本写到TCP套接字，由客户端读取。</p>
+<p>（4）、 <strong>释放TCP连接。</strong> 若connection模式为close，则服务器主动关闭TCP连接，客户端被动关闭TCP连接并释放。反之若为keepalive，则TCP连接会保持一段时间，在这段时间内可以继续接受请求和响应。</p>
+<p>（5）、 <strong>客户端浏览器解析HTML内容。</strong> 客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取相应的HTML，根据HTML语法对其进行格式化，并在浏览器窗口显示。</p>
+<h2 id="http报文">HTTP报文</h2>
+<h3 id="http请求报文">HTTP请求报文</h3>
+<p>请求报文格式如下图。其中第一行称为 <strong>请求行</strong> ，其后继的行称为 <strong>首部行</strong> 。</p>
+<p>请求行有三个字段：方法字段、URL字段和HTTP版本字段。方法字段可以区包括GET、POST、HEAD、PUT和DELETE。这些请求方法将会在下文讲述。</p>
+<p>首部行则会包含Host字段，Connection字段以及User-agent字段等。分别指明了对象所在的主机、是否使用持续连接以及用户代理（发送请求的浏览器类型）。其中Host首部行则是Web代理高速缓存所要求的。</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/620cfc842ab3f51d91860c6e.png" >
+		<img src="https://pic.imgdb.cn/item/620cfc842ab3f51d91860c6e.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="http响应报文">HTTP响应报文</h3>
+<p>响应报文的格式如下图。分为 <strong>状态行</strong> ， <strong>首部行</strong> 以及 <strong>实体体</strong> 三个部分。实体体为报文的主要部分，为所请求的对象本身。同样在首部行会包含一些字段。例如：Date：指示发送该报文的日期和时间；Server：指示发送的服务器；Last-Modified：最后修改的日期和时间等。</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/620cfbbc2ab3f51d9184bfb8.png" >
+		<img src="https://pic.imgdb.cn/item/620cfbbc2ab3f51d9184bfb8.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="http状态码">HTTP状态码</h2>
+<p>由上述HTTP响应报文可以得出，在状态行中包含状态码字段，这个字段将指示请求的结果。可以将状态码分为以下几类：</p>
+<ul>
+<li>1xx： <strong>指示信息</strong> ，表示请求已接收，继续处理</li>
+<li>2xx： <strong>成功</strong> ，表示请求已被成功接收、理解、接受</li>
+<li>3xx： <strong>重定向</strong> ，要完成请求必须进行进一步的操作</li>
+<li>4xx： <strong>客户端错误</strong> ，请求有语法错误或请求无法实现</li>
+<li>5xx： <strong>服务器端错误</strong> ，服务器未能实现合法请求</li>
+</ul>
+<p>常见的状态码如下：</p>
+<ul>
+<li>200 OK：请求成功，信息在返回的响应报文中。</li>
+<li>301 Moved Permanently：请求的对象已经被永久转移了，新的URL定义在响应报文的Location：首部行中。客户软件将自动获取新的URL</li>
+<li>400 Bad Request：一个通用的差错代码，指示该请求不能被服务器理解。</li>
+<li>404 Not Found：被请求的文档不在服务器上。</li>
+<li>505 HTTP Version Not Supported：服务器不支持请求报文使用的HTTP协议版本。</li>
+</ul>
+<p>更多的状态码及其对应短语可以参考<a class="link" href="https://www.runoob.com/http/http-status-codes.html"  target="_blank" rel="noopener"
+    >此网址</a>。</p>
+<h2 id="http请求方法">HTTP请求方法</h2>
+<p>HTTP1.0定义了三种请求方法：GET、POST和HEAD。</p>
+<p>HTTP1.1新增了五种请求方法：OPTIONS、PUT、DELETE、TRACE和CONNECT方法</p>
+<p>每种方法的特点如下：</p>
+<ul>
+<li><strong>GET。</strong>  请求指定的页面信息，并返回实体主体。</li>
+<li><strong>HEAD。</strong> 类似于GET请求，只不过返回的响应中没有主体内容，用于获取报头。</li>
+<li><strong>POST。</strong> 向指定资源提交提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。</li>
+<li><strong>PUT。</strong> 从客户端向服务器传送的数据取代指定的文档的内容。</li>
+<li><strong>DELETE。</strong> 请求服务器删除指定的页面。</li>
+<li><strong>CONNECT。</strong> HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。</li>
+<li><strong>OPTIONS。</strong> 允许客户端查看服务器的性能。</li>
+<li><strong>TRACE。</strong> 回显服务器收到的请求，主要用于测试或诊断。</li>
+</ul>
+<h3 id="get和post请求的区别">GET和POST请求的区别</h3>
+<p>（1）、 <strong>GET提交：</strong> 请求的数据会附在URL之后（就是把数据放置在HTTP协议头中），以<code>?</code>分割URL和传输数据，多个参数用<code>&amp;</code>连接；例如：<code>login.action?name=hyddd&amp;password=idontknow&amp;verify=%E4%BD%A0%E5%A5%BD</code>。如果数据是英文字母/数字，原样发送，如果是空格，转换为<code>+</code>，如果是中文/其他字符，则直接把字符串用BASE64加密，得出如： %E4%BD%A0%E5%A5%BD，其中％XX中的XX为该符号以16进制表示的ASCII。 <strong>POST提交：</strong> 把提交的数据放置在是HTTP包的包体中。</p>
+<p>也即 <strong>GET提交的数据会在地址栏中显示出来，而POST提交，地址栏不会改变</strong></p>
+<p>（2）、传输数据的大小：首先 <strong>HTTP协议没有对传输的数据大小进行限制，HTTP协议规范也没有对URL长度进行限制</strong> 。</p>
+<p>而在实际的开发中：</p>
+<p><strong>GET：</strong> 特定浏览器和服务器对URL长度有限制，例如：IE对URL长度的限制是2083字节(2K+35)。对于其他浏览器，如Netscape、FireFox等，理论上没有长度限制，其限制取决于操作系统的支持。因此对于GET提交时，传输数据就会受到URL长度的限制。</p>
+<p><strong>POST：</strong> 由于不是通过URL传值，理论上数据不受限。但实际各个WEB服务器会规定对POST提交数据大小进行限制，Apache、IIS6都有各自的配置。</p>
+<p>（3）、安全性</p>
+<p>POST的安全性要比GET的安全性高。比如：通过GET提交数据，用户名和密码将明文出现在URL上，因为登录页面有可能被浏览器缓存；其他人查看浏览器的历史纪录，那么别人就可以拿到你的账号和密码了，除此之外，使用GET提交数据还可能会造成Cross-site request forgery攻击</p>
+<h2 id="https">HTTPS</h2>
+<h3 id="http的不足">HTTP的不足</h3>
+<ul>
+<li>通信使用明文（不加密），内容可能会被窃听</li>
+<li>不验证通信方的身份，因此有可能遭遇伪装</li>
+<li>无法证明报文的完整性，所以有可能已遭篡改</li>
+</ul>
+<h3 id="https介绍">HTTPS介绍</h3>
+<p>HTTP协议中没有加密机制，但可以通过和SSL（Secure Socket Layer， <strong>安全套接层</strong> ）或TLS（Transport Layer Security， <strong>安全传输协议</strong> ）的组合使用，加密HTTP通信内容。属于通信加密，即在整个通信线路中加密。如图</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/620da6e52ab3f51d916d0424.png" >
+		<img src="https://pic.imgdb.cn/item/620da6e52ab3f51d916d0424.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>HTTPS采用 <strong>共享密钥加密（对称）</strong> 和 <strong>公开密钥加密（非对称）</strong> 两者并用的混合加密机制，若密钥能够实现安全交换，那么有可能仅考虑使用公开密钥来加密通信。但是公开密钥加密相对于共享密钥加密处理速度较慢。因此可以在交换密钥阶段使用 <strong>公开密钥</strong> 加密方式，之后建立通信交换报文阶段则使用 <strong>共享密钥</strong> 加密方式。</p>
+<p>HTTPS握手流程简单描述如下：</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/620dabdc2ab3f51d917398df.png" >
+		<img src="https://pic.imgdb.cn/item/620dabdc2ab3f51d917398df.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>（1）、浏览器将自己支持的一套加密规则发送给网站 <em>（服务器获得浏览器公钥）</em></p>
+<p>（2）、网站从中选出一组加密算法与HASH算法，并将自己的身份信息以证书的形式发回给浏览器。证书里面包含了网站地址，加密公钥等信息 <em>（浏览器获得服务器公钥）</em></p>
+<p>（3）、获得网站证书后浏览器需要进行以下操作</p>
+<p>（a）、验证证书的合法性（颁发证书的机构是否合法，证书中包含的网站地址是否与正在访问的地址一致等），如果证书受信任，则浏览器栏里面会显示一个小锁头，否则会给出证书不受信的提示。</p>
+<p>（b）、如果证书受信任，或者是用户接受了不受信的证书，浏览器会生成一串随机数的密码（接下来通信的密钥），并用证书中提供的公钥加密（共享密钥加密）。</p>
+<p>（c）、使用约定好的HASH计算握手消息，并使用生成的随机数对消息进行加密，最后将之前生成的所有信息发送给网站。</p>
+<p>（4）、网站接受浏览器发来的数据之后要做以下的操作：</p>
+<p>（a）、使用自己的私钥将信息解密取出密码，使用密码解密浏览器发来的握手消息，并验证HASH是否与浏览器发来的一致。</p>
+<p>（b）、使用密码加密一段握手消息，发送给浏览器。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%98%A5%E6%8B%9B/">春招</a>
+        
+            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">春招 | 知识点留档</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeetCode 二叉搜索树与双向链表</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeetCode 矩阵中的路径</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#http协议概述">HTTP协议概述</a>
+      <ul>
+        <li><a href="#概况">概况</a></li>
+        <li><a href="#持续和非持续连接">持续和非持续连接</a></li>
+        <li><a href="#http连接流程">HTTP连接流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#http报文">HTTP报文</a>
+      <ul>
+        <li><a href="#http请求报文">HTTP请求报文</a></li>
+        <li><a href="#http响应报文">HTTP响应报文</a></li>
+      </ul>
+    </li>
+    <li><a href="#http状态码">HTTP状态码</a></li>
+    <li><a href="#http请求方法">HTTP请求方法</a>
+      <ul>
+        <li><a href="#get和post请求的区别">GET和POST请求的区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#https">HTTPS</a>
+      <ul>
+        <li><a href="#http的不足">HTTP的不足</a></li>
+        <li><a href="#https介绍">HTTPS介绍</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>
