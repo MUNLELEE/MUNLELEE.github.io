@@ -376,7 +376,118 @@ A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (
 <li><strong>与map、set相比</strong></li>
 </ul>
 <p>查找速度比map、set快，通常为常数级别，但会<strong>消耗较多的内存</strong>，且构造速度较慢。</p>
+<h2 id="9c内存分区">9、C++内存分区</h2>
+<p>在C++中分为五大内存分区，分别是 <strong>堆</strong> 、 <strong>栈</strong>  、 <strong>自由存储区</strong> 、 <strong>全局/静态存储区</strong> 和 <strong>常量存储区</strong></p>
+<ul>
+<li>
+<p><strong>栈：</strong> 由编译器在 <strong>需要时分配</strong>，在 <strong>不需要时自动清除</strong> 的变量存储区。里面的变量通常是局部变量，函数参数等。</p>
+</li>
+<li>
+<p><strong>堆：</strong> 操作系统层面的术语，为<code>malloc</code>等分配的内存块，用<code>free</code>结束自己的生命周期。</p>
+</li>
+<li>
+<p><strong>自由存储区：</strong> C++层面上的术语，为<code>new</code>分配的内存块，它们的释放编译器不进行管理，而是由应用程序控制，一般<code>new</code>后需要<code>delete</code>，如果没有释放，操作系统会在程序结束之后回收</p>
+<p><em>因为 <code>new</code> 的申请是调用 <code>malloc</code> 的，自由存储区就和堆类似，但不等价</em></p>
+</li>
+<li>
+<p><strong>全局/静态存储区：</strong> 全局变量和静态变量被分配到同一块内存中。</p>
+<p><em>初始化的全局变量和静态变量在一块区域，未初始化的全局变量和静态变量在相邻的另一块区域，程序结束之后由系统释放。</em></p>
+</li>
+<li>
+<p><strong>常量存储区：</strong> 一块特殊的存储区，存放 <strong>常量</strong> ，这些常量不允许被修改，程序结束后由系统释放</p>
+</li>
+</ul>
+<h2 id="10智能指针">10、智能指针</h2>
+<p>在C++中，动态内存管理是用一对运算符（<code>new</code>和<code>delete</code>）完成的。但是动态管理经常出现两种问题：一是忘记释放内存，会造成内存泄漏；另一是在尚有指针引用内存的情况下就释放了它，会导致产生引用非法内存的指针。因此引入了智能指针的概念。 <strong>智能指针负责自动释放所指向的对象，可以更安全的使用动态内存。</strong> C++中存在三种类型的智能指针，分别为<code>shared_ptr</code>、<code>weak_ptr</code>以及<code>unique_ptr</code>。</p>
+<p>在创建智能指针时，必须提供额外的信息即指针可以指向的类型如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
+shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ptr;
+</code></pre></div><h3 id="1shared_ptr">（1）<strong>shared_ptr</strong></h3>
+<p>其实就是对资源做引用计数——当引用计数为0时自动释放资源。可以使用<code>ptr.use_count()</code>来获取当前的引用数。也可以实现对数组的引用，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>[]<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">13</span>]);  <span style="color:#75715e">// 引用计数为1
+</span><span style="color:#75715e"></span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>[]<span style="color:#f92672">&gt;</span> prt1 <span style="color:#f92672">=</span> ptr;  <span style="color:#75715e">// 引用计数为2，ptr1和ptr共享资源
+</span><span style="color:#75715e"></span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ptr3 <span style="color:#f92672">=</span> make_shared<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">10</span>);  <span style="color:#75715e">// 这种做法较为高效。
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">++</span>i) {
+	ptr[i] <span style="color:#f92672">=</span> i;
+}
+</code></pre></div><p>智能指针在初始化时还可以指定删除器，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">DeleteIntPtr</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p) {
+	<span style="color:#66d9ef">delete</span> p;
+	p <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+}
+std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> p(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">10</span>), DeleteIntPtr);
+</code></pre></div><p><strong>实现原理：</strong></p>
+<p>一个<code>shared_ptr</code>对象的内存开销要比裸指针和无自定义<code>deleter</code>的<code>unique_ptr</code>对象略大。</p>
+<p><code>shared_ptr</code>需要 <strong>维护的信息</strong> 有两部分：</p>
+<ul>
+<li>指向共享资源的指针</li>
+<li>引用计数等共享资源的控制信息——实际上是维护一个指向控制信息的指针</li>
+</ul>
+<p>当我们实现一个shared_ptr时，其实现一般如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>;
+std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> T);
+</code></pre></div><p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/62106cd42ab3f51d9128008b.png" >
+		<img src="https://pic.imgdb.cn/item/62106cd42ab3f51d9128008b.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>在使用<code>shared_ptr</code>时，要注意的时要避免 <strong>循环引用</strong> ，循环引用会导致内存泄漏，经典的循环引用如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span>;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {
+	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> bptr;
+	<span style="color:#f92672">~</span>A() {
+		cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;A is deleted&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+	}
+}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span> {
+	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> aptr;
+	<span style="color:#f92672">~</span>B() {
+		cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;B is deleted&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+	}
+}
+<span style="color:#66d9ef">void</span> TestPtr {
+	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ap(<span style="color:#66d9ef">new</span> A);
+	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> bp(<span style="color:#66d9ef">new</span> B);
+	ap<span style="color:#f92672">-&gt;</span>bptr <span style="color:#f92672">=</span> bp;
+	bp<span style="color:#f92672">-&gt;</span>aptr <span style="color:#f92672">=</span> ap;
+}
+</code></pre></div><p>这样两个指针最后都不会被删除，循环引用导致<code>ap</code>和<code>bp</code>的引用计数为2，在离开作用域之后两者的引用计数都为1，因此两个指针都不会被析构。</p>
+<h3 id="2weak_ptr">（2）weak_ptr</h3>
+<p>弱引用指针<code>weak_ptr</code>是用来监视<code>shared_ptr</code>的，不会使引用计数加1，因此可以通过<code>weak_ptr</code>来解决循环引用的问题。（如可以B类的<code>shared_ptr</code>成员改为<code>weak_ptr</code>成员）它不管理shared_ptr内部的指针，主要使为了监视<code>shared_ptr</code>的生命周期，不能操作资源。使用方法如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> sp(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">10</span>));
+weak_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> wp(sp);
+</code></pre></div><p>同时weak_ptr还有一些特殊的方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> sp(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">20</span>));
+weak_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> wp(sp);
 
+wp.expired()  <span style="color:#75715e">// 判断所观测的资源是否已经被释放
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> spt <span style="color:#f92672">=</span> wp.lock()  <span style="color:#75715e">// 获取所监视的shared_ptr
+</span></code></pre></div><p>当 shared_ptr 析构并释放共享资源的时候，只要 weak_ptr 对象还存在，控制块就会保留，weak_ptr 可以通过控制块观察到对象是否存活。如图：</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/62109c352ab3f51d915791d8.jpg" >
+		<img src="https://pic.imgdb.cn/item/62109c352ab3f51d915791d8.jpg"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="3unique_ptr">（3）unique_ptr</h3>
+<p>unique_ptr是一个独占型的智能指针，它不允许其它的智能指针共享其内部的指针，不允许通过赋值将一个unique_ptr赋值给另一个unique_ptr。但是可以通过函数返回给其它的unique_ptr，这样它本身就不再拥有原来指针的所有权了。如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> T);
+unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> Otherptr <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(ptr);
+</code></pre></div>
 </section>
 
 
@@ -603,6 +714,14 @@ A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (
         <li><a href="#3deque">（3）、deque</a></li>
         <li><a href="#4setmapmultisetmultimap">（4）、set、map、multiset、multimap</a></li>
         <li><a href="#5unordered_mapunordered_set">（5）、unordered_map、unordered_set</a></li>
+      </ul>
+    </li>
+    <li><a href="#9c内存分区">9、C++内存分区</a></li>
+    <li><a href="#10智能指针">10、智能指针</a>
+      <ul>
+        <li><a href="#1shared_ptr">（1）<strong>shared_ptr</strong></a></li>
+        <li><a href="#2weak_ptr">（2）weak_ptr</a></li>
+        <li><a href="#3unique_ptr">（3）unique_ptr</a></li>
       </ul>
     </li>
   </ul>

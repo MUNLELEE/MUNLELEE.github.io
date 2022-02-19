@@ -330,7 +330,118 @@ A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#3
 &lt;li&gt;&lt;strong&gt;与map、set相比&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;查找速度比map、set快，通常为常数级别，但会&lt;strong&gt;消耗较多的内存&lt;/strong&gt;，且构造速度较慢。&lt;/p&gt;
-</description>
+&lt;h2 id=&#34;9c内存分区&#34;&gt;9、C++内存分区&lt;/h2&gt;
+&lt;p&gt;在C++中分为五大内存分区，分别是 &lt;strong&gt;堆&lt;/strong&gt; 、 &lt;strong&gt;栈&lt;/strong&gt;  、 &lt;strong&gt;自由存储区&lt;/strong&gt; 、 &lt;strong&gt;全局/静态存储区&lt;/strong&gt; 和 &lt;strong&gt;常量存储区&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;栈：&lt;/strong&gt; 由编译器在 &lt;strong&gt;需要时分配&lt;/strong&gt;，在 &lt;strong&gt;不需要时自动清除&lt;/strong&gt; 的变量存储区。里面的变量通常是局部变量，函数参数等。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;堆：&lt;/strong&gt; 操作系统层面的术语，为&lt;code&gt;malloc&lt;/code&gt;等分配的内存块，用&lt;code&gt;free&lt;/code&gt;结束自己的生命周期。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;自由存储区：&lt;/strong&gt; C++层面上的术语，为&lt;code&gt;new&lt;/code&gt;分配的内存块，它们的释放编译器不进行管理，而是由应用程序控制，一般&lt;code&gt;new&lt;/code&gt;后需要&lt;code&gt;delete&lt;/code&gt;，如果没有释放，操作系统会在程序结束之后回收&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;因为 &lt;code&gt;new&lt;/code&gt; 的申请是调用 &lt;code&gt;malloc&lt;/code&gt; 的，自由存储区就和堆类似，但不等价&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;全局/静态存储区：&lt;/strong&gt; 全局变量和静态变量被分配到同一块内存中。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;初始化的全局变量和静态变量在一块区域，未初始化的全局变量和静态变量在相邻的另一块区域，程序结束之后由系统释放。&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;常量存储区：&lt;/strong&gt; 一块特殊的存储区，存放 &lt;strong&gt;常量&lt;/strong&gt; ，这些常量不允许被修改，程序结束后由系统释放&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;10智能指针&#34;&gt;10、智能指针&lt;/h2&gt;
+&lt;p&gt;在C++中，动态内存管理是用一对运算符（&lt;code&gt;new&lt;/code&gt;和&lt;code&gt;delete&lt;/code&gt;）完成的。但是动态管理经常出现两种问题：一是忘记释放内存，会造成内存泄漏；另一是在尚有指针引用内存的情况下就释放了它，会导致产生引用非法内存的指针。因此引入了智能指针的概念。 &lt;strong&gt;智能指针负责自动释放所指向的对象，可以更安全的使用动态内存。&lt;/strong&gt; C++中存在三种类型的智能指针，分别为&lt;code&gt;shared_ptr&lt;/code&gt;、&lt;code&gt;weak_ptr&lt;/code&gt;以及&lt;code&gt;unique_ptr&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;在创建智能指针时，必须提供额外的信息即指针可以指向的类型如：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt;;
+shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;A&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ptr;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;1shared_ptr&#34;&gt;（1）&lt;strong&gt;shared_ptr&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;其实就是对资源做引用计数——当引用计数为0时自动释放资源。可以使用&lt;code&gt;ptr.use_count()&lt;/code&gt;来获取当前的引用数。也可以实现对数组的引用，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;[]&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ptr(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt;]);  &lt;span style=&#34;color:#75715e&#34;&gt;// 引用计数为1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;[]&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; prt1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ptr;  &lt;span style=&#34;color:#75715e&#34;&gt;// 引用计数为2，ptr1和ptr共享资源
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ptr3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; make_shared&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;);  &lt;span style=&#34;color:#75715e&#34;&gt;// 这种做法较为高效。
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+	ptr[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;智能指针在初始化时还可以指定删除器，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DeleteIntPtr&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; p) {
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;delete&lt;/span&gt; p;
+	p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;nullptr&lt;/span&gt;;
+}
+std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; p(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;), DeleteIntPtr);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;实现原理：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一个&lt;code&gt;shared_ptr&lt;/code&gt;对象的内存开销要比裸指针和无自定义&lt;code&gt;deleter&lt;/code&gt;的&lt;code&gt;unique_ptr&lt;/code&gt;对象略大。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;shared_ptr&lt;/code&gt;需要 &lt;strong&gt;维护的信息&lt;/strong&gt; 有两部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;指向共享资源的指针&lt;/li&gt;
+&lt;li&gt;引用计数等共享资源的控制信息——实际上是维护一个指向控制信息的指针&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当我们实现一个shared_ptr时，其实现一般如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;T&lt;/span&gt;;
+std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ptr(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; T);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/62106cd42ab3f51d9128008b.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/62106cd42ab3f51d9128008b.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在使用&lt;code&gt;shared_ptr&lt;/code&gt;时，要注意的时要避免 &lt;strong&gt;循环引用&lt;/strong&gt; ，循环引用会导致内存泄漏，经典的循环引用如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;B&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt; {
+	std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;B&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; bptr;
+	&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;A() {
+		cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;A is deleted&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+	}
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;B&lt;/span&gt; {
+	std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;A&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; aptr;
+	&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;B() {
+		cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;B is deleted&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+	}
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; TestPtr {
+	std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;A&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ap(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; A);
+	std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;B&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; bp(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; B);
+	ap&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;bptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bp;
+	bp&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;aptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ap;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样两个指针最后都不会被删除，循环引用导致&lt;code&gt;ap&lt;/code&gt;和&lt;code&gt;bp&lt;/code&gt;的引用计数为2，在离开作用域之后两者的引用计数都为1，因此两个指针都不会被析构。&lt;/p&gt;
+&lt;h3 id=&#34;2weak_ptr&#34;&gt;（2）weak_ptr&lt;/h3&gt;
+&lt;p&gt;弱引用指针&lt;code&gt;weak_ptr&lt;/code&gt;是用来监视&lt;code&gt;shared_ptr&lt;/code&gt;的，不会使引用计数加1，因此可以通过&lt;code&gt;weak_ptr&lt;/code&gt;来解决循环引用的问题。（如可以B类的&lt;code&gt;shared_ptr&lt;/code&gt;成员改为&lt;code&gt;weak_ptr&lt;/code&gt;成员）它不管理shared_ptr内部的指针，主要使为了监视&lt;code&gt;shared_ptr&lt;/code&gt;的生命周期，不能操作资源。使用方法如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; sp(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;));
+weak_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; wp(sp);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;同时weak_ptr还有一些特殊的方法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;shared_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; sp(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;));
+weak_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; wp(sp);
+
+wp.expired()  &lt;span style=&#34;color:#75715e&#34;&gt;// 判断所观测的资源是否已经被释放
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;auto&lt;/span&gt; spt &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; wp.lock()  &lt;span style=&#34;color:#75715e&#34;&gt;// 获取所监视的shared_ptr
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当 shared_ptr 析构并释放共享资源的时候，只要 weak_ptr 对象还存在，控制块就会保留，weak_ptr 可以通过控制块观察到对象是否存活。如图：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/62109c352ab3f51d915791d8.jpg&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/62109c352ab3f51d915791d8.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3unique_ptr&#34;&gt;（3）unique_ptr&lt;/h3&gt;
+&lt;p&gt;unique_ptr是一个独占型的智能指针，它不允许其它的智能指针共享其内部的指针，不允许通过赋值将一个unique_ptr赋值给另一个unique_ptr。但是可以通过函数返回给其它的unique_ptr，这样它本身就不再拥有原来指针的所有权了。如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;unique_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ptr(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; T);
+unique_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; Otherptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;move(ptr);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         <item>
         <title>LeetCode 二叉搜索树与双向链表</title>
