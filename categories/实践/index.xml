@@ -6,7 +6,26 @@
     <description>Recent content in 实践 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 15 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/categories/%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/categories/%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux下的socket网络通信</title>
+      <link>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Mon, 28 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
+      <description>想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
+1、socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
+ 
+因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
+对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式
+ 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  2、C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
+服务器工作流程 1、创建服务器socket 在这个阶段我们可以使用socket函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为AF_INET，即表示利用IPv4进行通信。这个函数的返回值为 文件描述符 （类型为整型），当失败时则会返回-1如下
+int listenfd; listenfd = socket(AF_INET, SOCK_STREAM, 0) 2、将服务器用于通信的地址和端口绑定到socket上 在Linux中，地址信息被封装在了结构体sockaddr中，如下
+struct sockaddr { sa_family_t sin_family; //地址族 	char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
+struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 	struct in_addr sin_addr; // IP地址 	char sin_zero; } 但如果你进入到Linux的底层代码会发现，sockaddr_in还有一个参数为sockaddr的构造函数。因此使用这个结构体可以让操作更简单，如下
+struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.</description>
+    </item>
+    
     <item>
       <title>Hugo博客 | stack主题修改第一站</title>
       <link>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</link>

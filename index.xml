@@ -6,7 +6,288 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Linux下的socket网络通信</title>
+        <link>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>
+        <pubDate>Mon, 28 Feb 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
+        <description>&lt;p&gt;想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。&lt;/p&gt;
+&lt;h2 id=&#34;1socket&#34;&gt;1、socket&lt;/h2&gt;
+&lt;p&gt;socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621c69da2ab3f51d912afc07.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621c69da2ab3f51d912afc07.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。&lt;/p&gt;
+&lt;p&gt;对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;流：基于TCP协议，因此有序，可靠。可以实现可靠传输。&lt;/li&gt;
+&lt;li&gt;数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2cs模式&#34;&gt;2、C/S模式&lt;/h2&gt;
+&lt;p&gt;在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。&lt;/p&gt;
+&lt;h3 id=&#34;服务器工作流程&#34;&gt;服务器工作流程&lt;/h3&gt;
+&lt;h4 id=&#34;1创建服务器socket&#34;&gt;1、创建服务器socket&lt;/h4&gt;
+&lt;p&gt;在这个阶段我们可以使用&lt;code&gt;socket&lt;/code&gt;函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为&lt;code&gt;AF_INET&lt;/code&gt;，即表示利用IPv4进行通信。这个函数的返回值为 &lt;strong&gt;文件描述符&lt;/strong&gt; （类型为整型），当失败时则会返回&lt;code&gt;-1&lt;/code&gt;如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; listenfd;
+listenfd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; socket(AF_INET, SOCK_STREAM, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;2将服务器用于通信的地址和端口绑定到socket上&#34;&gt;2、将服务器用于通信的地址和端口绑定到socket上&lt;/h4&gt;
+&lt;p&gt;在Linux中，地址信息被封装在了结构体&lt;code&gt;sockaddr&lt;/code&gt;中，如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr&lt;/span&gt; {  
+	sa_family_t sin_family;  &lt;span style=&#34;color:#75715e&#34;&gt;//地址族
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; sa_data[&lt;span style=&#34;color:#ae81ff&#34;&gt;14&lt;/span&gt;];  &lt;span style=&#34;color:#75715e&#34;&gt;//14字节，包含套接字中的目标地址和端口信息               
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体&lt;code&gt;sockaddr_in&lt;/code&gt;，这个结构体如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr_in&lt;/span&gt; {
+	sa_family_t sin_family;  
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;uint16_t&lt;/span&gt; sin_port;  &lt;span style=&#34;color:#75715e&#34;&gt;// 端口号
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;in_addr&lt;/span&gt; sin_addr;  &lt;span style=&#34;color:#75715e&#34;&gt;// IP地址
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; sin_zero;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;但如果你进入到Linux的底层代码会发现，&lt;code&gt;sockaddr_in&lt;/code&gt;还有一个参数为&lt;code&gt;sockaddr&lt;/code&gt;的构造函数。因此使用这个结构体可以让操作更简单，如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr_in&lt;/span&gt; servaddr;
+memset(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr));
+servaddr.sin_family &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AF_INET;
+servaddr.sin_addr.s_addr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; htonl(INADDR_ANY);  &lt;span style=&#34;color:#75715e&#34;&gt;// 指定为任意IP地址
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;servaddr.sin_port &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; htons(atoi(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]));  &lt;span style=&#34;color:#75715e&#34;&gt;// 将主机字节顺序转换为网络字节顺序
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;之后将端口绑定。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;bind(listenfd, (&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;3将socket设置为监听模式&#34;&gt;3、将socket设置为监听模式&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;listen(listenfd, &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;);  &lt;span style=&#34;color:#75715e&#34;&gt;// 5表示准备接受5个连接
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;4等待并接受客户端连接&#34;&gt;4、等待并接受客户端连接&lt;/h4&gt;
+&lt;p&gt;使用&lt;code&gt;accept&lt;/code&gt;函数来连接客户端&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; clientfd;
+clientfd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; accept(listenfd, (&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;clientaddr, (socklen_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;socklen);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;这里需要解释的是，服务器端其实建立了两个socket，第一个socket为被动的socket用来监听，当经过监听阶段后，Linux内核拥有accept函数借助监听的socket创建出连接客户端的socket&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5与客户端通信接受客户端发送的信息并返回响应&#34;&gt;5、与客户端通信，接受客户端发送的信息，并返回响应&lt;/h4&gt;
+&lt;p&gt;通过&lt;code&gt;recv&lt;/code&gt;和&lt;code&gt;send&lt;/code&gt;函数进行通信&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (true) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; iret;
+    memset(buffer, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; recv(clientfd, buffer, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+    	cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;iret = &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; iret &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+    	&lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+    }
+    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;receive &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+    strcpy(buffer, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ACCEPT&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; send(clientfd, buffer, strlen(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+    	perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;send&amp;#34;&lt;/span&gt;);
+    	&lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+    }
+    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SEND: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;6重复5中操作直到客户端断开连接&#34;&gt;6、重复（5）中操作，直到客户端断开连接&lt;/h4&gt;
+&lt;h4 id=&#34;7释放socket连接&#34;&gt;7、释放socket连接&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;close(listenfd);
+close(clientfd);  &lt;span style=&#34;color:#75715e&#34;&gt;// 释放监听socket和连接socket
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;代码&#34;&gt;代码&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;cstring&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;cstdlib&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;netdb.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;sys/types.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;sys/socket.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;arpa/inet.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; std;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; argc, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;argv[]) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (argc &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) {
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Using server port&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Example: ./server 5005&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; listenfd;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((listenfd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; socket(AF_INET, SOCK_STREAM, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+        perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;socket&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 2
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr_in&lt;/span&gt; servaddr;
+    memset(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr));
+    servaddr.sin_family &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AF_INET;
+    servaddr.sin_addr.s_addr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; htonl(INADDR_ANY);
+    &lt;span style=&#34;color:#75715e&#34;&gt;//servaddr.sin_addr.s_addr = inet_addr(&amp;#34;192.168.190.134&amp;#34;);  // 手动指定IP地址
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    servaddr.sin_port &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; htons(atoi(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]));
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 3
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (bind(listenfd, (&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+        perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bind&amp;#34;&lt;/span&gt;);
+        close(listenfd);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (listen(listenfd, &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+        perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;listen&amp;#34;&lt;/span&gt;);
+        close(listenfd);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; clientfd;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; socklen &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr_in&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr_in&lt;/span&gt; clientaddr;
+    clientfd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; accept(listenfd, (&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;clientaddr, (socklen_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;socklen);
+    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;clinet has connected&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IP is: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; inet_ntoa(clientaddr.sin_addr) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 5
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; buffer[&lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (true) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; iret;
+        memset(buffer, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer));
+        &lt;span style=&#34;color:#75715e&#34;&gt;// 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; recv(clientfd, buffer, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+            cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;iret = &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; iret &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        }
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;receive &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+        strcpy(buffer, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ACCEPT&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; send(clientfd, buffer, strlen(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+            perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;send&amp;#34;&lt;/span&gt;);
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        }
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SEND: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+    }
+    close(listenfd);
+    close(clientfd);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;客户端工作流程&#34;&gt;客户端工作流程&lt;/h3&gt;
+&lt;h4 id=&#34;1创建客户端socket&#34;&gt;1、创建客户端socket&lt;/h4&gt;
+&lt;p&gt;同样采用&lt;code&gt;socket&lt;/code&gt;函数创建套接字，用来主动连接，与服务器的创建方式一样。&lt;/p&gt;
+&lt;h4 id=&#34;2向服务器发起连接请求&#34;&gt;2、向服务器发起连接请求&lt;/h4&gt;
+&lt;p&gt;使用&lt;code&gt;gethostbyname&lt;/code&gt;函数将IP地址转换为&lt;code&gt;hostent&lt;/code&gt;结构体所表示的格式。&lt;code&gt;hostent&lt;/code&gt;结构体如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;hostent&lt;/span&gt;  {  
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;h_name;         &lt;span style=&#34;color:#75715e&#34;&gt;//正式主机名  
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;h_aliases;     &lt;span style=&#34;color:#75715e&#34;&gt;//主机别名  
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; h_addrtype;       &lt;span style=&#34;color:#75715e&#34;&gt;//主机IP地址类型：IPV4-AF_INET  
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; h_length;         &lt;span style=&#34;color:#75715e&#34;&gt;//主机IP地址字节长度，对于IPv4是四字节，即32位  
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;h_addr_list;   &lt;span style=&#34;color:#75715e&#34;&gt;//主机的IP地址列表  
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;建立连接的过程如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; sockfd;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr_in&lt;/span&gt; servaddr;
+memset(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr));
+servaddr.sin_family &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AF_INET;  &lt;span style=&#34;color:#75715e&#34;&gt;// 手动指定相关参数
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;servaddr.sin_port &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; htons(atoi(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]));
+memcpy(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr.sin_addr, hostcon&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;h_addr, hostcon&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;h_length);
+connect(sockfd, (&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr)  &lt;span style=&#34;color:#75715e&#34;&gt;// 连接
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;3与服务器通信将消息通过socket发送给服务器每发送一个消息等待回复&#34;&gt;3、与服务器通信，将消息通过socket发送给服务器，每发送一个消息等待回复&lt;/h4&gt;
+&lt;p&gt;同样使用&lt;code&gt;recv&lt;/code&gt;和&lt;code&gt;send&lt;/code&gt;函数&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; buffer[&lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;];
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; iret;
+    memset(buffer, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer));
+    sprintf(buffer, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;this is %d data&amp;#34;&lt;/span&gt;, i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; send(sockfd, buffer, strlen(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+        perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;send&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+    }
+    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;send: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+    memset(buffer, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; recv(sockfd, buffer, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;iret = &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; iret &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+    }
+    cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;receive &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;4重复操作3直至数据发送完毕&#34;&gt;4、重复操作（3），直至数据发送完毕&lt;/h4&gt;
+&lt;h4 id=&#34;5释放socket&#34;&gt;5、释放socket&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;close(sockfd);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;代码-1&#34;&gt;代码&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;cstdio&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;cstring&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;netdb.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;cstdlib&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;sys/types.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;sys/socket.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;arpa/inet.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; std;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; argc, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;argv[]) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (argc &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) {
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Using client port&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Example: ./client 127.0.0.1 5005&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl; 
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; sockfd;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((sockfd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; socket(AF_INET, SOCK_STREAM, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+        perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;socket&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 2
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;hostent&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; hostcon;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((hostcon &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; gethostbyname(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;])) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;gethostbyname failed&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+        close(sockfd);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr_in&lt;/span&gt; servaddr;
+    memset(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr));
+    servaddr.sin_family &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AF_INET;
+    servaddr.sin_port &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; htons(atoi(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]));
+    memcpy(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr.sin_addr, hostcon&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;h_addr, hostcon&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;h_length);
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 3    
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (connect(sockfd, (&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sockaddr&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;servaddr, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(servaddr)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+        perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;connect&amp;#34;&lt;/span&gt;);
+        close(sockfd);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; buffer[&lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; iret;
+        memset(buffer, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer));
+        sprintf(buffer, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;this is %d data&amp;#34;&lt;/span&gt;, i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; send(sockfd, buffer, strlen(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+            perror(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;send&amp;#34;&lt;/span&gt;);
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        }
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;send: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+        memset(buffer, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer));
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((iret &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; recv(sockfd, buffer, &lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(buffer), &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+            cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;iret = &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; iret &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        }
+        cout &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;receive &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; buffer &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl;
+    }
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 5
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    close(sockfd);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;运行结果&#34;&gt;运行结果&lt;/h2&gt;
+&lt;p&gt;在工程目录中打开两个终端，在编译后通过命令&lt;code&gt;./server 5005&lt;/code&gt;启动服务器，之后在另一个终端通过命令&lt;code&gt;./client 127.0.0.1 5005&lt;/code&gt;运行客户端，最终结果呈现如下。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621cca3c2ab3f51d91db196d.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621cca3c2ab3f51d91db196d.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;p&gt;[1] &lt;a class=&#34;link&#34; href=&#34;https://www.freecplus.net/0047ac4059b14d52bcc1d4df6ae8bb83.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;网络通信基础socket&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2] &lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/dosthing/article/details/80383817&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;hostent实例讲解&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[3] &lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/will130/article/details/53326740&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;sockaddr和sockaddr_in详解&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>应用层协议——HTTP</title>
         <link>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
         <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
@@ -441,7 +722,39 @@ wp.expired()  &lt;span style=&#34;color:#75715e&#34;&gt;// 判断所观测的资
 &lt;p&gt;unique_ptr是一个独占型的智能指针，它不允许其它的智能指针共享其内部的指针，不允许通过赋值将一个unique_ptr赋值给另一个unique_ptr。但是可以通过函数返回给其它的unique_ptr，这样它本身就不再拥有原来指针的所有权了。如下：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;unique_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; ptr(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; T);
 unique_ptr&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; Otherptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;move(ptr);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;11函数指针和指针函数&#34;&gt;11、函数指针和指针函数&lt;/h2&gt;
+&lt;h3 id=&#34;1指针函数&#34;&gt;（1）指针函数&lt;/h3&gt;
+&lt;p&gt;简单来说，就是一个返回指针的函数，本质是一个函数。声明格式为&lt;code&gt;*类型标识符 函数名(参数)&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt;;
+A&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fun&lt;/span&gt;(params...);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;2函数指针&#34;&gt;（2）函数指针&lt;/h3&gt;
+&lt;p&gt;本质是一个指针变量，该指针指向这个函数。声明格式为&lt;code&gt;类型标识符 (*函数名)()&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;A&lt;/span&gt;;
+A (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;fun)(params...);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;函数指针需要把一个函数的地址赋值给它，具体示例如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y) {
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; y;
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;fun)(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y);
+fun &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; add;
+fun &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;add;  &lt;span style=&#34;color:#75715e&#34;&gt;// 两种写法都行
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;可以不用取址符是因为函数名就代表函数的地址&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&#34;12操作系统专题&#34;&gt;12、操作系统专题&lt;/h2&gt;
+&lt;h3 id=&#34;121-操作系统特性&#34;&gt;12.1 操作系统特性&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;并发：&lt;/strong&gt; 同一段时间内多个程序执行&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;共享：&lt;/strong&gt; 系统中的资源可以被内存中多个并发执行的线程共同使用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;虚拟：&lt;/strong&gt; 通过时分复用以及空分复用（如虚拟内存），把一个物理实体虚拟为多个&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;异步：&lt;/strong&gt; 系统中的进程以走走停停的方式执行的，且以一种不可预知的速度推进&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;122-动态链接库与静态链接库&#34;&gt;12.2 动态链接库与静态链接库&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;静态链接库一般为&lt;code&gt;.lib&lt;/code&gt;文件，在项目界面直接加入工程，程序编译时，将文件中的代码加入到程序中，不能手动移除此文件的代码。&lt;/li&gt;
+&lt;li&gt;动态链接库一般为&lt;code&gt;.dll&lt;/code&gt;文件，是程序运行时动态装入内存模块，程序运行时可以随意加载和移除。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;123-协程&#34;&gt;12.3 协程&lt;/h3&gt;
+&lt;p&gt;协程是一种比 &lt;strong&gt;线程更加轻量级&lt;/strong&gt; 的存在，正如一个进程可以拥有多个线程一样， &lt;strong&gt;一个线程也可以拥有多个协程&lt;/strong&gt; 。协程 &lt;strong&gt;不被操作系统内核管理&lt;/strong&gt; ，完全由程序所控制，运行在 &lt;strong&gt;用户态&lt;/strong&gt; 。协程不是进程也不是线程，而 &lt;strong&gt;是一个特殊的函数&lt;/strong&gt; ，这个函数可以在某个地方挂起，并且可以重新在挂起处外运行。&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>LeetCode 二叉搜索树与双向链表</title>
