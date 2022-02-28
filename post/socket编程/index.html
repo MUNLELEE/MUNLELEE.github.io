@@ -2,11 +2,11 @@
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
-1、socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
+socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
  
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
 对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式
- 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  2、C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
+ 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
 服务器工作流程 1、创建服务器socket 在这个阶段我们可以使用socket函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为AF_INET，即表示利用IPv4进行通信。这个函数的返回值为 文件描述符 （类型为整型），当失败时则会返回-1如下
 int listenfd; listenfd = socket(AF_INET, SOCK_STREAM, 0) 2、将服务器用于通信的地址和端口绑定到socket上 在Linux中，地址信息被封装在了结构体sockaddr中，如下
 struct sockaddr { sa_family_t sin_family; //地址族 	char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
@@ -35,11 +35,11 @@ struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); ser
 </script>
 <meta property='og:title' content='Linux下的socket网络通信'>
 <meta property='og:description' content='想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
-1、socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
+socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
  
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
 对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式
- 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  2、C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
+ 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
 服务器工作流程 1、创建服务器socket 在这个阶段我们可以使用socket函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为AF_INET，即表示利用IPv4进行通信。这个函数的返回值为 文件描述符 （类型为整型），当失败时则会返回-1如下
 int listenfd; listenfd = socket(AF_INET, SOCK_STREAM, 0) 2、将服务器用于通信的地址和端口绑定到socket上 在Linux中，地址信息被封装在了结构体sockaddr中，如下
 struct sockaddr { sa_family_t sin_family; //地址族 	char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
@@ -50,11 +50,11 @@ struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); ser
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='计算机网络' /><meta property='article:published_time' content='2022-02-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-02-28T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="Linux下的socket网络通信">
 <meta name="twitter:description" content="想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
-1、socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
+socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
  
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
 对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式
- 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  2、C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
+ 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
 服务器工作流程 1、创建服务器socket 在这个阶段我们可以使用socket函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为AF_INET，即表示利用IPv4进行通信。这个函数的返回值为 文件描述符 （类型为整型），当失败时则会返回-1如下
 int listenfd; listenfd = socket(AF_INET, SOCK_STREAM, 0) 2、将服务器用于通信的地址和端口绑定到socket上 在Linux中，地址信息被封装在了结构体sockaddr中，如下
 struct sockaddr { sa_family_t sin_family; //地址族 	char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
@@ -171,7 +171,7 @@ struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); ser
 
     <section class="article-content">
     <p>想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。</p>
-<h2 id="1socket">1、socket</h2>
+<h2 id="socket">socket</h2>
 <p>socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。</p>
 <p><figure 
 	>
@@ -191,7 +191,7 @@ struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); ser
 <li>流：基于TCP协议，因此有序，可靠。可以实现可靠传输。</li>
 <li>数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。</li>
 </ul>
-<h2 id="2cs模式">2、C/S模式</h2>
+<h2 id="cs模式">C/S模式</h2>
 <p>在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。</p>
 <h3 id="服务器工作流程">服务器工作流程</h3>
 <h4 id="1创建服务器socket">1、创建服务器socket</h4>
@@ -608,8 +608,8 @@ connect(sockfd, (<span style="color:#66d9ef">struct</span> <span style="color:#a
                 <div class="widget--toc">
                     <nav id="TableOfContents">
   <ul>
-    <li><a href="#1socket">1、socket</a></li>
-    <li><a href="#2cs模式">2、C/S模式</a>
+    <li><a href="#socket">socket</a></li>
+    <li><a href="#cs模式">C/S模式</a>
       <ul>
         <li><a href="#服务器工作流程">服务器工作流程</a></li>
         <li><a href="#客户端工作流程">客户端工作流程</a></li>

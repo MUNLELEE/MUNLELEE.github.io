@@ -13,7 +13,7 @@
         
         <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
         <description>&lt;p&gt;想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。&lt;/p&gt;
-&lt;h2 id=&#34;1socket&#34;&gt;1、socket&lt;/h2&gt;
+&lt;h2 id=&#34;socket&#34;&gt;socket&lt;/h2&gt;
 &lt;p&gt;socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。&lt;/p&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
@@ -33,7 +33,7 @@
 &lt;li&gt;流：基于TCP协议，因此有序，可靠。可以实现可靠传输。&lt;/li&gt;
 &lt;li&gt;数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;2cs模式&#34;&gt;2、C/S模式&lt;/h2&gt;
+&lt;h2 id=&#34;cs模式&#34;&gt;C/S模式&lt;/h2&gt;
 &lt;p&gt;在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。&lt;/p&gt;
 &lt;h3 id=&#34;服务器工作流程&#34;&gt;服务器工作流程&lt;/h3&gt;
 &lt;h4 id=&#34;1创建服务器socket&#34;&gt;1、创建服务器socket&lt;/h4&gt;
