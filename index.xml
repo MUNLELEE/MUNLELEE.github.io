@@ -463,7 +463,7 @@ connect(sockfd, (&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; &
 &lt;p&gt;构造函数可以被重载，因为可以存在有参和无参的构造函数；析构函数不能被重载，因为析构函数只能有一个并且不带参数。&lt;/p&gt;
 &lt;h2 id=&#34;2new和malloc的区别&#34;&gt;2、new和malloc的区别&lt;/h2&gt;
 &lt;p&gt;据说是C++的经典问题，在综合了网络上的一些博文后，得出以下几点不同。&lt;/p&gt;
-&lt;p&gt;（1）、&lt;strong&gt;申请内存所在区域。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;操作符从自由存储区*（不仅可以是堆还可以是静态存储区）*上为对象动态分配内存，而&lt;code&gt;malloc&lt;/code&gt;从堆上分配内存，这块区域是操作系统维护的一块特殊内存，用于程序动态分配。&lt;/p&gt;
+&lt;p&gt;（1）、&lt;strong&gt;申请内存所在区域。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;操作符从自由存储区 &lt;em&gt;（不仅可以是堆还可以是静态存储区）&lt;/em&gt; 上为对象动态分配内存，而&lt;code&gt;malloc&lt;/code&gt;从堆上分配内存，这块区域是操作系统维护的一块特殊内存，用于程序动态分配。&lt;/p&gt;
 &lt;p&gt;（2）、&lt;strong&gt;返回类型。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;操作符返回的是对象类型指针，不需要进行强制转换；&lt;code&gt;malloc&lt;/code&gt;内存分配成功则是返回&lt;code&gt;void*&lt;/code&gt;，需要通过强制类型转换成指定类型。&lt;/p&gt;
 &lt;p&gt;（3）、&lt;strong&gt;内存分配失败时的返回值。&lt;/strong&gt;&lt;code&gt;new&lt;/code&gt;内存分配失败时，会抛出&lt;code&gt;bad_alloc&lt;/code&gt;异常，不会返回&lt;code&gt;NULL&lt;/code&gt;，&lt;code&gt;malloc&lt;/code&gt;分配内存失败时返回&lt;code&gt;NULL&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;（4）、&lt;strong&gt;是否需要指定内存大小。&lt;/strong&gt; 使用&lt;code&gt;new&lt;/code&gt;操作符时进行内存分配时无需指定内存块的大小，使用&lt;code&gt;malloc&lt;/code&gt;需要显式的指定内存的大小。&lt;/p&gt;
@@ -487,7 +487,7 @@ A &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr &lt;span style=&#3
 &lt;p&gt;虚函数的实现是由两个部分组成的，虚函数指针和虚函数表。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id=&#34;31虚函数指针&#34;&gt;3.1、虚函数指针&lt;/h3&gt;
-&lt;p&gt;本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。只有拥有虚函数的类才会拥有虚函数指针，只有拥有虚函数的类才会拥有虚函数指针，每个虚函数也都会对应一个虚函数指针。&lt;/p&gt;
+&lt;p&gt;本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。 &lt;strong&gt;只有拥有虚函数的类才会拥有虚函数指针&lt;/strong&gt; ，每个虚函数也都会对应一个虚函数指针。&lt;/p&gt;
 &lt;h3 id=&#34;32ab两个类类中有虚函数c继承ab有几张虚函数表&#34;&gt;3.2、A、B两个类，类中有虚函数。C继承AB，有几张虚函数表？&lt;/h3&gt;
 &lt;p&gt;两张，多继承就会有多个虚函数表，因为每个父类的虚函数是不同的，指针也是不同的。如果公用一张虚函数表，就分不清子类到底实例化的哪个基类函数。&lt;/p&gt;
 &lt;h3 id=&#34;33虚构函数可以是虚函数吗&#34;&gt;3.3、虚构函数可以是虚函数吗？&lt;/h3&gt;
@@ -754,6 +754,146 @@ fun &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34
 &lt;/ul&gt;
 &lt;h3 id=&#34;123-协程&#34;&gt;12.3 协程&lt;/h3&gt;
 &lt;p&gt;协程是一种比 &lt;strong&gt;线程更加轻量级&lt;/strong&gt; 的存在，正如一个进程可以拥有多个线程一样， &lt;strong&gt;一个线程也可以拥有多个协程&lt;/strong&gt; 。协程 &lt;strong&gt;不被操作系统内核管理&lt;/strong&gt; ，完全由程序所控制，运行在 &lt;strong&gt;用户态&lt;/strong&gt; 。协程不是进程也不是线程，而 &lt;strong&gt;是一个特殊的函数&lt;/strong&gt; ，这个函数可以在某个地方挂起，并且可以重新在挂起处外运行。&lt;/p&gt;
+&lt;h2 id=&#34;13常见的设计模式&#34;&gt;13、常见的设计模式&lt;/h2&gt;
+&lt;h3 id=&#34;131-工厂模式&#34;&gt;13.1 工厂模式&lt;/h3&gt;
+&lt;h4 id=&#34;1简单工厂&#34;&gt;（1）简单工厂&lt;/h4&gt;
+&lt;p&gt;简单工厂包含以下角色&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Factory：工厂角色，负责实现创建所有实例的内部逻辑&lt;/li&gt;
+&lt;li&gt;Product：抽象产品角色，是所创建的所有对象的父类，负责描述所有实例所共有的公共接口&lt;/li&gt;
+&lt;li&gt;ConcreteProduct：具体产品角色，是创建目标，所有创建的对象都充当这个角色的某个具体类的实例。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如图：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621e04a02ab3f51d91973b30.jpg&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621e04a02ab3f51d91973b30.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2工厂方法&#34;&gt;（2）工厂方法&lt;/h4&gt;
+&lt;p&gt;工厂方法模式包含以下结构&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Product：抽象产品&lt;/li&gt;
+&lt;li&gt;ConcreteProduct：具体产品&lt;/li&gt;
+&lt;li&gt;Factory：抽象工厂&lt;/li&gt;
+&lt;li&gt;ConcreteFactory：具体工厂&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如图：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621e06822ab3f51d919abd2b.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621e06822ab3f51d919abd2b.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;132-单例模式&#34;&gt;13.2 单例模式&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;只对外提供&lt;code&gt;getInstance&lt;/code&gt;方法，不提供任何构造函数&lt;/strong&gt; ，适用于 &lt;strong&gt;全局统一&lt;/strong&gt; 如图：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621e06c42ab3f51d919b3ce2.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621e06c42ab3f51d919b3ce2.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;133-装饰模式&#34;&gt;13.3 装饰模式&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;适合需要（通过配置，如：diamond）来动态增减对象功能的场景&lt;/strong&gt; 。装饰模式包含以下角色：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Component：抽象构件&lt;/li&gt;
+&lt;li&gt;ConcreteComponent：具体构件&lt;/li&gt;
+&lt;li&gt;Decorator：抽象装饰类&lt;/li&gt;
+&lt;li&gt;ConcreteDecorator：具体装饰类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如图：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621e082f2ab3f51d919de278.jpg&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621e082f2ab3f51d919de278.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一个装饰类的接口必须与被装饰类的接口保持相同，对于客户端来说无论是装饰之前的对象还是装饰之后的对象都可以一致对待。&lt;/li&gt;
+&lt;li&gt;尽量保持具体构件类Component作为一个“轻”类，也就是说不要把太多的逻辑和状态放在具体构件类中，可以通过装饰类。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;134-策略模式&#34;&gt;13.4 策略模式&lt;/h3&gt;
+&lt;p&gt;适用于一个系统需要动态地在几种可替换算法中选择一种。不希望使用者关心算法细节，将具体算法封装进策略类中。包含以下几个角色：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Context：环境类&lt;/li&gt;
+&lt;li&gt;Strategy：抽象策略类&lt;/li&gt;
+&lt;li&gt;ConcreteStrategy：具体策略类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如图：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621e0a372ab3f51d91a19da2.jpg&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621e0a372ab3f51d91a19da2.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;135-代理模式&#34;&gt;13.5 代理模式&lt;/h3&gt;
+&lt;p&gt;包括远程代理，虚拟代理等多种代理。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;虚拟代理：如果需要创建一个资源消耗较大的对象，先创建一个消耗相对较小的对象来表示，真实对象只在需要时才会被真正创建。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621e19ae2ab3f51d91b9855c.jpg&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621e19ae2ab3f51d91b9855c.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;136-观察者模式&#34;&gt;13.6 观察者模式&lt;/h3&gt;
+&lt;p&gt;适用于一对多的的业务场景，一个对象发生变更，会触发N个对象做相应处理的场景。例如：订单调度通知，任务状态变化等。包含以下角色：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Subject：目标&lt;/li&gt;
+&lt;li&gt;ConcreteSubject：具体目标&lt;/li&gt;
+&lt;li&gt;Observer：观察者&lt;/li&gt;
+&lt;li&gt;ConcreteObserver：具体观察者&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/621e1a2f2ab3f51d91b9f6a0.jpg&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/621e1a2f2ab3f51d91b9f6a0.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 </description>
         </item>
         <item>
