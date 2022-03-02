@@ -14,17 +14,15 @@
 （3）、内存分配失败时的返回值。new内存分配失败时，会抛出bad_alloc异常，不会返回NULL，malloc分配内存失败时返回NULL
 （4）、是否需要指定内存大小。 使用new操作符时进行内存分配时无需指定内存块的大小，使用malloc需要显式的指定内存的大小。
 class A {...} A *ptr = new A; A *ptr = (A*)malloc(sizeof(A)); （5）、是否调用构造函数。 使用new操作符分配对象内存时经历如下的几个步骤：
-· 调用operator new函数（数组是operator new[]）来分配内存空间
-· 编译器运行相应的构造函数创建对象，并赋初值
-· 返回指向这个对象的指针
-使用delete操作符释放内存空间时会经历如下步骤：
-· 调用对象的析构函数
-· 编译器调用operator delete（operator delete[]）释放内存空间
-使用malloc分配内存则不会调用构造函数
+  ·调用operator new函数（数组是operator new[]）来分配内存空间
+  ·编译器运行相应的构造函数创建对象，并赋初值
+  ·返回指向这个对象的指针
+  使用delete操作符释放内存空间时会经历如下步骤：
+  ·调用对象的析构函数
+  ·编译器调用operator delete（operator delete[]）释放内存空间
+  使用malloc分配内存则不会调用构造函数
 （6）、对数组的处理。 C&#43;&#43;提供了new []和delete []来专门处理数组类型，而malloc需要自己指定数组的大小
-int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作
-（8）、客户处理内存分配不足。new会有异常机制，而malloc只能返回NULL
-3、虚函数 虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成运行时决议，与传统的编译时决定有本质区别。'><title>春招 | 知识点留档</title>
+int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作'><title>春招 | 知识点留档</title>
 
 <link rel='canonical' href='https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/'>
 
@@ -60,17 +58,15 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
 （3）、内存分配失败时的返回值。new内存分配失败时，会抛出bad_alloc异常，不会返回NULL，malloc分配内存失败时返回NULL
 （4）、是否需要指定内存大小。 使用new操作符时进行内存分配时无需指定内存块的大小，使用malloc需要显式的指定内存的大小。
 class A {...} A *ptr = new A; A *ptr = (A*)malloc(sizeof(A)); （5）、是否调用构造函数。 使用new操作符分配对象内存时经历如下的几个步骤：
-· 调用operator new函数（数组是operator new[]）来分配内存空间
-· 编译器运行相应的构造函数创建对象，并赋初值
-· 返回指向这个对象的指针
-使用delete操作符释放内存空间时会经历如下步骤：
-· 调用对象的析构函数
-· 编译器调用operator delete（operator delete[]）释放内存空间
-使用malloc分配内存则不会调用构造函数
+  ·调用operator new函数（数组是operator new[]）来分配内存空间
+  ·编译器运行相应的构造函数创建对象，并赋初值
+  ·返回指向这个对象的指针
+  使用delete操作符释放内存空间时会经历如下步骤：
+  ·调用对象的析构函数
+  ·编译器调用operator delete（operator delete[]）释放内存空间
+  使用malloc分配内存则不会调用构造函数
 （6）、对数组的处理。 C&#43;&#43;提供了new []和delete []来专门处理数组类型，而malloc需要自己指定数组的大小
-int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作
-（8）、客户处理内存分配不足。new会有异常机制，而malloc只能返回NULL
-3、虚函数 虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成运行时决议，与传统的编译时决定有本质区别。'>
+int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作'>
 <meta property='og:url' content='https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/'>
 <meta property='og:site_name' content='墨纹'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='春招' /><meta property='article:published_time' content='2022-02-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-02-02T00:00:00&#43;00:00'/>
@@ -88,17 +84,15 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
 （3）、内存分配失败时的返回值。new内存分配失败时，会抛出bad_alloc异常，不会返回NULL，malloc分配内存失败时返回NULL
 （4）、是否需要指定内存大小。 使用new操作符时进行内存分配时无需指定内存块的大小，使用malloc需要显式的指定内存的大小。
 class A {...} A *ptr = new A; A *ptr = (A*)malloc(sizeof(A)); （5）、是否调用构造函数。 使用new操作符分配对象内存时经历如下的几个步骤：
-· 调用operator new函数（数组是operator new[]）来分配内存空间
-· 编译器运行相应的构造函数创建对象，并赋初值
-· 返回指向这个对象的指针
-使用delete操作符释放内存空间时会经历如下步骤：
-· 调用对象的析构函数
-· 编译器调用operator delete（operator delete[]）释放内存空间
-使用malloc分配内存则不会调用构造函数
+  ·调用operator new函数（数组是operator new[]）来分配内存空间
+  ·编译器运行相应的构造函数创建对象，并赋初值
+  ·返回指向这个对象的指针
+  使用delete操作符释放内存空间时会经历如下步骤：
+  ·调用对象的析构函数
+  ·编译器调用operator delete（operator delete[]）释放内存空间
+  使用malloc分配内存则不会调用构造函数
 （6）、对数组的处理。 C&#43;&#43;提供了new []和delete []来专门处理数组类型，而malloc需要自己指定数组的大小
-int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作
-（8）、客户处理内存分配不足。new会有异常机制，而malloc只能返回NULL
-3、虚函数 虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成运行时决议，与传统的编译时决定有本质区别。"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
     :root {
         --article-font-family: "Noto Serif SC", var(--base-font-family);
     }
@@ -230,12 +224,26 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
 A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> A;
 A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (A<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(A));
 </code></pre></div><p>（5）、<strong>是否调用构造函数。</strong> 使用<code>new</code>操作符分配对象内存时经历如下的几个步骤：</p>
-<p>· 调用<code>operator new</code>函数（数组是<code>operator new[]</code>）来分配内存空间</p>
-<p>· 编译器运行相应的构造函数创建对象，并赋初值</p>
-<p>· 返回指向这个对象的指针</p>
+<ul>
+<li>
+<p>·调用<code>operator new</code>函数（数组是<code>operator new[]</code>）来分配内存空间</p>
+</li>
+<li>
+<p>·编译器运行相应的构造函数创建对象，并赋初值</p>
+</li>
+<li>
+<p>·返回指向这个对象的指针</p>
+</li>
+</ul>
 <p>使用<code>delete</code>操作符释放内存空间时会经历如下步骤：</p>
-<p>· 调用对象的析构函数</p>
-<p>· 编译器调用<code>operator delete</code>（<code>operator delete[]</code>）释放内存空间</p>
+<ul>
+<li>
+<p>·调用对象的析构函数</p>
+</li>
+<li>
+<p>·编译器调用<code>operator delete</code>（<code>operator delete[]</code>）释放内存空间</p>
+</li>
+</ul>
 <p>使用<code>malloc</code>分配内存则不会调用构造函数</p>
 <p>（6）、<strong>对数组的处理。</strong> C++提供了<code>new []</code>和<code>delete []</code>来专门处理数组类型，而malloc需要自己指定数组的大小</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C++" data-lang="C++"><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span>)  <span style="color:#75715e">// 分配一个十个int大小的数组
