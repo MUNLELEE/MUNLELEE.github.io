@@ -24,6 +24,21 @@
 &lt;li&gt;返回前k个点出现频率最高的类别作为当前点的预测分类&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;在确定样本和当前点的距离时，通常采用的是欧式距离公式$$d=\sqrt{(x_1-x_0)+(y_1-y_0)}$$ 当公式中的指数变化时，随之也会得到相应的不同的距离公式。&lt;/p&gt;
+&lt;p&gt;如下图所示的例子中&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/624d7f79239250f7c5f8940f.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/624d7f79239250f7c5f8940f.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;1、当采用实线的圆作为k近邻的范围，也就是$k=3$时，此时与绿点距离更近的三个点中，三角形出现的频率更大，因此将绿点归为三角形一类&lt;/p&gt;
+&lt;p&gt;2、当采用虚线的圆作为k近邻的范围，也就是$k=5$，时，此时与绿点距离更近的五个点中，正方形的频率更大，因此将绿点归为正方形一类。&lt;/p&gt;
 &lt;p&gt;以下采用鸢尾花作为例子进行KNN测试&lt;/p&gt;
 &lt;h2 id=&#34;代码&#34;&gt;代码&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; numpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; np
