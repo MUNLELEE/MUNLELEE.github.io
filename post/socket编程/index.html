@@ -47,7 +47,7 @@ struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 	st
 struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.'>
 <meta property='og:url' content='https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/'>
 <meta property='og:site_name' content='墨纹'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='计算机网络' /><meta property='article:published_time' content='2022-02-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-02-28T00:00:00&#43;00:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='计算机网络' /><meta property='article:tag' content='技术' /><meta property='article:published_time' content='2022-02-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-02-28T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="Linux下的socket网络通信">
 <meta name="twitter:description" content="想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
 socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
@@ -452,6 +452,8 @@ connect(sockfd, (<span style="color:#66d9ef">struct</span> <span style="color:#a
     <section class="article-tags">
         
             <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
         
     </section>
 

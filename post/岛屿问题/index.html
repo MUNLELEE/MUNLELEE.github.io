@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
+ 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长  图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
+DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
+之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
+class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x &#43; 1, pos_y); dfs(grid, pos_x, pos_y &#43; 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下'><title>岛屿问题 | DFS框架</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/'>
+
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='岛屿问题 | DFS框架'>
+<meta property='og:description' content='在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
+ 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长  图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
+DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
+之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
+class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x &#43; 1, pos_y); dfs(grid, pos_x, pos_y &#43; 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='算法' /><meta property='article:published_time' content='2022-04-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-02T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="岛屿问题 | DFS框架">
+<meta name="twitter:description" content="在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
+ 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长  图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
+DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
+之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
+class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x &#43; 1, pos_y); dfs(grid, pos_x, pos_y &#43; 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/">岛屿问题 | DFS框架</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 02, 2022</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。</p>
+<ul>
+<li><a class="link" href="https://leetcode-cn.com/problems/number-of-islands/"  target="_blank" rel="noopener"
+    >岛屿数量</a></li>
+<li><a class="link" href="https://leetcode-cn.com/problems/ZL6zAn/"  target="_blank" rel="noopener"
+    >岛屿的最大面积</a></li>
+<li><a class="link" href="https://leetcode-cn.com/problems/making-a-large-island/"  target="_blank" rel="noopener"
+    >最大人工岛</a></li>
+<li><a class="link" href="https://leetcode-cn.com/problems/number-of-closed-islands/"  target="_blank" rel="noopener"
+    >封闭岛屿的数目</a></li>
+<li><a class="link" href="https://leetcode-cn.com/problems/island-perimeter/"  target="_blank" rel="noopener"
+    >岛屿的周长</a></li>
+</ul>
+<h2 id="图类dfs方法">图类DFS方法</h2>
+<p>图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）</p>
+<h3 id="dfs框架">DFS框架</h3>
+<p>DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。</p>
+<p>之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">bool</span> inRange(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+        <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> x <span style="color:#f92672">&lt;</span> grid.size() <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&lt;</span> grid[<span style="color:#ae81ff">0</span>].size()) {
+            <span style="color:#66d9ef">return</span> true;
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> pos_x, <span style="color:#66d9ef">int</span> pos_y) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>inRange(grid, pos_x, pos_y)) <span style="color:#66d9ef">return</span>;
+        <span style="color:#66d9ef">if</span> (grid[pos_x][pos_y] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span>;
+        dfs(grid, pos_x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, pos_y);
+        dfs(grid, pos_x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, pos_y);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+    }
+}
+</code></pre></div><h3 id="避免重复遍历">避免重复遍历</h3>
+<p>在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">bool</span> inRange(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+        <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> x <span style="color:#f92672">&lt;</span> grid.size() <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&lt;</span> grid[<span style="color:#ae81ff">0</span>].size()) {
+            <span style="color:#66d9ef">return</span> true;
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> pos_x, <span style="color:#66d9ef">int</span> pos_y) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>inRange(grid, pos_x, pos_y)) <span style="color:#66d9ef">return</span>;
+        <span style="color:#66d9ef">if</span> (grid[pos_x][pos_y] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span>;
+        grid[pos_x][pos_y] <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
+        dfs(grid, pos_x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, pos_y);
+        dfs(grid, pos_x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, pos_y);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+    }
+};
+</code></pre></div><h2 id="岛屿问题解法">岛屿问题解法</h2>
+<h3 id="岛屿数量问题">岛屿数量问题</h3>
+<p>其实粗看题目，很容易能想到并查集能够解决这类问题，但是DFS应该较为常见的解法，这道题也是最为简单的DFS。</p>
+<p>我们可以这么想，当你使用DFS时，每次遍历到的都是相邻的方格，因此在一次DFS过程中，遍历过的所有陆地应该是属于同一块岛屿的，而在遍历的过程中我们应当将已走过的陆地更改为不可走。这样一来就会使之前的岛屿失效。</p>
+<p>那么如何寻找下一个岛屿呢？答案也就是寻找下一个在地图中尚未使用过的$1$，之后在对这个$1$进行DFS，也就可以得到另一个岛屿了。</p>
+<p>因此要想获得岛屿的数量，其实就是在整个地图执行DFS算法的次数。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">bool</span> inRange(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+        <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> x <span style="color:#f92672">&lt;</span> grid.size() <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&lt;</span> grid[<span style="color:#ae81ff">0</span>].size()) {
+            <span style="color:#66d9ef">return</span> true;
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> pos_x, <span style="color:#66d9ef">int</span> pos_y) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>inRange(grid, pos_x, pos_y)) <span style="color:#66d9ef">return</span>;
+        <span style="color:#66d9ef">if</span> (grid[pos_x][pos_y] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;1&#39;</span>) <span style="color:#66d9ef">return</span>;
+        grid[pos_x][pos_y] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;2&#39;</span>;
+        dfs(grid, pos_x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, pos_y);
+        dfs(grid, pos_x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, pos_y);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+    }
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> numIslands(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid) {
+        <span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> grid.size();
+        <span style="color:#66d9ef">int</span> col <span style="color:#f92672">=</span> grid[<span style="color:#ae81ff">0</span>].size();
+        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> row; <span style="color:#f92672">++</span>i) {
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> col; <span style="color:#f92672">++</span>j) {
+                <span style="color:#66d9ef">if</span> (grid[i][j] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;1&#39;</span>) {
+                    <span style="color:#f92672">++</span>res;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        <span style="color:#66d9ef">return</span> res;
+    }
+};
+</code></pre></div><h3 id="岛屿的最大面积">岛屿的最大面积</h3>
+<p>这个问题和上一个问题其实本质上没什么区别，你都需要在整个地图中去遍历出所有的岛屿，无非需要的就是在DFS的过程中，你需要统计已走过的陆地数量。当遍历完所有的岛屿之后，取这些值中的最大值即可。</p>
+<p>因此在这个问题中，我们只需要在每次进入DFS函数中，如果走过的是陆地，那么就对其面积（<code>area</code>）$+1$即可。（使用C++时，可以传递引用避免无法改变形参的问题）。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">bool</span> inRange(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+        <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> x <span style="color:#f92672">&lt;</span> grid.size() <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&lt;</span> grid[<span style="color:#ae81ff">0</span>].size()) {
+            <span style="color:#66d9ef">return</span> true;
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> pos_x, <span style="color:#66d9ef">int</span> pos_y, <span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> area) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>inRange(grid, pos_x, pos_y)) <span style="color:#66d9ef">return</span>;
+        <span style="color:#66d9ef">if</span> (grid[pos_x][pos_y] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span>;
+        <span style="color:#f92672">++</span>area;
+        grid[pos_x][pos_y] <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
+        dfs(grid, pos_x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, pos_y, area);
+        dfs(grid, pos_x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, pos_y, area);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, area);
+        dfs(grid, pos_x, pos_y <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, area);
+    }
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> maxAreaOfIsland(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid) {
+        <span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> grid.size();
+        <span style="color:#66d9ef">int</span> col <span style="color:#f92672">=</span> grid[<span style="color:#ae81ff">0</span>].size();
+        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> row; <span style="color:#f92672">++</span>i) {
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> col; <span style="color:#f92672">++</span>j) {
+                <span style="color:#66d9ef">if</span> (grid[i][j] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
+                    <span style="color:#66d9ef">int</span> area <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+                    dfs(grid, i, j, area);
+                    res <span style="color:#f92672">=</span> max(res, area);    
+                }
+            }
+        }
+        <span style="color:#66d9ef">return</span> res;
+    }
+};
+</code></pre></div><h3 id="岛屿的周长">岛屿的周长</h3>
+<p>这道题要求的是岛屿的周长，这道题最终是在题解的启发下才做出来的。</p>
+<p>对于一张地图，如果我们遍历到一个海洋结点（$0$），这时候表明岛屿有一条边与其相接，而当我们遍历出地图时，也表明有一条边与岛屿相接，相反，如果是陆地，则对岛屿的周长没有影响。</p>
+<p>所以我们只需要在DFS中分以上三种情况进行讨论，将最后的结果相加即可得到岛屿的周长。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">bool</span> inRange(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+        <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> x <span style="color:#f92672">&lt;</span> grid.size() <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&lt;</span> grid[<span style="color:#ae81ff">0</span>].size()) {
+            <span style="color:#66d9ef">return</span> true;
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> pos_x, <span style="color:#66d9ef">int</span> pos_y) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>inRange(grid, pos_x, pos_y)) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+        <span style="color:#66d9ef">if</span> (grid[pos_x][pos_y] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+        <span style="color:#66d9ef">if</span> (grid[pos_x][pos_y] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// 说明这个方格已经是遍历过的陆地
+</span><span style="color:#75715e"></span>        grid[pos_x][pos_y] <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
+        <span style="color:#66d9ef">return</span> dfs(grid, pos_x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, pos_y) <span style="color:#f92672">+</span> dfs(grid, pos_x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, pos_y) <span style="color:#f92672">+</span> 
+                dfs(grid, pos_x, pos_y <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> dfs(grid, pos_x, pos_y <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+    }
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> islandPerimeter(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid) {
+        <span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> grid.size();
+        <span style="color:#66d9ef">int</span> col <span style="color:#f92672">=</span> grid[<span style="color:#ae81ff">0</span>].size();
+        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> row; <span style="color:#f92672">++</span>i) {
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> col; <span style="color:#f92672">++</span>j) {
+                <span style="color:#66d9ef">if</span> (grid[i][j] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) {
+                    res <span style="color:#f92672">+=</span> dfs(grid, i, j);
+                }
+            }
+        }
+        <span style="color:#66d9ef">return</span> res;
+    }
+};
+</code></pre></div><h3 id="封闭岛屿的数目">封闭岛屿的数目</h3>
+<p>这道题与求岛屿的数目有点像，稍有不同的是，当岛屿以地图边界为边时，此时这个岛屿算是封闭的。</p>
+<p>因此我们可以自然的想到，利用DFS将不算封闭的边界岛屿找出来，而在这个算法执行的过程中就会将这些岛屿修改为海洋，因此剩下的岛屿就全为封闭岛屿，计算这些剩下的岛屿即可。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">constexpr</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> dx[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>};
+    <span style="color:#66d9ef">constexpr</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> dy[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>};
+    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">inRange</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+        <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> x <span style="color:#f92672">&lt;</span> grid.size() <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> y <span style="color:#f92672">&lt;</span> grid[<span style="color:#ae81ff">0</span>].size()) {
+            <span style="color:#66d9ef">return</span> true;
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span>(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid, <span style="color:#66d9ef">int</span> pox, <span style="color:#66d9ef">int</span> poy) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>inRange(grid, pox, poy)) <span style="color:#66d9ef">return</span>;
+        <span style="color:#66d9ef">if</span> (grid[pox][poy] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>;
+        grid[pox][poy] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>i) {
+            dfs(grid, pox <span style="color:#f92672">+</span> dx[i], poy <span style="color:#f92672">+</span> dy[i]);
+        }
+    }
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> closedIsland(vector<span style="color:#f92672">&lt;</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&gt;&amp;</span> grid) {
+        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> grid.size(), col <span style="color:#f92672">=</span> grid[<span style="color:#ae81ff">0</span>].size();
+        <span style="color:#75715e">// 优先处理边界，将边界岛屿剔除
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> row; <span style="color:#f92672">++</span>i) {
+            dfs(grid, i, <span style="color:#ae81ff">0</span>);
+            dfs(grid, i, col <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+        }
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> col; <span style="color:#f92672">++</span>j) {
+            dfs(grid, <span style="color:#ae81ff">0</span>, j);
+            dfs(grid, row <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, j);
+        }
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> row; <span style="color:#f92672">++</span>i) {
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> col; <span style="color:#f92672">++</span>j) {
+                <span style="color:#66d9ef">if</span> (grid[i][j] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+                    <span style="color:#f92672">++</span>res;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        <span style="color:#66d9ef">return</span> res;
+    }
+};
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">机器学习算法 | K近邻</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">应用层协议——HTTP</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">春招 | 知识点留档</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#图类dfs方法">图类DFS方法</a>
+      <ul>
+        <li><a href="#dfs框架">DFS框架</a></li>
+        <li><a href="#避免重复遍历">避免重复遍历</a></li>
+      </ul>
+    </li>
+    <li><a href="#岛屿问题解法">岛屿问题解法</a>
+      <ul>
+        <li><a href="#岛屿数量问题">岛屿数量问题</a></li>
+        <li><a href="#岛屿的最大面积">岛屿的最大面积</a></li>
+        <li><a href="#岛屿的周长">岛屿的周长</a></li>
+        <li><a href="#封闭岛屿的数目">封闭岛屿的数目</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>

@@ -578,7 +578,25 @@ fun <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span
 	</a>
 	
 </figure></p>
-<h3 id="133-装饰模式">13.3 装饰模式</h3>
+<p>用C++实现单例模式如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Singleton</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> Singleton<span style="color:#f92672">*</span> singleton;
+    Singleton() {}
+    Singleton(<span style="color:#66d9ef">const</span> Singleton<span style="color:#f92672">&amp;</span> tmp) {}
+    Singleton<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Singleton<span style="color:#f92672">&amp;</span> tmp) {}
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> Singleton<span style="color:#f92672">*</span> getInstance() {
+        <span style="color:#66d9ef">if</span> (singleton <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+            singleton <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Singleton();
+        }
+        <span style="color:#66d9ef">else</span> {
+            <span style="color:#66d9ef">return</span> singleton;
+        }
+    }
+};
+Singleton<span style="color:#f92672">*</span> Singleton<span style="color:#f92672">::</span>singleton <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+</code></pre></div><h3 id="133-装饰模式">13.3 装饰模式</h3>
 <p><strong>适合需要（通过配置，如：diamond）来动态增减对象功能的场景</strong> 。装饰模式包含以下角色：</p>
 <ul>
 <li>Component：抽象构件</li>
@@ -661,6 +679,13 @@ fun <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span
 	</a>
 	
 </figure></p>
+<h2 id="14c必用初始化列表的情况">14、C++必用初始化列表的情况</h2>
+<p>C++中类成员的初始化于初始化列表中完成，先于构造函数体执行，即成员真正的初始化发生在初始化列表中，而不是构造函数体中。所以有以下几种情况必须使用初始化列表。</p>
+<ul>
+<li>如果类中有一个成员是引用，由于引用必须赋有初始值，因此，引用必须使用初始化列表</li>
+<li><code>const</code>修饰也需要赋有初始值，因此const成员也需要初始化列表</li>
+<li>继承类中调用基类初始化构造函数，实际上就是先构造基类对象，必须使用初始化列表。</li>
+</ul>
 
 </section>
 
@@ -703,24 +728,24 @@ fun <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span
                 
                     
 <article class="">
-    <a href="/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/">
+    <a href="/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">LeetCode 二叉搜索树与双向链表</h2>
+            <h2 class="article-title">机器学习算法 | K近邻</h2>
         </div>
     </a>
 </article>
                 
                     
 <article class="">
-    <a href="/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">
+    <a href="/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">LeetCode 矩阵中的路径</h2>
+            <h2 class="article-title">岛屿问题 | DFS框架</h2>
         </div>
     </a>
 </article>
@@ -921,6 +946,7 @@ fun <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span
         <li><a href="#136-观察者模式">13.6 观察者模式</a></li>
       </ul>
     </li>
+    <li><a href="#14c必用初始化列表的情况">14、C++必用初始化列表的情况</a></li>
   </ul>
 </nav>
                 </div>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>算法 on 墨纹</title>
+    <link>https://MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/</link>
+    <description>Recent content in 算法 on 墨纹</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 02 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>岛屿问题 | DFS框架</title>
+      <link>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Sat, 02 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
+      <description>在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
+ 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长  图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
+DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
+之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
+class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x + 1, pos_y); dfs(grid, pos_x, pos_y + 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下</description>
+    </item>
+    
+  </channel>
+</rss>

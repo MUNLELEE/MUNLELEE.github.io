@@ -6,7 +6,33 @@
     <description>Recent content in Posts on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>机器学习算法 | K近邻</title>
+      <link>https://MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Wed, 06 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/</guid>
+      <description>K近邻算法 K近邻是一种有监督学习算法。因为没有对数据进行训练，而是通过新数据与旧数据的比较得到相应的结果。因此是一种隐式的学习过程和训练过程。K近邻算法可以用来解决分类问题，也可以用来解决回归问题。
+步骤 对未知类别的属性的数据集中的每个点依次执行以下操作：
+ 计算已知类别数据集中点与当前点之间的距离 按照距离递增次序排序 选取与当前点距离最小的k个点 确定前k个点所在的类别出现的频率 返回前k个点出现频率最高的类别作为当前点的预测分类  在确定样本和当前点的距离时，通常采用的是欧式距离公式$$d=\sqrt{(x_1-x_0)+(y_1-y_0)}$$ 当公式中的指数变化时，随之也会得到相应的不同的距离公式。
+以下采用鸢尾花作为例子进行KNN测试
+代码 import numpy as np import pandas as pd from sklearn.datasets import load_iris import matplotlib.pyplot as plt iris = load_iris() df = pd.DataFrame(iris.data, columns=iris.feature_names) # print(df) df[&amp;#39;label&amp;#39;] = iris.target # print(len(df)) 150 # 绘散点图 # print(df.info()) # 显示数据类型 # 前两个特征 Colors = [] for i in range(df.shape[0]): item = df.iloc[i, -1] # 定位到标签 if item == 0: Colors.</description>
+    </item>
+    
+    <item>
+      <title>岛屿问题 | DFS框架</title>
+      <link>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Sat, 02 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
+      <description>在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
+ 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长  图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
+DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
+之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
+class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x + 1, pos_y); dfs(grid, pos_x, pos_y + 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下</description>
+    </item>
+    
     <item>
       <title>Linux下的socket网络通信</title>
       <link>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>
