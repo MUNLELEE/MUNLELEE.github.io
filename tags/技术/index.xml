@@ -6,7 +6,24 @@
     <description>Recent content in 技术 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 15 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flask实现Web应用（二）</title>
+      <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/</link>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/</guid>
+      <description>书接上回，这篇博文主要是要讲一讲前端页面以及相应的css的变化，虽然是一个简单的web应用，但是在一定程度上还是需要符合人的审美。
+基础页面 由于我需要实现两个功能，调用本地麦克风录制和上传录音文件，最开始我是想把这两个功能放在同一个页面，但是最后觉得为了美观和页面逻辑，我就决定设计一个主页面，包含了这两个功能的可选项，之后再通过选择重定向至另一个页面。
+因此在基础页面中就有了如下的HTML代码
+&amp;lt;body style=&amp;#34;background-size: 100%; background-image:url({{ url_for(&amp;#39;static&amp;#39;, filename=&amp;#39;cool-background.png&amp;#39;) }})&amp;#34;&amp;gt; &amp;lt;div class=&amp;#34;items&amp;#34;&amp;gt; &amp;lt;p&amp;gt;选择语音识别方式&amp;lt;/p&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn1&amp;#34; value=&amp;#34;上传文件&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn2&amp;#34; value=&amp;#34;麦克风录音&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 当然一个网页好看的背景是不可缺少的，在这里可以给各位有前端需求的朋友推荐一个网站炫酷背景，这个网站可以在线生成一些简单的可以用作网页背景的图片并提供免费下载。
+当你使用Flask框架并打算引用外部文件时，你只能将文件放在static文件夹下，并采用url_for函数来作为引用的链接。
+按钮链接 可以看见在这个基础页面中有两个按钮，通过这两个按钮的点击重定向至其他页面。这时候需要用到jQuery来判断被点击的是哪个按钮（最开始想用JS实现，但是发现略微麻烦）。
+我们可以通过attr来获取相应HTML标签的属性值，通过属性值实现判断和重定向。判断条件满足时使用window.location.href将url导向至其他页面。并将这个函数绑定到按钮的点击事件上。
+window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function () { const text = $(this).attr(&amp;#34;value&amp;#34;); if (text === &amp;#34;上传文件&amp;#34;) { window.location.href = &amp;#39;upload&amp;#39;; } else { window.location.href = &amp;#39;microphone&amp;#39;; } }); } 通过上面的JS，当点击某个按钮，浏览器的url将会改变，因此我们需要将将相应的url在Flask后端进行渲染。
+@app.route(&amp;#39;/upload&amp;#39;) def upload(): return render_template(&amp;#39;upload.</description>
+    </item>
+    
     <item>
       <title>Flask实现Web应用（一）</title>
       <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</link>
@@ -19,12 +36,12 @@
 &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;title&amp;gt;语音识别站点&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;录音文件上传&amp;lt;/h1&amp;gt; &amp;lt;form method=&amp;#34;post&amp;#34; action=&amp;#34;&amp;#34; enctype=&amp;#34;multipart/form-data&amp;#34;&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; accept=&amp;#34;.wav&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;submit&amp;#34; value=&amp;#34;提交&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这里需要注意的是，&amp;lt;form&amp;gt;元素的method属性可以是get或post。使用get时，数据将在请求URL的查询字符串中提交，而使用post时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用post方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用multipart/form-data字段则是因为这个字段可以适用于提交文件。accept属性则是可以限制表单可以接受的文件类型。如上使用了.wav进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。
 使用Flask进行文件接收 对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 request.files字典中，可以通过键值 file来访问文件列表，从中得出文件名，再用save保存文件。
 @app.route(&amp;#39;/upload&amp;#39;, methods=[&amp;#39;post&amp;#39;]) def upload_file(): upload_file = request.files[&amp;#39;file&amp;#39;] if upload_file.filename != &amp;#34;&amp;#34;: upload_file.save(upload_file.filename) return redirect(url_for(&amp;#39;upload_file&amp;#39;)) 这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示
- 
+ 文件上传效果 
 添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
 app.config[&amp;#39;MAX_CONTENT_LENGTH&amp;#39;] = 1024 * 1024 添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。
 可接收文件类型限制 在前面的HTML表单中提到了accept属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。
 app.config[&amp;#39;UPLOAD_EXTENSIONS&amp;#39;] = [&amp;#39;.wav&amp;#39;] 上传路径的限制 由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置
-app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 综合以上几点限制之后我们可以得到后端接收录音文件的完整代码如下。</description>
+app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当文件上传之后，你就可以看到文件在uploads的文件夹下出现</description>
     </item>
     
     <item>

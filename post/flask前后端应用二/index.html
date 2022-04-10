@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='书接上回，这篇博文主要是要讲一讲前端页面以及相应的css的变化，虽然是一个简单的web应用，但是在一定程度上还是需要符合人的审美。
+基础页面 由于我需要实现两个功能，调用本地麦克风录制和上传录音文件，最开始我是想把这两个功能放在同一个页面，但是最后觉得为了美观和页面逻辑，我就决定设计一个主页面，包含了这两个功能的可选项，之后再通过选择重定向至另一个页面。
+因此在基础页面中就有了如下的HTML代码
+&amp;lt;body style=&amp;#34;background-size: 100%; background-image:url({{ url_for(&amp;#39;static&amp;#39;, filename=&amp;#39;cool-background.png&amp;#39;) }})&amp;#34;&amp;gt; &amp;lt;div class=&amp;#34;items&amp;#34;&amp;gt; &amp;lt;p&amp;gt;选择语音识别方式&amp;lt;/p&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn1&amp;#34; value=&amp;#34;上传文件&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn2&amp;#34; value=&amp;#34;麦克风录音&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 当然一个网页好看的背景是不可缺少的，在这里可以给各位有前端需求的朋友推荐一个网站炫酷背景，这个网站可以在线生成一些简单的可以用作网页背景的图片并提供免费下载。
+当你使用Flask框架并打算引用外部文件时，你只能将文件放在static文件夹下，并采用url_for函数来作为引用的链接。
+按钮链接 可以看见在这个基础页面中有两个按钮，通过这两个按钮的点击重定向至其他页面。这时候需要用到jQuery来判断被点击的是哪个按钮（最开始想用JS实现，但是发现略微麻烦）。
+我们可以通过attr来获取相应HTML标签的属性值，通过属性值实现判断和重定向。判断条件满足时使用window.location.href将url导向至其他页面。并将这个函数绑定到按钮的点击事件上。
+window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function () { const text = $(this).attr(&amp;#34;value&amp;#34;); if (text === &amp;#34;上传文件&amp;#34;) { window.location.href = &amp;#39;upload&amp;#39;; } else { window.location.href = &amp;#39;microphone&amp;#39;; } }); } 通过上面的JS，当点击某个按钮，浏览器的url将会改变，因此我们需要将将相应的url在Flask后端进行渲染。
+@app.route(&amp;#39;/upload&amp;#39;) def upload(): return render_template(&amp;#39;upload.'><title>Flask实现Web应用（二）</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/'>
+
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='Flask实现Web应用（二）'>
+<meta property='og:description' content='书接上回，这篇博文主要是要讲一讲前端页面以及相应的css的变化，虽然是一个简单的web应用，但是在一定程度上还是需要符合人的审美。
+基础页面 由于我需要实现两个功能，调用本地麦克风录制和上传录音文件，最开始我是想把这两个功能放在同一个页面，但是最后觉得为了美观和页面逻辑，我就决定设计一个主页面，包含了这两个功能的可选项，之后再通过选择重定向至另一个页面。
+因此在基础页面中就有了如下的HTML代码
+&amp;lt;body style=&amp;#34;background-size: 100%; background-image:url({{ url_for(&amp;#39;static&amp;#39;, filename=&amp;#39;cool-background.png&amp;#39;) }})&amp;#34;&amp;gt; &amp;lt;div class=&amp;#34;items&amp;#34;&amp;gt; &amp;lt;p&amp;gt;选择语音识别方式&amp;lt;/p&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn1&amp;#34; value=&amp;#34;上传文件&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn2&amp;#34; value=&amp;#34;麦克风录音&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 当然一个网页好看的背景是不可缺少的，在这里可以给各位有前端需求的朋友推荐一个网站炫酷背景，这个网站可以在线生成一些简单的可以用作网页背景的图片并提供免费下载。
+当你使用Flask框架并打算引用外部文件时，你只能将文件放在static文件夹下，并采用url_for函数来作为引用的链接。
+按钮链接 可以看见在这个基础页面中有两个按钮，通过这两个按钮的点击重定向至其他页面。这时候需要用到jQuery来判断被点击的是哪个按钮（最开始想用JS实现，但是发现略微麻烦）。
+我们可以通过attr来获取相应HTML标签的属性值，通过属性值实现判断和重定向。判断条件满足时使用window.location.href将url导向至其他页面。并将这个函数绑定到按钮的点击事件上。
+window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function () { const text = $(this).attr(&amp;#34;value&amp;#34;); if (text === &amp;#34;上传文件&amp;#34;) { window.location.href = &amp;#39;upload&amp;#39;; } else { window.location.href = &amp;#39;microphone&amp;#39;; } }); } 通过上面的JS，当点击某个按钮，浏览器的url将会改变，因此我们需要将将相应的url在Flask后端进行渲染。
+@app.route(&amp;#39;/upload&amp;#39;) def upload(): return render_template(&amp;#39;upload.'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='技术' /><meta property='article:published_time' content='2022-04-10T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-10T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Flask实现Web应用（二）">
+<meta name="twitter:description" content="书接上回，这篇博文主要是要讲一讲前端页面以及相应的css的变化，虽然是一个简单的web应用，但是在一定程度上还是需要符合人的审美。
+基础页面 由于我需要实现两个功能，调用本地麦克风录制和上传录音文件，最开始我是想把这两个功能放在同一个页面，但是最后觉得为了美观和页面逻辑，我就决定设计一个主页面，包含了这两个功能的可选项，之后再通过选择重定向至另一个页面。
+因此在基础页面中就有了如下的HTML代码
+&amp;lt;body style=&amp;#34;background-size: 100%; background-image:url({{ url_for(&amp;#39;static&amp;#39;, filename=&amp;#39;cool-background.png&amp;#39;) }})&amp;#34;&amp;gt; &amp;lt;div class=&amp;#34;items&amp;#34;&amp;gt; &amp;lt;p&amp;gt;选择语音识别方式&amp;lt;/p&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn1&amp;#34; value=&amp;#34;上传文件&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;item&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; id=&amp;#34;choose_btn2&amp;#34; value=&amp;#34;麦克风录音&amp;#34; class=&amp;#34;choose_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 当然一个网页好看的背景是不可缺少的，在这里可以给各位有前端需求的朋友推荐一个网站炫酷背景，这个网站可以在线生成一些简单的可以用作网页背景的图片并提供免费下载。
+当你使用Flask框架并打算引用外部文件时，你只能将文件放在static文件夹下，并采用url_for函数来作为引用的链接。
+按钮链接 可以看见在这个基础页面中有两个按钮，通过这两个按钮的点击重定向至其他页面。这时候需要用到jQuery来判断被点击的是哪个按钮（最开始想用JS实现，但是发现略微麻烦）。
+我们可以通过attr来获取相应HTML标签的属性值，通过属性值实现判断和重定向。判断条件满足时使用window.location.href将url导向至其他页面。并将这个函数绑定到按钮的点击事件上。
+window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function () { const text = $(this).attr(&amp;#34;value&amp;#34;); if (text === &amp;#34;上传文件&amp;#34;) { window.location.href = &amp;#39;upload&amp;#39;; } else { window.location.href = &amp;#39;microphone&amp;#39;; } }); } 通过上面的JS，当点击某个按钮，浏览器的url将会改变，因此我们需要将将相应的url在Flask后端进行渲染。
+@app.route(&amp;#39;/upload&amp;#39;) def upload(): return render_template(&amp;#39;upload."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AE%9E%E8%B7%B5/" >
+                实践
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/">Flask实现Web应用（二）</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 10, 2022</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>书接上回，这篇博文主要是要讲一讲前端页面以及相应的css的变化，虽然是一个简单的web应用，但是在一定程度上还是需要符合人的审美。</p>
+<h2 id="基础页面">基础页面</h2>
+<p>由于我需要实现两个功能，调用本地麦克风录制和上传录音文件，最开始我是想把这两个功能放在同一个页面，但是最后觉得为了美观和页面逻辑，我就决定设计一个主页面，包含了这两个功能的可选项，之后再通过选择重定向至另一个页面。</p>
+<p>因此在基础页面中就有了如下的HTML代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">body</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;background-size: 100%; background-image:url({{ url_for(&#39;static&#39;, filename=&#39;cool-background.png&#39;) }})&#34;</span>&gt;
+    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;items&#34;</span>&gt;
+        &lt;<span style="color:#f92672">p</span>&gt;选择语音识别方式&lt;/<span style="color:#f92672">p</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item&#34;</span>&gt;
+            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choose_btn1&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;上传文件&#34;</span>  <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choose_btn&#34;</span>&gt;
+        &lt;/<span style="color:#f92672">div</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item&#34;</span>&gt;
+            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choose_btn2&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;麦克风录音&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;choose_btn&#34;</span>&gt;
+        &lt;/<span style="color:#f92672">div</span>&gt;
+    &lt;/<span style="color:#f92672">div</span>&gt;
+&lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><p>当然一个网页好看的背景是不可缺少的，在这里可以给各位有前端需求的朋友推荐一个网站<a class="link" href="https://coolbackgrounds.io/"  target="_blank" rel="noopener"
+    >炫酷背景</a>，这个网站可以在线生成一些简单的可以用作网页背景的图片并提供免费下载。</p>
+<p><strong>当你使用Flask框架并打算引用外部文件时，你只能将文件放在<code>static</code>文件夹下，并采用<code>url_for</code>函数来作为引用的链接。</strong></p>
+<h2 id="按钮链接">按钮链接</h2>
+<p>可以看见在这个基础页面中有两个按钮，通过这两个按钮的点击重定向至其他页面。这时候需要用到jQuery来判断被点击的是哪个按钮（最开始想用JS实现，但是发现略微麻烦）。</p>
+<p>我们可以通过<code>attr</code>来获取相应HTML标签的属性值，通过属性值实现判断和重定向。判断条件满足时使用<code>window.location.href</code>将url导向至其他页面。并将这个函数绑定到按钮的点击事件上。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">window.<span style="color:#a6e22e">onload</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> () {
+	<span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.choose_btn&#34;</span>).<span style="color:#a6e22e">click</span>(<span style="color:#66d9ef">function</span> () {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">text</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;value&#34;</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">text</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;上传文件&#34;</span>) {
+            window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;upload&#39;</span>;
+        }
+        <span style="color:#66d9ef">else</span> {
+            window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;microphone&#39;</span>;
+        }
+    });
+}
+</code></pre></div><p>通过上面的JS，当点击某个按钮，浏览器的url将会改变，因此我们需要将将相应的url在Flask后端进行渲染。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/upload&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload</span>():
+    <span style="color:#66d9ef">return</span> render_template(<span style="color:#e6db74">&#39;upload.html&#39;</span>)
+
+<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/microphone&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">microphone</span>():
+    <span style="color:#66d9ef">return</span> render_template(<span style="color:#e6db74">&#39;microphone.html&#39;</span>)
+</code></pre></div><h2 id="背景css样式">背景CSS样式</h2>
+<h3 id="段落字体">段落字体</h3>
+<p>这一块其实没什么好说的，就是将网站的默认字体修改了一下，设置了字体间距和文字居中</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css"><span style="color:#f92672">p</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#66d9ef">white</span>;
+    <span style="color:#66d9ef">font-family</span>: <span style="color:#e6db74">&#34;Microsoft YaHei UI Light&#34;</span>;
+    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>; 
+    <span style="color:#66d9ef">letter-spacing</span>: <span style="color:#ae81ff">3</span><span style="color:#66d9ef">px</span>;  <span style="color:#75715e">/*文字间间距*/</span>
+    <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">center</span>; <span style="color:#75715e">/* 居中 */</span>
+}
+</code></pre></div><h3 id="卡片样式">卡片样式</h3>
+<p>我希望能够将两个功能的选择放在一个卡片上，这样不会显得一个页面上的元素过少，只有两个按钮元素毕竟难以撑起整个页面。同时修改了卡片的样式。</p>
+<ul>
+<li>通过<code>background: rgba(0, 0, 0, .5)</code>修改卡片的背景</li>
+<li>利用属性<code>border-radius</code>来改变卡片四周的角</li>
+<li>利用<code>box-shadow</code>属性来使卡片显得更立体</li>
+<li>通过<code>transform</code>属性来让卡片位于居中位置</li>
+</ul>
+<p>相应的CSS文件属性如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">items</span> {
+    <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">absolute</span>;
+    <span style="color:#66d9ef">top</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">%</span>;
+    <span style="color:#66d9ef">left</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">%</span>;
+    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">400</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">300</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">40</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">transform</span>: translate(<span style="color:#ae81ff">-50</span><span style="color:#66d9ef">%</span>, <span style="color:#ae81ff">-50</span><span style="color:#66d9ef">%</span>);
+    <span style="color:#66d9ef">background</span>: rgba(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">.5</span>);
+    <span style="color:#66d9ef">box-sizing</span>: <span style="color:#66d9ef">border-box</span>;
+    <span style="color:#66d9ef">box-shadow</span>: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">px</span> rgba(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">.6</span>);
+    <span style="color:#66d9ef">border-radius</span>: <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+}
+</code></pre></div><h3 id="卡片动画效果">卡片动画效果</h3>
+<p>通过以上的CSS打开网页时，卡片将会直接出现在页面上。这样显然是不是很美观的，在好友的帮助下实现了卡片的淡出效果。首先我们需要在CSS上设置<code>opacity</code>属性为透明，并设置相关的<code>transition</code>过渡。最后就是通过jQuery来修改网页加载后的CSS属性（之前不知到jQuery能操作CSS一直觉得没有逻辑可以实现这样的动态效果）。</p>
+<p>相关的CSS和JS的修改如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cs" data-lang="cs">.items {
+    position: absolute;
+    top: <span style="color:#ae81ff">50</span>%;
+    left: <span style="color:#ae81ff">50</span>%;
+    width: <span style="color:#ae81ff">400</span>px;
+    height: <span style="color:#ae81ff">300</span>px;
+    padding: <span style="color:#ae81ff">40</span>px;
+    transform: translate(-<span style="color:#ae81ff">50</span>%, -<span style="color:#ae81ff">50</span>%);
+    background: rgba(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, .<span style="color:#ae81ff">5</span>);
+    box-sizing: border-box;
+    box-shadow: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">15</span>px <span style="color:#ae81ff">25</span>px rgba(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, .<span style="color:#ae81ff">6</span>);
+    border-radius: <span style="color:#ae81ff">20</span>px;
+    opacity: <span style="color:#ae81ff">0</span>;
+    transition: opacity <span style="color:#ae81ff">1.5</span>s ease-<span style="color:#66d9ef">in</span>;
+}
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">window.<span style="color:#a6e22e">onload</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> () {
+    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.items&#34;</span>).<span style="color:#a6e22e">css</span>(<span style="color:#e6db74">&#39;opacity&#39;</span>, <span style="color:#e6db74">&#39;1&#39;</span>);
+    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.choose_btn&#34;</span>).<span style="color:#a6e22e">click</span>(<span style="color:#66d9ef">function</span> () {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">text</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;value&#34;</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">text</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;上传文件&#34;</span>) {
+            window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;upload&#39;</span>;
+        }
+        <span style="color:#66d9ef">else</span> {
+            window.<span style="color:#a6e22e">location</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;microphone&#39;</span>;
+        }
+    });
+}
+</code></pre></div><p>当使用了以上的组合之后就会有打开网页之后卡片淡入的效果了。</p>
+<h3 id="按钮悬停样式">按钮悬停样式</h3>
+<p>为了能够让按钮在鼠标悬停的时候有一定的反应，就在按钮上加上一些鼠标悬停时的动态效果。</p>
+<p>悬停效果其实和上面的卡片动画效果异曲同工，只不过动画的最后效果采用CSS中的<code>hover</code>伪元素进行修改，而非采用JS进行修改。</p>
+<p>相关代码如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">item</span>:<span style="color:#a6e22e">before</span> {
+    <span style="color:#66d9ef">content</span>: <span style="color:#e6db74">&#39;&#39;</span>;
+    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">4</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">background-color</span>: <span style="color:#ae81ff">#BADFED</span>;
+    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+    <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">absolute</span>;
+    <span style="color:#66d9ef">left</span>: <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">bottom</span>: <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">transform</span>: scaleX(<span style="color:#ae81ff">0</span>);
+    <span style="color:#66d9ef">transition</span>: <span style="color:#ae81ff">.3</span><span style="color:#66d9ef">s</span>;
+}
+.<span style="color:#a6e22e">item</span>:<span style="color:#a6e22e">hover</span>:<span style="color:#a6e22e">before</span> {
+    <span style="color:#66d9ef">transform</span>: scaleX(<span style="color:#ae81ff">1</span>);
+}
+</code></pre></div><p>最后实现的效果如下：</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/6252d053239250f7c5257a79.gif" >
+		<img src="https://pic.imgdb.cn/item/6252d053239250f7c5257a79.gif"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Flask实现Web应用（一）</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/socket%E7%BC%96%E7%A8%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux下的socket网络通信</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Hugo博客 | stack主题修改第一站</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基础页面">基础页面</a></li>
+    <li><a href="#按钮链接">按钮链接</a></li>
+    <li><a href="#背景css样式">背景CSS样式</a>
+      <ul>
+        <li><a href="#段落字体">段落字体</a></li>
+        <li><a href="#卡片样式">卡片样式</a></li>
+        <li><a href="#卡片动画效果">卡片动画效果</a></li>
+        <li><a href="#按钮悬停样式">按钮悬停样式</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>
