@@ -274,7 +274,7 @@ print(KnnAlgorithm(df, new_data, k&lt;span style=&#34;color:#f92672&#34;&gt;=&lt
     }
 };
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;封闭岛屿的数目&#34;&gt;封闭岛屿的数目&lt;/h3&gt;
-&lt;p&gt;这道题与求岛屿的数目有点像，稍有不同的是，当岛屿以地图边界为边时，此时这个岛屿算是封闭的。&lt;/p&gt;
+&lt;p&gt;这道题与求岛屿的数目有点像，稍有不同的是，当岛屿以地图边界为边时，此时这个岛屿不算是封闭的。&lt;/p&gt;
 &lt;p&gt;因此我们可以自然的想到，利用DFS将不算封闭的边界岛屿找出来，而在这个算法执行的过程中就会将这些岛屿修改为海洋，因此剩下的岛屿就全为封闭岛屿，计算这些剩下的岛屿即可。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Solution&lt;/span&gt; {
 &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
@@ -319,6 +319,96 @@ print(KnnAlgorithm(df, new_data, k&lt;span style=&#34;color:#f92672&#34;&gt;=&lt
     }
 };
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
+        <title>Flask实现Web应用（一）</title>
+        <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</link>
+        <pubDate>Tue, 15 Mar 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</guid>
+        <description>&lt;p&gt;为了让之后的项目能够专注于算法，于是打算先在近几日解决一定的应用层面的内容。因此也就诞生了这篇文章。&lt;/p&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;这个Web应用说来其实应该是很简单的，但是由于没有前后端开发经验，对我来说也算是一个挑战。这个应用旨在实现能够通过前端上传录音文件，通过后端的处理将文本返回给前端页面以及能够调用本地的麦克风进行录音最后通过这段录音能够返回文本内容。项目不大，也应该不会太过华丽，所以选用了Flask框架处理。&lt;/p&gt;
+&lt;h2 id=&#34;基本文件上传表单&#34;&gt;基本文件上传表单&lt;/h2&gt;
+&lt;p&gt;从客户端的角度来讲，上传文件和提交表单数据一样，因此我们需要定义一个包含文件字段的HTML表单。一个简单的HTML表单如下。这个表单可以接收一个文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;html&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;lang&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;head&lt;/span&gt;&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;meta&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;charset&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;UTF-8&amp;#34;&lt;/span&gt;&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;title&lt;/span&gt;&amp;gt;语音识别站点&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;title&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;head&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;录音文件上传&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;form&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;method&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;post&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;action&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;enctype&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;multipart/form-data&amp;#34;&lt;/span&gt;&amp;gt;
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;file&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;file&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;accept&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;.wav&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;input&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;submit&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;提交&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;p&lt;/span&gt;&amp;gt;
+    &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;form&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;body&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;html&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这里需要注意的是，&lt;code&gt;&amp;lt;form&amp;gt;&lt;/code&gt;元素的&lt;code&gt;method&lt;/code&gt;属性可以是&lt;code&gt;get&lt;/code&gt;或&lt;code&gt;post&lt;/code&gt;。使用&lt;code&gt;get&lt;/code&gt;时，数据将在请求URL的查询字符串中提交，而使用&lt;code&gt;post&lt;/code&gt;时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用&lt;code&gt;post&lt;/code&gt;方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用&lt;code&gt;multipart/form-data&lt;/code&gt;字段则是因为这个字段可以适用于提交文件。&lt;code&gt;accept&lt;/code&gt;属性则是可以限制表单可以接受的文件类型。如上使用了&lt;code&gt;.wav&lt;/code&gt;进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。&lt;/p&gt;
+&lt;h2 id=&#34;使用flask进行文件接收&#34;&gt;使用Flask进行文件接收&lt;/h2&gt;
+&lt;p&gt;对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 &lt;code&gt;request.files&lt;/code&gt;字典中，可以通过键值 &lt;code&gt;file&lt;/code&gt;来访问文件列表，从中得出文件名，再用save保存文件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@app&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;route(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/upload&amp;#39;&lt;/span&gt;, methods&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;post&amp;#39;&lt;/span&gt;])
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;upload_file&lt;/span&gt;():
+    upload_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;files[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;file&amp;#39;&lt;/span&gt;]
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; upload_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;filename &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;:
+        upload_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;save(upload_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;filename)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; redirect(url_for(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;upload_file&amp;#39;&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/624965bea971a0e5c7288807.png&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/624965bea971a0e5c7288807.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;添加一些限制&#34;&gt;添加一些限制&lt;/h2&gt;
+&lt;h3 id=&#34;文件大小限制&#34;&gt;文件大小限制&lt;/h3&gt;
+&lt;p&gt;为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MAX_CONTENT_LENGTH&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。&lt;/p&gt;
+&lt;h3 id=&#34;可接收文件类型限制&#34;&gt;可接收文件类型限制&lt;/h3&gt;
+&lt;p&gt;在前面的HTML表单中提到了&lt;code&gt;accept&lt;/code&gt;属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;UPLOAD_EXTENSIONS&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;.wav&amp;#39;&lt;/span&gt;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;上传路径的限制&#34;&gt;上传路径的限制&lt;/h3&gt;
+&lt;p&gt;由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;UPLOAD_PATH&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;uploads&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;综合以上几点限制之后我们可以得到后端接收录音文件的完整代码如下。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@app&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;route(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/upload&amp;#39;&lt;/span&gt;, methods&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;post&amp;#39;&lt;/span&gt;])
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;upload_file&lt;/span&gt;():
+    upload_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;files[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;file&amp;#39;&lt;/span&gt;]
+    filename &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; secure_filename(upload_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;filename)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; filename &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;:
+        file_ext &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; os&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;path&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;splitext(filename)[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; file_ext &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;UPLOAD_EXTENSIONS&amp;#39;&lt;/span&gt;]:
+            abort(&lt;span style=&#34;color:#ae81ff&#34;&gt;400&lt;/span&gt;)
+        upload_file&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;save(os&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;path&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;join(app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;UPLOAD_PATH&amp;#39;&lt;/span&gt;], filename))
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; redirect(url_for(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;upload_file&amp;#39;&lt;/span&gt;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;使用dropzone的css框架&#34;&gt;使用dropzone的css框架&lt;/h2&gt;
+&lt;p&gt;当采用HTML自带的表单文件上传时，生成的页面显示的更像是一个登录的文本框，在我看来如果要提交一个文件的话这样的文本框未免太小气了，因此在查阅相关资料后，发现了dropzone这个css框架，通过这个框架可以得到一个范围较大且可拖拽上传的文本框以及一个上传动画（虽然HTML表单也可以拖拽）。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://pic.imgdb.cn/item/62524c82239250f7c50db346.gif&#34; &gt;
+		&lt;img src=&#34;https://pic.imgdb.cn/item/62524c82239250f7c50db346.gif&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;要使用这个框架我们只需要在前端页面中添加如下的代码即可&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;link&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;rel&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;stylesheet&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;href&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css&amp;#34;&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;form&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;action&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ url_for(&amp;#39;upload_file&amp;#39;) }}&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dropzone&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;form&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;此处的&lt;code&gt;action&lt;/code&gt;属性即是Flask后端中用来接收上传文件的处理函数。这样一个简单的录音文件上传的前后端应用就已经初具模样了。&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>Linux下的socket网络通信</title>

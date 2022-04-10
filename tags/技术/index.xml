@@ -6,7 +6,27 @@
     <description>Recent content in 技术 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flask实现Web应用（一）</title>
+      <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</link>
+      <pubDate>Tue, 15 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</guid>
+      <description>为了让之后的项目能够专注于算法，于是打算先在近几日解决一定的应用层面的内容。因此也就诞生了这篇文章。
+背景 这个Web应用说来其实应该是很简单的，但是由于没有前后端开发经验，对我来说也算是一个挑战。这个应用旨在实现能够通过前端上传录音文件，通过后端的处理将文本返回给前端页面以及能够调用本地的麦克风进行录音最后通过这段录音能够返回文本内容。项目不大，也应该不会太过华丽，所以选用了Flask框架处理。
+基本文件上传表单 从客户端的角度来讲，上传文件和提交表单数据一样，因此我们需要定义一个包含文件字段的HTML表单。一个简单的HTML表单如下。这个表单可以接收一个文件。
+&amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;title&amp;gt;语音识别站点&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;录音文件上传&amp;lt;/h1&amp;gt; &amp;lt;form method=&amp;#34;post&amp;#34; action=&amp;#34;&amp;#34; enctype=&amp;#34;multipart/form-data&amp;#34;&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; accept=&amp;#34;.wav&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;submit&amp;#34; value=&amp;#34;提交&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这里需要注意的是，&amp;lt;form&amp;gt;元素的method属性可以是get或post。使用get时，数据将在请求URL的查询字符串中提交，而使用post时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用post方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用multipart/form-data字段则是因为这个字段可以适用于提交文件。accept属性则是可以限制表单可以接受的文件类型。如上使用了.wav进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。
+使用Flask进行文件接收 对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 request.files字典中，可以通过键值 file来访问文件列表，从中得出文件名，再用save保存文件。
+@app.route(&amp;#39;/upload&amp;#39;, methods=[&amp;#39;post&amp;#39;]) def upload_file(): upload_file = request.files[&amp;#39;file&amp;#39;] if upload_file.filename != &amp;#34;&amp;#34;: upload_file.save(upload_file.filename) return redirect(url_for(&amp;#39;upload_file&amp;#39;)) 这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示
+ 
+添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
+app.config[&amp;#39;MAX_CONTENT_LENGTH&amp;#39;] = 1024 * 1024 添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。
+可接收文件类型限制 在前面的HTML表单中提到了accept属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。
+app.config[&amp;#39;UPLOAD_EXTENSIONS&amp;#39;] = [&amp;#39;.wav&amp;#39;] 上传路径的限制 由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置
+app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 综合以上几点限制之后我们可以得到后端接收录音文件的完整代码如下。</description>
+    </item>
+    
     <item>
       <title>Linux下的socket网络通信</title>
       <link>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>

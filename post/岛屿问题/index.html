@@ -320,7 +320,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
     }
 };
 </code></pre></div><h3 id="封闭岛屿的数目">封闭岛屿的数目</h3>
-<p>这道题与求岛屿的数目有点像，稍有不同的是，当岛屿以地图边界为边时，此时这个岛屿算是封闭的。</p>
+<p>这道题与求岛屿的数目有点像，稍有不同的是，当岛屿以地图边界为边时，此时这个岛屿不算是封闭的。</p>
 <p>因此我们可以自然的想到，利用DFS将不算封闭的边界岛屿找出来，而在这个算法执行的过程中就会将这些岛屿修改为海洋，因此剩下的岛屿就全为封闭岛屿，计算这些剩下的岛屿即可。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
 <span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
