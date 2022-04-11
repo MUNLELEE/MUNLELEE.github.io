@@ -6,7 +6,20 @@
     <description>Recent content in 技术 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flask实现Web应用（三）</title>
+      <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/</link>
+      <pubDate>Mon, 11 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/</guid>
+      <description>这篇博文应该是这个应用的最后一个部分，主要是实现调用本地麦克风录音的前后端。
+前端页面的实现 在这个页面中，需要实现录音功能，而录音功能在参考了网上的相关资料之后，决定采用recorder.js的现行库（因为如果要造轮子的话需要自己去了解语音采样等过程），这是库的链接。
+对于我这种前端小白本来是没看懂要怎么使用的，后来才发现在其项目目录下有dist/recorder.js文件，如果你使用是Flask框架只需要在static文件夹中导入recorder.js以及recorder.js.map两个文件并采用如下方法引入
+&amp;lt;script type=&amp;#34;text/javascript&amp;#34; src=&amp;#34;{{ url_for(&amp;#39;static&amp;#39;, filename=&amp;#39;recorder.js&amp;#39;) }}&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; 通过recorder我决定设置录音相关的六个按钮分别是开始、暂停、继续、结束、上传、播放。于是就有了以下的HTML代码
+&amp;lt;body style=&amp;#34;background-size: 100%; background-image:url({{ url_for(&amp;#39;static&amp;#39;, filename=&amp;#39;cool-2.png&amp;#39;) }})&amp;#34;&amp;gt; &amp;lt;div id=&amp;#34;items&amp;#34;&amp;gt; &amp;lt;div&amp;gt; &amp;lt;p&amp;gt;麦克风录制&amp;lt;/p&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; value=&amp;#34;开始录制&amp;#34; id=&amp;#34;record_btn&amp;#34; class=&amp;#34;item_btn_left&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; value=&amp;#34;暂停录制&amp;#34; id=&amp;#34;stop_btn&amp;#34; class=&amp;#34;item_btn_left&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; value=&amp;#34;继续录制&amp;#34; id=&amp;#34;resume_btn&amp;#34; class=&amp;#34;item_btn&amp;#34;&amp;gt; &amp;lt;br&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; value=&amp;#34;结束录制&amp;#34; id=&amp;#34;end_btn&amp;#34; class=&amp;#34;item_btn_left&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; value=&amp;#34;播放录音&amp;#34; id=&amp;#34;play_btn&amp;#34; class=&amp;#34;item_btn_left&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; value=&amp;#34;上传录音&amp;#34; id=&amp;#34;submit_btn&amp;#34; class=&amp;#34;item_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div&amp;gt; &amp;lt;p&amp;gt;识别文本&amp;lt;/p&amp;gt; &amp;lt;input type=&amp;#34;text&amp;#34; id=&amp;#34;res_text&amp;#34; disabled=&amp;#34;disabled&amp;#34;&amp;gt; &amp;lt;input type=&amp;#34;button&amp;#34; value=&amp;#34;返回主页&amp;#34; onclick=&amp;#34;back()&amp;#34; id=&amp;#34;back_btn&amp;#34;&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/body&amp;gt; 前端CSS样式 没有什么CSS基础又想让界面好看一点的我，在这个页面的按钮样式上参考了其他大佬的所写的CSS代码样式，并修改了其大小和变化时间长短，所以这里并没有太多可以讲述的东西。直接附上相关链接以及我修改后的CSS代码</description>
+    </item>
+    
     <item>
       <title>Flask实现Web应用（二）</title>
       <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/</link>
