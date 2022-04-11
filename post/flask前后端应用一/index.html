@@ -255,7 +255,20 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
     <span style="color:#66d9ef">return</span> redirect(url_for(<span style="color:#e6db74">&#39;upload_file&#39;</span>))
 </code></pre></div><h2 id="使用dropzone的css框架">使用dropzone的css框架</h2>
 <p>当采用HTML自带的表单文件上传时，生成的页面显示的更像是一个登录的文本框，在我看来如果要提交一个文件的话这样的文本框未免太小气了，因此在查阅相关资料后，发现了dropzone这个css框架，通过这个框架可以得到一个范围较大且可拖拽上传的文本框以及一个上传动画（虽然HTML表单也可以拖拽）。</p>
-<!-- raw HTML omitted -->
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/62524c82239250f7c50db346.gif" >
+		<img src="https://pic.imgdb.cn/item/62524c82239250f7c50db346.gif"
+			
+			
+			
+			loading="lazy"
+			alt="拖拽上传">
+	</a>
+	
+	<figcaption>拖拽上传</figcaption>
+	
+</figure></p>
 <p>要使用这个框架我们只需要在前端页面中添加如下的代码即可</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css&#34;</span>&gt;
 &lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ url_for(&#39;upload_file&#39;) }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dropzone&#34;</span>&gt;&lt;/<span style="color:#f92672">form</span>&gt;
