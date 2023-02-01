@@ -14,15 +14,20 @@
 （3）、内存分配失败时的返回值。new内存分配失败时，会抛出bad_alloc异常，不会返回NULL，malloc分配内存失败时返回NULL
 （4）、是否需要指定内存大小。 使用new操作符时进行内存分配时无需指定内存块的大小，使用malloc需要显式的指定内存的大小。
 class A {...} A *ptr = new A; A *ptr = (A*)malloc(sizeof(A)); （5）、是否调用构造函数。 使用new操作符分配对象内存时经历如下的几个步骤：
-  ·调用operator new函数（数组是operator new[]）来分配内存空间
-  ·编译器运行相应的构造函数创建对象，并赋初值
-  ·返回指向这个对象的指针
-  使用delete操作符释放内存空间时会经历如下步骤：
-  ·调用对象的析构函数
-  ·编译器调用operator delete（operator delete[]）释放内存空间
-  使用malloc分配内存则不会调用构造函数
+·调用operator new函数（数组是operator new[]）来分配内存空间
+·编译器运行相应的构造函数创建对象，并赋初值
+·返回指向这个对象的指针
+使用delete操作符释放内存空间时会经历如下步骤：
+·调用对象的析构函数
+·编译器调用operator delete（operator delete[]）释放内存空间
+使用malloc分配内存则不会调用构造函数
 （6）、对数组的处理。 C&#43;&#43;提供了new []和delete []来专门处理数组类型，而malloc需要自己指定数组的大小
-int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作'><title>春招 | 知识点留档</title>
+int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作
+（8）、客户处理内存分配不足。new会有异常机制，而malloc只能返回NULL
+3、虚函数 虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成运行时决议，与传统的编译时决定有本质区别。
+虚函数的实现是由两个部分组成的，虚函数指针和虚函数表。
+当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。
+3.1、虚函数指针 本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。 只有拥有虚函数的类才会拥有虚函数指针 ，每个虚函数也都会对应一个虚函数指针。'><title>春招 | 知识点留档</title>
 
 <link rel='canonical' href='https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/'>
 
@@ -58,15 +63,20 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
 （3）、内存分配失败时的返回值。new内存分配失败时，会抛出bad_alloc异常，不会返回NULL，malloc分配内存失败时返回NULL
 （4）、是否需要指定内存大小。 使用new操作符时进行内存分配时无需指定内存块的大小，使用malloc需要显式的指定内存的大小。
 class A {...} A *ptr = new A; A *ptr = (A*)malloc(sizeof(A)); （5）、是否调用构造函数。 使用new操作符分配对象内存时经历如下的几个步骤：
-  ·调用operator new函数（数组是operator new[]）来分配内存空间
-  ·编译器运行相应的构造函数创建对象，并赋初值
-  ·返回指向这个对象的指针
-  使用delete操作符释放内存空间时会经历如下步骤：
-  ·调用对象的析构函数
-  ·编译器调用operator delete（operator delete[]）释放内存空间
-  使用malloc分配内存则不会调用构造函数
+·调用operator new函数（数组是operator new[]）来分配内存空间
+·编译器运行相应的构造函数创建对象，并赋初值
+·返回指向这个对象的指针
+使用delete操作符释放内存空间时会经历如下步骤：
+·调用对象的析构函数
+·编译器调用operator delete（operator delete[]）释放内存空间
+使用malloc分配内存则不会调用构造函数
 （6）、对数组的处理。 C&#43;&#43;提供了new []和delete []来专门处理数组类型，而malloc需要自己指定数组的大小
-int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作'>
+int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作
+（8）、客户处理内存分配不足。new会有异常机制，而malloc只能返回NULL
+3、虚函数 虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成运行时决议，与传统的编译时决定有本质区别。
+虚函数的实现是由两个部分组成的，虚函数指针和虚函数表。
+当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。
+3.1、虚函数指针 本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。 只有拥有虚函数的类才会拥有虚函数指针 ，每个虚函数也都会对应一个虚函数指针。'>
 <meta property='og:url' content='https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/'>
 <meta property='og:site_name' content='墨纹'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='春招' /><meta property='article:published_time' content='2022-02-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-02-02T00:00:00&#43;00:00'/>
@@ -84,15 +94,20 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
 （3）、内存分配失败时的返回值。new内存分配失败时，会抛出bad_alloc异常，不会返回NULL，malloc分配内存失败时返回NULL
 （4）、是否需要指定内存大小。 使用new操作符时进行内存分配时无需指定内存块的大小，使用malloc需要显式的指定内存的大小。
 class A {...} A *ptr = new A; A *ptr = (A*)malloc(sizeof(A)); （5）、是否调用构造函数。 使用new操作符分配对象内存时经历如下的几个步骤：
-  ·调用operator new函数（数组是operator new[]）来分配内存空间
-  ·编译器运行相应的构造函数创建对象，并赋初值
-  ·返回指向这个对象的指针
-  使用delete操作符释放内存空间时会经历如下步骤：
-  ·调用对象的析构函数
-  ·编译器调用operator delete（operator delete[]）释放内存空间
-  使用malloc分配内存则不会调用构造函数
+·调用operator new函数（数组是operator new[]）来分配内存空间
+·编译器运行相应的构造函数创建对象，并赋初值
+·返回指向这个对象的指针
+使用delete操作符释放内存空间时会经历如下步骤：
+·调用对象的析构函数
+·编译器调用operator delete（operator delete[]）释放内存空间
+使用malloc分配内存则不会调用构造函数
 （6）、对数组的处理。 C&#43;&#43;提供了new []和delete []来专门处理数组类型，而malloc需要自己指定数组的大小
-int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作
+（8）、客户处理内存分配不足。new会有异常机制，而malloc只能返回NULL
+3、虚函数 虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成运行时决议，与传统的编译时决定有本质区别。
+虚函数的实现是由两个部分组成的，虚函数指针和虚函数表。
+当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。
+3.1、虚函数指针 本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。 只有拥有虚函数的类才会拥有虚函数指针 ，每个虚函数也都会对应一个虚函数指针。"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
     :root {
         --article-font-family: "Noto Serif SC", var(--base-font-family);
     }
@@ -220,10 +235,10 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
 <p>（2）、<strong>返回类型。</strong><code>new</code>操作符返回的是对象类型指针，不需要进行强制转换；<code>malloc</code>内存分配成功则是返回<code>void*</code>，需要通过强制类型转换成指定类型。</p>
 <p>（3）、<strong>内存分配失败时的返回值。</strong><code>new</code>内存分配失败时，会抛出<code>bad_alloc</code>异常，不会返回<code>NULL</code>，<code>malloc</code>分配内存失败时返回<code>NULL</code></p>
 <p>（4）、<strong>是否需要指定内存大小。</strong> 使用<code>new</code>操作符时进行内存分配时无需指定内存块的大小，使用<code>malloc</code>需要显式的指定内存的大小。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {...}
-A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> A;
-A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (A<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(A));
-</code></pre></div><p>（5）、<strong>是否调用构造函数。</strong> 使用<code>new</code>操作符分配对象内存时经历如下的几个步骤：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {...}
+</span></span><span style="display:flex;"><span>A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> A;
+</span></span><span style="display:flex;"><span>A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (A<span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(A));
+</span></span></code></pre></div><p>（5）、<strong>是否调用构造函数。</strong> 使用<code>new</code>操作符分配对象内存时经历如下的几个步骤：</p>
 <ul>
 <li>
 <p>·调用<code>operator new</code>函数（数组是<code>operator new[]</code>）来分配内存空间</p>
@@ -246,8 +261,8 @@ A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (
 </ul>
 <p>使用<code>malloc</code>分配内存则不会调用构造函数</p>
 <p>（6）、<strong>对数组的处理。</strong> C++提供了<code>new []</code>和<code>delete []</code>来专门处理数组类型，而malloc需要自己指定数组的大小</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C++" data-lang="C++"><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span>)  <span style="color:#75715e">// 分配一个十个int大小的数组
-</span></code></pre></div><p>（7）、<strong>是否能够重新分配内存。</strong> 使用<code>malloc</code>分配内存后，如果在使用过程中发现内存不足，可以使用<code>realloc</code>函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。<code>new</code>没有扩充内存的配套操作</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C++" data-lang="C++"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span>)  <span style="color:#75715e">// 分配一个十个int大小的数组
+</span></span></span></code></pre></div><p>（7）、<strong>是否能够重新分配内存。</strong> 使用<code>malloc</code>分配内存后，如果在使用过程中发现内存不足，可以使用<code>realloc</code>函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。<code>new</code>没有扩充内存的配套操作</p>
 <p>（8）、<strong>客户处理内存分配不足。</strong><code>new</code>会有异常机制，而<code>malloc</code>只能返回<code>NULL</code></p>
 <h2 id="3虚函数">3、虚函数</h2>
 <p>虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成<strong>运行时决议</strong>，与传统的编译时决定有本质区别。</p>
@@ -293,18 +308,18 @@ A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (
 <p><em>静态变量和全局变量的存储区域是一起的，一旦静态区的内存被分配，静态区的内存直到程序全部结束之后才会被释放。</em></p>
 <h3 id="面向对象的static">面向对象的static</h3>
 <p>（1）、<strong>类中的静态变量。<strong>声明为<code>static</code>的变量只能被初始化一次，而且</strong>必须初始化</strong>，且类中的静态变量由<strong>对象共享</strong>，类中的静态成员变量必须在类内声明，在类外定义（<code>const</code>修饰可以直接定义）。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> num;  <span style="color:#75715e">// 类内声明
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> num_2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// const可以在声明时就初始化
-</span><span style="color:#75715e"></span>}
-<span style="color:#66d9ef">int</span> A<span style="color:#f92672">::</span>num <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// 类外初始化
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>) {
-    A a;
-    cout <span style="color:#f92672">&lt;&lt;</span> a.num; <span style="color:#75715e">// 输出10
-</span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> A<span style="color:#f92672">::</span>num; <span style="color:#75715e">// 输出10
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>（2）、<strong>类中的静态成员函数。</strong> 静态成员函数不依赖于类的对象。允许使用<code>.</code>和类名来调用静态成员函数。<strong>静态成员函数只能访问静态成员变量或其它静态成员函数。</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> num;  <span style="color:#75715e">// 类内声明
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> num_2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// const可以在声明时就初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> A<span style="color:#f92672">::</span>num <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// 类外初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    A a;
+</span></span><span style="display:flex;"><span>    cout <span style="color:#f92672">&lt;&lt;</span> a.num; <span style="color:#75715e">// 输出10
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;&lt;</span> A<span style="color:#f92672">::</span>num; <span style="color:#75715e">// 输出10
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>（2）、<strong>类中的静态成员函数。</strong> 静态成员函数不依赖于类的对象。允许使用<code>.</code>和类名来调用静态成员函数。<strong>静态成员函数只能访问静态成员变量或其它静态成员函数。</strong></p>
 <p>此外还有以下特点</p>
 <ul>
 <li>static成员变量不占用对象的内存，而是在所有对象之外开辟内存</li>
@@ -313,9 +328,9 @@ A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (
 <h2 id="7const关键字">7、const关键字</h2>
 <p>作用：被其修饰的值不能改变，是只读变量。必须在定义时就赋初值。</p>
 <p>const关键字还可以用来修饰指针，如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p; <span style="color:#75715e">// 常量指针
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> p; <span style="color:#75715e">// 指针常量 
-</span></code></pre></div><h3 id="常量指针">常量指针</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p; <span style="color:#75715e">// 常量指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> p; <span style="color:#75715e">// 指针常量 
+</span></span></span></code></pre></div><h3 id="常量指针">常量指针</h3>
 <p>底层const，指针指向的值被指针限定住，不能通过指针改变指向的值。但此时可以修改指针的指向。</p>
 <h3 id="指针常量">指针常量</h3>
 <p>顶层const，指针指向的地址不能修改，并且<strong>声明时必须初始化</strong>，但是指针指向的地址的内容可以通过指针修改。</p>
@@ -346,9 +361,9 @@ A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (
 </ul>
 <p>list底层是一个<strong>双向链表</strong>，以结点为单位存放数据，结点的地址在内存中不一定连续，每次插入或删除一个元素，就配置或释放一个元素空间，<strong>不支持随机存取</strong>，适合需要大量的插入和删除操作的数据结构。</p>
 <p><em>一些函数操作：</em></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">list.unique()  <span style="color:#75715e">// 移除数值相同的连续元素
-</span><span style="color:#75715e"></span>list.sort()  <span style="color:#75715e">// 对list进行排序，通常可以和上面的函数连用
-</span></code></pre></div><h3 id="3deque">（3）、deque</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>list.unique()  <span style="color:#75715e">// 移除数值相同的连续元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>list.sort()  <span style="color:#75715e">// 对list进行排序，通常可以和上面的函数连用
+</span></span></span></code></pre></div><h3 id="3deque">（3）、deque</h3>
 <ul>
 <li><strong>底层原理</strong></li>
 </ul>
@@ -402,23 +417,23 @@ A <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> (
 <h2 id="10智能指针">10、智能指针</h2>
 <p>在C++中，动态内存管理是用一对运算符（<code>new</code>和<code>delete</code>）完成的。但是动态管理经常出现两种问题：一是忘记释放内存，会造成内存泄漏；另一是在尚有指针引用内存的情况下就释放了它，会导致产生引用非法内存的指针。因此引入了智能指针的概念。 <strong>智能指针负责自动释放所指向的对象，可以更安全的使用动态内存。</strong> C++中存在三种类型的智能指针，分别为<code>shared_ptr</code>、<code>weak_ptr</code>以及<code>unique_ptr</code>。</p>
 <p>在创建智能指针时，必须提供额外的信息即指针可以指向的类型如：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
-shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ptr;
-</code></pre></div><h3 id="1shared_ptr">（1）<strong>shared_ptr</strong></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
+</span></span><span style="display:flex;"><span>shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ptr;
+</span></span></code></pre></div><h3 id="1shared_ptr">（1）<strong>shared_ptr</strong></h3>
 <p>其实就是对资源做引用计数——当引用计数为0时自动释放资源。可以使用<code>ptr.use_count()</code>来获取当前的引用数。也可以实现对数组的引用，如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>[]<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">13</span>]);  <span style="color:#75715e">// 引用计数为1
-</span><span style="color:#75715e"></span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>[]<span style="color:#f92672">&gt;</span> prt1 <span style="color:#f92672">=</span> ptr;  <span style="color:#75715e">// 引用计数为2，ptr1和ptr共享资源
-</span><span style="color:#75715e"></span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ptr3 <span style="color:#f92672">=</span> make_shared<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">10</span>);  <span style="color:#75715e">// 这种做法较为高效。
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">++</span>i) {
-	ptr[i] <span style="color:#f92672">=</span> i;
-}
-</code></pre></div><p>智能指针在初始化时还可以指定删除器，如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">DeleteIntPtr</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p) {
-	<span style="color:#66d9ef">delete</span> p;
-	p <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
-}
-std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> p(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">10</span>), DeleteIntPtr);
-</code></pre></div><p><strong>实现原理：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>[]<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">13</span>]);  <span style="color:#75715e">// 引用计数为1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>[]<span style="color:#f92672">&gt;</span> prt1 <span style="color:#f92672">=</span> ptr;  <span style="color:#75715e">// 引用计数为2，ptr1和ptr共享资源
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ptr3 <span style="color:#f92672">=</span> make_shared<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">10</span>);  <span style="color:#75715e">// 这种做法较为高效。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>	ptr[i] <span style="color:#f92672">=</span> i;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>智能指针在初始化时还可以指定删除器，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">DeleteIntPtr</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">delete</span> p;
+</span></span><span style="display:flex;"><span>	p <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> p(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">10</span>), DeleteIntPtr);
+</span></span></code></pre></div><p><strong>实现原理：</strong></p>
 <p>一个<code>shared_ptr</code>对象的内存开销要比裸指针和无自定义<code>deleter</code>的<code>unique_ptr</code>对象略大。</p>
 <p><code>shared_ptr</code>需要 <strong>维护的信息</strong> 有两部分：</p>
 <ul>
@@ -426,9 +441,9 @@ std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&l
 <li>引用计数等共享资源的控制信息——实际上是维护一个指向控制信息的指针</li>
 </ul>
 <p>当我们实现一个shared_ptr时，其实现一般如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>;
-std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> T);
-</code></pre></div><p><figure 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>;
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> T);
+</span></span></code></pre></div><p><figure 
 	>
 	<a href="https://pic.imgdb.cn/item/62106cd42ab3f51d9128008b.png" >
 		<img src="https://pic.imgdb.cn/item/62106cd42ab3f51d9128008b.png"
@@ -441,38 +456,38 @@ std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&l
 	
 </figure></p>
 <p>在使用<code>shared_ptr</code>时，要注意的时要避免 <strong>循环引用</strong> ，循环引用会导致内存泄漏，经典的循环引用如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span>;
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {
-	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> bptr;
-	<span style="color:#f92672">~</span>A() {
-		cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;A is deleted&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
-	}
-}
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span> {
-	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> aptr;
-	<span style="color:#f92672">~</span>B() {
-		cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;B is deleted&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
-	}
-}
-<span style="color:#66d9ef">void</span> TestPtr {
-	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ap(<span style="color:#66d9ef">new</span> A);
-	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> bp(<span style="color:#66d9ef">new</span> B);
-	ap<span style="color:#f92672">-&gt;</span>bptr <span style="color:#f92672">=</span> bp;
-	bp<span style="color:#f92672">-&gt;</span>aptr <span style="color:#f92672">=</span> ap;
-}
-</code></pre></div><p>这样两个指针最后都不会被删除，循环引用导致<code>ap</code>和<code>bp</code>的引用计数为2，在离开作用域之后两者的引用计数都为1，因此两个指针都不会被析构。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span> {
+</span></span><span style="display:flex;"><span>	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> bptr;
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">~</span>A() {
+</span></span><span style="display:flex;"><span>		cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;A is deleted&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span> {
+</span></span><span style="display:flex;"><span>	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> aptr;
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">~</span>B() {
+</span></span><span style="display:flex;"><span>		cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;B is deleted&#34;</span> <span style="color:#f92672">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> TestPtr {
+</span></span><span style="display:flex;"><span>	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>A<span style="color:#f92672">&gt;</span> ap(<span style="color:#66d9ef">new</span> A);
+</span></span><span style="display:flex;"><span>	std<span style="color:#f92672">::</span>shared_ptr<span style="color:#f92672">&lt;</span>B<span style="color:#f92672">&gt;</span> bp(<span style="color:#66d9ef">new</span> B);
+</span></span><span style="display:flex;"><span>	ap<span style="color:#f92672">-&gt;</span>bptr <span style="color:#f92672">=</span> bp;
+</span></span><span style="display:flex;"><span>	bp<span style="color:#f92672">-&gt;</span>aptr <span style="color:#f92672">=</span> ap;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这样两个指针最后都不会被删除，循环引用导致<code>ap</code>和<code>bp</code>的引用计数为2，在离开作用域之后两者的引用计数都为1，因此两个指针都不会被析构。</p>
 <h3 id="2weak_ptr">（2）weak_ptr</h3>
 <p>弱引用指针<code>weak_ptr</code>是用来监视<code>shared_ptr</code>的，不会使引用计数加1，因此可以通过<code>weak_ptr</code>来解决循环引用的问题。（如可以B类的<code>shared_ptr</code>成员改为<code>weak_ptr</code>成员）它不管理shared_ptr内部的指针，主要使为了监视<code>shared_ptr</code>的生命周期，不能操作资源。使用方法如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> sp(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">10</span>));
-weak_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> wp(sp);
-</code></pre></div><p>同时weak_ptr还有一些特殊的方法：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> sp(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">20</span>));
-weak_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> wp(sp);
-
-wp.expired()  <span style="color:#75715e">// 判断所观测的资源是否已经被释放
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> spt <span style="color:#f92672">=</span> wp.lock()  <span style="color:#75715e">// 获取所监视的shared_ptr
-</span></code></pre></div><p>当 shared_ptr 析构并释放共享资源的时候，只要 weak_ptr 对象还存在，控制块就会保留，weak_ptr 可以通过控制块观察到对象是否存活。如图：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> sp(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">10</span>));
+</span></span><span style="display:flex;"><span>weak_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> wp(sp);
+</span></span></code></pre></div><p>同时weak_ptr还有一些特殊的方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> sp(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>(<span style="color:#ae81ff">20</span>));
+</span></span><span style="display:flex;"><span>weak_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> wp(sp);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>wp.expired()  <span style="color:#75715e">// 判断所观测的资源是否已经被释放
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> spt <span style="color:#f92672">=</span> wp.lock()  <span style="color:#75715e">// 获取所监视的shared_ptr
+</span></span></span></code></pre></div><p>当 shared_ptr 析构并释放共享资源的时候，只要 weak_ptr 对象还存在，控制块就会保留，weak_ptr 可以通过控制块观察到对象是否存活。如图：</p>
 <p><figure 
 	>
 	<a href="https://pic.imgdb.cn/item/62109c352ab3f51d915791d8.jpg" >
@@ -487,25 +502,25 @@ wp.expired()  <span style="color:#75715e">// 判断所观测的资源是否已�
 </figure></p>
 <h3 id="3unique_ptr">（3）unique_ptr</h3>
 <p>unique_ptr是一个独占型的智能指针，它不允许其它的智能指针共享其内部的指针，不允许通过赋值将一个unique_ptr赋值给另一个unique_ptr。但是可以通过函数返回给其它的unique_ptr，这样它本身就不再拥有原来指针的所有权了。如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> T);
-unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> Otherptr <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(ptr);
-</code></pre></div><h2 id="11函数指针和指针函数">11、函数指针和指针函数</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> ptr(<span style="color:#66d9ef">new</span> T);
+</span></span><span style="display:flex;"><span>unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> Otherptr <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(ptr);
+</span></span></code></pre></div><h2 id="11函数指针和指针函数">11、函数指针和指针函数</h2>
 <h3 id="1指针函数">（1）指针函数</h3>
 <p>简单来说，就是一个返回指针的函数，本质是一个函数。声明格式为<code>*类型标识符 函数名(参数)</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
-A<span style="color:#f92672">*</span> <span style="color:#a6e22e">fun</span>(params...);
-</code></pre></div><h3 id="2函数指针">（2）函数指针</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
+</span></span><span style="display:flex;"><span>A<span style="color:#f92672">*</span> <span style="color:#a6e22e">fun</span>(params...);
+</span></span></code></pre></div><h3 id="2函数指针">（2）函数指针</h3>
 <p>本质是一个指针变量，该指针指向这个函数。声明格式为<code>类型标识符 (*函数名)()</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
-A (<span style="color:#f92672">*</span>fun)(params...);
-</code></pre></div><p>函数指针需要把一个函数的地址赋值给它，具体示例如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
-	<span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y;
-}
-<span style="color:#66d9ef">int</span> (<span style="color:#f92672">*</span>fun)(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
-fun <span style="color:#f92672">=</span> add;
-fun <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>add;  <span style="color:#75715e">// 两种写法都行
-</span></code></pre></div><p><em>可以不用取址符是因为函数名就代表函数的地址</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">A</span>;
+</span></span><span style="display:flex;"><span>A (<span style="color:#f92672">*</span>fun)(params...);
+</span></span></code></pre></div><p>函数指针需要把一个函数的地址赋值给它，具体示例如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> (<span style="color:#f92672">*</span>fun)(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
+</span></span><span style="display:flex;"><span>fun <span style="color:#f92672">=</span> add;
+</span></span><span style="display:flex;"><span>fun <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>add;  <span style="color:#75715e">// 两种写法都行
+</span></span></span></code></pre></div><p><em>可以不用取址符是因为函数名就代表函数的地址</em></p>
 <h2 id="12操作系统专题">12、操作系统专题</h2>
 <h3 id="121-操作系统特性">12.1 操作系统特性</h3>
 <ul>
@@ -579,24 +594,24 @@ fun <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span
 	
 </figure></p>
 <p>用C++实现单例模式如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Singleton</span> {
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> Singleton<span style="color:#f92672">*</span> singleton;
-    Singleton() {}
-    Singleton(<span style="color:#66d9ef">const</span> Singleton<span style="color:#f92672">&amp;</span> tmp) {}
-    Singleton<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Singleton<span style="color:#f92672">&amp;</span> tmp) {}
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> Singleton<span style="color:#f92672">*</span> getInstance() {
-        <span style="color:#66d9ef">if</span> (singleton <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
-            singleton <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Singleton();
-        }
-        <span style="color:#66d9ef">else</span> {
-            <span style="color:#66d9ef">return</span> singleton;
-        }
-    }
-};
-Singleton<span style="color:#f92672">*</span> Singleton<span style="color:#f92672">::</span>singleton <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
-</code></pre></div><h3 id="133-装饰模式">13.3 装饰模式</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Singleton</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> Singleton<span style="color:#f92672">*</span> singleton;
+</span></span><span style="display:flex;"><span>    Singleton() {}
+</span></span><span style="display:flex;"><span>    Singleton(<span style="color:#66d9ef">const</span> Singleton<span style="color:#f92672">&amp;</span> tmp) {}
+</span></span><span style="display:flex;"><span>    Singleton<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Singleton<span style="color:#f92672">&amp;</span> tmp) {}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> Singleton<span style="color:#f92672">*</span> getInstance() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (singleton <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>            singleton <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Singleton();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> singleton;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>Singleton<span style="color:#f92672">*</span> Singleton<span style="color:#f92672">::</span>singleton <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span></code></pre></div><h3 id="133-装饰模式">13.3 装饰模式</h3>
 <p><strong>适合需要（通过配置，如：diamond）来动态增减对象功能的场景</strong> 。装饰模式包含以下角色：</p>
 <ul>
 <li>Component：抽象构件</li>
@@ -764,7 +779,7 @@ Singleton<span style="color:#f92672">*</span> Singleton<span style="color:#f9267
     <section class="copyright">
         &copy; 
         
-        2022 墨纹
+        2023 墨纹
     </section>
     
     <section class="powerby">

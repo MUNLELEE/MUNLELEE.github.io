@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 近日有了解社区发现相关内容以及实现这个比较古老的算法的需要，索性就了解一下社区发现，并尝试着复现这个算法。
+社区发现概述 什么是社区 在现代人们的日常生活中，每个人都会进行社交，这在无形中就形成了一个社交网络。在这个网络中，每个人可以视为一个点，而用户之间的点赞、关注以及其他行为形成了边。在这样的一个网络中，有的用户之间联系较为紧密，有的用户之间联系较为稀疏。联系较为紧密的几个用户可以形成一个社区，在社区内，每个节点的链接都较为紧密，而两个社区之间的联系就较为稀疏。整体的结构可以被称为社团结构。如下图，圈起来的部分即为社区。
+社团中的边结构其实是一种逻辑抽象，并不是一种空间位置上的关系，而是节点之间的共有关系，假如节点代表的是消费者，那么节点间的边则可能代表消费者购买了共同一类商品，边的权重则可以代表购买物品的数量。
+社区发现的目的及简单思路 社区发现的目的就是为了在图中找到具有一定共同关系或者潜在特定关系的组织，也就是社区。社区发现也就是为了寻找图网络中联系较为紧密的社区也称为块（cluster）。基于这种想法，我们可以想到如果要进行社区发现那么就要寻找一个联系较为紧密的块，我们可以将其解释为具有较大的密度，之后便是考虑用什么方法去评估这种密度，类似于神经网络中的损失函数。
+CPM算法 CPM（派系过滤算法）算法是最早的重叠社区发现算法，它的思想是基于团渗透的，这个算法认为社区是具有共享节点的全连通子集集合，并通过一种团过滤算法来识别网络中的社区结构。在这个算法中遵循以下两个概念
+在图网络中视为团的部分是任意两个节点都存在一条边相连的，也就是完全子图 所有彼此连通的k-团（拥有k个节点）构成一个k-团社区，当两个k-团之间存在$k-1$个节点共享那么认为这两个k-团连通 算法步骤 算法首先需要找到网络中的所有团，并构建一个用来表示团团重叠情况的矩阵（matrix），在这个矩阵中matrix[i][j]表示网络中第i个团和第j个团之间的公共节点数。 根据给定的参数k，将矩阵（matrix）中对角线上小于$k$的元素和非对角线上的小于$k-1$的元素置零，其他元素置为一，这样所有对角线为1的即为k-团，而非对角线为1的即为两个相邻的k-团。 将相邻的k-团合并为一个较大的团社区，并可以使用模块度进行评价。 从上面可以得知算法中首先需要做到是得到k-团，因此为了提高效率，在这里需要使用Born_Kerbosch算法来寻找图中的团。在这里也简单介绍一下这个算法。
+Born_Kerbosch算法 算法的初始化包括了以下三个集合
+R集合：记录当前极大团中已经加入的点 P集合：记录可能可以继续加入极大团中的点（这些点应该与R集合中的所有点都相连） X集合：记录已经加入过极大团的点（用于判重，因为会从每个节点开始，枚举所有的团） 简单流程：
+对于每一个在集合P中的点v，将v加入R集合中，之后更新P集合，确保集合中的节点与v相连。 进行回溯时，将v节点从P集合中取出，并加入X集合，表示包含v节点的极大团已经寻找完毕了 当R集合满足为极大团时，P集合和X集合必须为空。因为P集合中包含的点是可能加入R集合中的点，同样的X集合中的点也与R集合中的点都相邻，因此也属于可能称为R集合中极大团点的情况。 算法缺点 CPM算法较为简单，但存在不能为单节点分配社团以及比较使用于完全子图较多的网络中，也即边密集网络中，在稀疏网络中算法的效率较低。
+模块度 模块度是评估一个社区网络划分好坏度量方法，其含义为社区内节点的边数与随机情况下的边数之差。定义如下：
+$$Q=\frac{1}{2m} \sum_{i, j}[A_{i j}-\frac{k_i k_j}{2m}]\delta(c_i, c_j) \qquad \delta(u, v)=\begin{cases}1,&amp;amp;u==v \newline 0, &amp;amp;else \end{cases}$$
+其中$A_{i j}$是节点$i$和节点$j$之间边的权重，当图网络不带权时，可以将其视为1；$k_i=\sum_j{A_{ij}}$表示所有与节点$i$相连的边的权重之和；$c_i$表示节点$i$所属的社区；$m={1\over2}\sum_{ij}A_{ij}$表示所有边的权重之和。$\frac{k_i k_j}{2m}$表示随机情况下节点$i$与节点$j$之间产生的边。
+对这个公式做进一步简化可以得到如下的公式：
+$$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
+其中$\sum{in}$表示社区$c$内边的权重之和，$\sum{tot}$表示与社区$c$节点相连的边的权重之和。
+可以这么简单的理解模块度，即社区内部边的权重和减去社区外部与社区内部相连的边的权重和。
+算法实现 在这部分将讲述算法实现的一些较为重要的地方，完整的代码可以点此，需要的朋友可以直接前往。
+实现算法要先实现寻找极大团，这里使用Born_Kerbosch算法，这个算法有两个版本，但我这里采用了经过一些剪枝处理的版本，在递归之前需要先确定需要的枢纽元素，数据结构方面采用集合（自动去重属实是太好用了^_^） /** * 使用BornKerbosch算法寻找最大团 * @param R 存在于极大团中的点 * @param P 可能可以加入极大团的点 * @param X 用于判重的点集合 * @param ans 将最后寻找到的所有极大团保存 * @param neighbor 存储每个节点的邻居节点，是一个map */ def bornKerbosch(R: Set[VertexId], P: Set[VertexId], X: Set[VertexId], ans: Set[Set[VertexId]], neighbor: Map[VertexId, Set[VertexId]]): Unit = { if (P.'><title>社区发现 | CPM算法及其实现</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/'>
+
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='社区发现 | CPM算法及其实现'>
+<meta property='og:description' content='前言 近日有了解社区发现相关内容以及实现这个比较古老的算法的需要，索性就了解一下社区发现，并尝试着复现这个算法。
+社区发现概述 什么是社区 在现代人们的日常生活中，每个人都会进行社交，这在无形中就形成了一个社交网络。在这个网络中，每个人可以视为一个点，而用户之间的点赞、关注以及其他行为形成了边。在这样的一个网络中，有的用户之间联系较为紧密，有的用户之间联系较为稀疏。联系较为紧密的几个用户可以形成一个社区，在社区内，每个节点的链接都较为紧密，而两个社区之间的联系就较为稀疏。整体的结构可以被称为社团结构。如下图，圈起来的部分即为社区。
+社团中的边结构其实是一种逻辑抽象，并不是一种空间位置上的关系，而是节点之间的共有关系，假如节点代表的是消费者，那么节点间的边则可能代表消费者购买了共同一类商品，边的权重则可以代表购买物品的数量。
+社区发现的目的及简单思路 社区发现的目的就是为了在图中找到具有一定共同关系或者潜在特定关系的组织，也就是社区。社区发现也就是为了寻找图网络中联系较为紧密的社区也称为块（cluster）。基于这种想法，我们可以想到如果要进行社区发现那么就要寻找一个联系较为紧密的块，我们可以将其解释为具有较大的密度，之后便是考虑用什么方法去评估这种密度，类似于神经网络中的损失函数。
+CPM算法 CPM（派系过滤算法）算法是最早的重叠社区发现算法，它的思想是基于团渗透的，这个算法认为社区是具有共享节点的全连通子集集合，并通过一种团过滤算法来识别网络中的社区结构。在这个算法中遵循以下两个概念
+在图网络中视为团的部分是任意两个节点都存在一条边相连的，也就是完全子图 所有彼此连通的k-团（拥有k个节点）构成一个k-团社区，当两个k-团之间存在$k-1$个节点共享那么认为这两个k-团连通 算法步骤 算法首先需要找到网络中的所有团，并构建一个用来表示团团重叠情况的矩阵（matrix），在这个矩阵中matrix[i][j]表示网络中第i个团和第j个团之间的公共节点数。 根据给定的参数k，将矩阵（matrix）中对角线上小于$k$的元素和非对角线上的小于$k-1$的元素置零，其他元素置为一，这样所有对角线为1的即为k-团，而非对角线为1的即为两个相邻的k-团。 将相邻的k-团合并为一个较大的团社区，并可以使用模块度进行评价。 从上面可以得知算法中首先需要做到是得到k-团，因此为了提高效率，在这里需要使用Born_Kerbosch算法来寻找图中的团。在这里也简单介绍一下这个算法。
+Born_Kerbosch算法 算法的初始化包括了以下三个集合
+R集合：记录当前极大团中已经加入的点 P集合：记录可能可以继续加入极大团中的点（这些点应该与R集合中的所有点都相连） X集合：记录已经加入过极大团的点（用于判重，因为会从每个节点开始，枚举所有的团） 简单流程：
+对于每一个在集合P中的点v，将v加入R集合中，之后更新P集合，确保集合中的节点与v相连。 进行回溯时，将v节点从P集合中取出，并加入X集合，表示包含v节点的极大团已经寻找完毕了 当R集合满足为极大团时，P集合和X集合必须为空。因为P集合中包含的点是可能加入R集合中的点，同样的X集合中的点也与R集合中的点都相邻，因此也属于可能称为R集合中极大团点的情况。 算法缺点 CPM算法较为简单，但存在不能为单节点分配社团以及比较使用于完全子图较多的网络中，也即边密集网络中，在稀疏网络中算法的效率较低。
+模块度 模块度是评估一个社区网络划分好坏度量方法，其含义为社区内节点的边数与随机情况下的边数之差。定义如下：
+$$Q=\frac{1}{2m} \sum_{i, j}[A_{i j}-\frac{k_i k_j}{2m}]\delta(c_i, c_j) \qquad \delta(u, v)=\begin{cases}1,&amp;amp;u==v \newline 0, &amp;amp;else \end{cases}$$
+其中$A_{i j}$是节点$i$和节点$j$之间边的权重，当图网络不带权时，可以将其视为1；$k_i=\sum_j{A_{ij}}$表示所有与节点$i$相连的边的权重之和；$c_i$表示节点$i$所属的社区；$m={1\over2}\sum_{ij}A_{ij}$表示所有边的权重之和。$\frac{k_i k_j}{2m}$表示随机情况下节点$i$与节点$j$之间产生的边。
+对这个公式做进一步简化可以得到如下的公式：
+$$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
+其中$\sum{in}$表示社区$c$内边的权重之和，$\sum{tot}$表示与社区$c$节点相连的边的权重之和。
+可以这么简单的理解模块度，即社区内部边的权重和减去社区外部与社区内部相连的边的权重和。
+算法实现 在这部分将讲述算法实现的一些较为重要的地方，完整的代码可以点此，需要的朋友可以直接前往。
+实现算法要先实现寻找极大团，这里使用Born_Kerbosch算法，这个算法有两个版本，但我这里采用了经过一些剪枝处理的版本，在递归之前需要先确定需要的枢纽元素，数据结构方面采用集合（自动去重属实是太好用了^_^） /** * 使用BornKerbosch算法寻找最大团 * @param R 存在于极大团中的点 * @param P 可能可以加入极大团的点 * @param X 用于判重的点集合 * @param ans 将最后寻找到的所有极大团保存 * @param neighbor 存储每个节点的邻居节点，是一个map */ def bornKerbosch(R: Set[VertexId], P: Set[VertexId], X: Set[VertexId], ans: Set[Set[VertexId]], neighbor: Map[VertexId, Set[VertexId]]): Unit = { if (P.'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='算法' /><meta property='article:published_time' content='2023-02-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2023-02-01T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="社区发现 | CPM算法及其实现">
+<meta name="twitter:description" content="前言 近日有了解社区发现相关内容以及实现这个比较古老的算法的需要，索性就了解一下社区发现，并尝试着复现这个算法。
+社区发现概述 什么是社区 在现代人们的日常生活中，每个人都会进行社交，这在无形中就形成了一个社交网络。在这个网络中，每个人可以视为一个点，而用户之间的点赞、关注以及其他行为形成了边。在这样的一个网络中，有的用户之间联系较为紧密，有的用户之间联系较为稀疏。联系较为紧密的几个用户可以形成一个社区，在社区内，每个节点的链接都较为紧密，而两个社区之间的联系就较为稀疏。整体的结构可以被称为社团结构。如下图，圈起来的部分即为社区。
+社团中的边结构其实是一种逻辑抽象，并不是一种空间位置上的关系，而是节点之间的共有关系，假如节点代表的是消费者，那么节点间的边则可能代表消费者购买了共同一类商品，边的权重则可以代表购买物品的数量。
+社区发现的目的及简单思路 社区发现的目的就是为了在图中找到具有一定共同关系或者潜在特定关系的组织，也就是社区。社区发现也就是为了寻找图网络中联系较为紧密的社区也称为块（cluster）。基于这种想法，我们可以想到如果要进行社区发现那么就要寻找一个联系较为紧密的块，我们可以将其解释为具有较大的密度，之后便是考虑用什么方法去评估这种密度，类似于神经网络中的损失函数。
+CPM算法 CPM（派系过滤算法）算法是最早的重叠社区发现算法，它的思想是基于团渗透的，这个算法认为社区是具有共享节点的全连通子集集合，并通过一种团过滤算法来识别网络中的社区结构。在这个算法中遵循以下两个概念
+在图网络中视为团的部分是任意两个节点都存在一条边相连的，也就是完全子图 所有彼此连通的k-团（拥有k个节点）构成一个k-团社区，当两个k-团之间存在$k-1$个节点共享那么认为这两个k-团连通 算法步骤 算法首先需要找到网络中的所有团，并构建一个用来表示团团重叠情况的矩阵（matrix），在这个矩阵中matrix[i][j]表示网络中第i个团和第j个团之间的公共节点数。 根据给定的参数k，将矩阵（matrix）中对角线上小于$k$的元素和非对角线上的小于$k-1$的元素置零，其他元素置为一，这样所有对角线为1的即为k-团，而非对角线为1的即为两个相邻的k-团。 将相邻的k-团合并为一个较大的团社区，并可以使用模块度进行评价。 从上面可以得知算法中首先需要做到是得到k-团，因此为了提高效率，在这里需要使用Born_Kerbosch算法来寻找图中的团。在这里也简单介绍一下这个算法。
+Born_Kerbosch算法 算法的初始化包括了以下三个集合
+R集合：记录当前极大团中已经加入的点 P集合：记录可能可以继续加入极大团中的点（这些点应该与R集合中的所有点都相连） X集合：记录已经加入过极大团的点（用于判重，因为会从每个节点开始，枚举所有的团） 简单流程：
+对于每一个在集合P中的点v，将v加入R集合中，之后更新P集合，确保集合中的节点与v相连。 进行回溯时，将v节点从P集合中取出，并加入X集合，表示包含v节点的极大团已经寻找完毕了 当R集合满足为极大团时，P集合和X集合必须为空。因为P集合中包含的点是可能加入R集合中的点，同样的X集合中的点也与R集合中的点都相邻，因此也属于可能称为R集合中极大团点的情况。 算法缺点 CPM算法较为简单，但存在不能为单节点分配社团以及比较使用于完全子图较多的网络中，也即边密集网络中，在稀疏网络中算法的效率较低。
+模块度 模块度是评估一个社区网络划分好坏度量方法，其含义为社区内节点的边数与随机情况下的边数之差。定义如下：
+$$Q=\frac{1}{2m} \sum_{i, j}[A_{i j}-\frac{k_i k_j}{2m}]\delta(c_i, c_j) \qquad \delta(u, v)=\begin{cases}1,&amp;amp;u==v \newline 0, &amp;amp;else \end{cases}$$
+其中$A_{i j}$是节点$i$和节点$j$之间边的权重，当图网络不带权时，可以将其视为1；$k_i=\sum_j{A_{ij}}$表示所有与节点$i$相连的边的权重之和；$c_i$表示节点$i$所属的社区；$m={1\over2}\sum_{ij}A_{ij}$表示所有边的权重之和。$\frac{k_i k_j}{2m}$表示随机情况下节点$i$与节点$j$之间产生的边。
+对这个公式做进一步简化可以得到如下的公式：
+$$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
+其中$\sum{in}$表示社区$c$内边的权重之和，$\sum{tot}$表示与社区$c$节点相连的边的权重之和。
+可以这么简单的理解模块度，即社区内部边的权重和减去社区外部与社区内部相连的边的权重和。
+算法实现 在这部分将讲述算法实现的一些较为重要的地方，完整的代码可以点此，需要的朋友可以直接前往。
+实现算法要先实现寻找极大团，这里使用Born_Kerbosch算法，这个算法有两个版本，但我这里采用了经过一些剪枝处理的版本，在递归之前需要先确定需要的枢纽元素，数据结构方面采用集合（自动去重属实是太好用了^_^） /** * 使用BornKerbosch算法寻找最大团 * @param R 存在于极大团中的点 * @param P 可能可以加入极大团的点 * @param X 用于判重的点集合 * @param ans 将最后寻找到的所有极大团保存 * @param neighbor 存储每个节点的邻居节点，是一个map */ def bornKerbosch(R: Set[VertexId], P: Set[VertexId], X: Set[VertexId], ans: Set[Set[VertexId]], neighbor: Map[VertexId, Set[VertexId]]): Unit = { if (P."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AE%9E%E8%B7%B5/" >
+                实践
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/">社区发现 | CPM算法及其实现</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 01, 2023</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="前言">前言</h2>
+<p>近日有了解社区发现相关内容以及实现这个比较古老的算法的需要，索性就了解一下社区发现，并尝试着复现这个算法。</p>
+<h2 id="社区发现概述">社区发现概述</h2>
+<h3 id="什么是社区">什么是社区</h3>
+<p>在现代人们的日常生活中，每个人都会进行社交，这在无形中就形成了一个社交网络。在这个网络中，每个人可以视为一个点，而用户之间的点赞、关注以及其他行为形成了边。在这样的一个网络中，有的用户之间联系较为紧密，有的用户之间联系较为稀疏。联系较为紧密的几个用户可以形成一个社区，在社区内，每个节点的链接都<strong>较为紧密</strong>，而两个社区之间的联系就<strong>较为稀疏</strong>。整体的结构可以被称为社团结构。如下图，圈起来的部分即为社区。</p>
+<p><figure 
+	>
+	<a href="https://pic.imgdb.cn/item/63c6788abe43e0d30e0fd0e6.webp" >
+		<img src="https://pic.imgdb.cn/item/63c6788abe43e0d30e0fd0e6.webp"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>社团中的边结构其实是一种逻辑抽象，并不是一种空间位置上的关系，而是节点之间的<strong>共有关系</strong>，假如节点代表的是消费者，那么节点间的边则可能代表消费者购买了共同一类商品，边的权重则可以代表购买物品的数量。</p>
+<h3 id="社区发现的目的及简单思路">社区发现的目的及简单思路</h3>
+<p>社区发现的目的就是为了在图中找到具有<strong>一定共同关系或者潜在特定关系的组织</strong>，也就是社区。社区发现也就是为了寻找图网络中联系较为紧密的社区也称为块（cluster）。基于这种想法，我们可以想到如果要进行社区发现那么就要寻找一个联系较为紧密的块，我们可以将其解释为具有较大的密度，之后便是考虑用什么方法去评估这种密度，类似于神经网络中的损失函数。</p>
+<h2 id="cpm算法">CPM算法</h2>
+<p>CPM（派系过滤算法）算法是最早的重叠社区发现算法，它的思想是基于团渗透的，这个算法认为社区是具有共享节点的全连通子集集合，并通过一种团过滤算法来识别网络中的社区结构。在这个算法中遵循以下两个概念</p>
+<ul>
+<li>在图网络中视为团的部分是任意两个节点都存在一条边相连的，也就是完全子图</li>
+<li>所有彼此连通的k-团（拥有k个节点）构成一个k-团社区，当两个k-团之间存在$k-1$个节点共享那么认为这两个k-团连通</li>
+</ul>
+<h3 id="算法步骤">算法步骤</h3>
+<ol>
+<li>算法首先需要找到网络中的所有团，并构建一个用来表示团团重叠情况的矩阵（matrix），在这个矩阵中<code>matrix[i][j]</code>表示网络中第<code>i</code>个团和第<code>j</code>个团之间的公共节点数。</li>
+<li>根据给定的参数k，将矩阵（matrix）中对角线上小于$k$的元素和非对角线上的小于$k-1$的元素置零，其他元素置为一，这样所有对角线为1的即为k-团，而非对角线为1的即为两个相邻的k-团。</li>
+<li>将相邻的k-团合并为一个较大的团社区，并可以使用模块度进行评价。</li>
+</ol>
+<p>从上面可以得知算法中首先需要做到是得到k-团，因此为了提高效率，在这里需要使用Born_Kerbosch算法来寻找图中的团。在这里也简单介绍一下这个算法。</p>
+<h4 id="born_kerbosch算法">Born_Kerbosch算法</h4>
+<p>算法的初始化包括了以下三个集合</p>
+<ul>
+<li>R集合：记录当前极大团中已经加入的点</li>
+<li>P集合：记录可能可以继续加入极大团中的点（这些点应该与R集合中的所有点都相连）</li>
+<li>X集合：记录已经加入过极大团的点（用于判重，因为会从每个节点开始，枚举所有的团）</li>
+</ul>
+<p><strong>简单流程：</strong></p>
+<ol>
+<li>对于每一个在集合P中的点v，将v加入R集合中，之后更新P集合，确保集合中的节点与v相连。</li>
+<li>进行回溯时，将v节点从P集合中取出，并加入X集合，表示包含v节点的极大团已经寻找完毕了</li>
+<li><strong>当R集合满足为极大团时，P集合和X集合必须为空</strong>。因为P集合中包含的点是可能加入R集合中的点，同样的X集合中的点也与R集合中的点都相邻，因此也属于可能称为R集合中极大团点的情况。</li>
+</ol>
+<h3 id="算法缺点">算法缺点</h3>
+<p>CPM算法较为简单，但存在不能为单节点分配社团以及比较使用于完全子图较多的网络中，也即边密集网络中，在稀疏网络中算法的效率较低。</p>
+<h3 id="模块度">模块度</h3>
+<p>模块度是评估一个社区网络划分好坏度量方法，其含义为社区内节点的边数与随机情况下的边数之差。定义如下：</p>
+<p>$$Q=\frac{1}{2m} \sum_{i, j}[A_{i j}-\frac{k_i k_j}{2m}]\delta(c_i, c_j)  \qquad \delta(u, v)=\begin{cases}1,&amp;u==v \newline 0, &amp;else \end{cases}$$</p>
+<p>其中$A_{i j}$是节点$i$和节点$j$之间边的权重，当图网络不带权时，可以将其视为1；$k_i=\sum_j{A_{ij}}$表示所有与节点$i$相连的边的权重之和；$c_i$表示节点$i$所属的社区；$m={1\over2}\sum_{ij}A_{ij}$表示所有边的权重之和。$\frac{k_i k_j}{2m}$表示随机情况下节点$i$与节点$j$之间产生的边。</p>
+<p>对这个公式做进一步简化可以得到如下的公式：</p>
+<p>$$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$</p>
+<p>其中$\sum{in}$表示社区$c$内边的权重之和，$\sum{tot}$表示与社区$c$节点相连的边的权重之和。</p>
+<p>可以这么简单的理解模块度，即<strong>社区内部边的权重和减去社区外部与社区内部相连的边的权重和</strong>。</p>
+<h2 id="算法实现">算法实现</h2>
+<p>在这部分将讲述算法实现的一些较为重要的地方，完整的代码可以<a class="link" href="https://github.com/MUNLELEE/CPM-Clique-percolation-method-"  target="_blank" rel="noopener"
+    >点此</a>，需要的朋友可以直接前往。</p>
+<ul>
+<li>实现算法要先实现寻找极大团，这里使用Born_Kerbosch算法，这个算法有两个版本，但我这里采用了经过一些剪枝处理的版本，在递归之前需要先确定需要的枢纽元素，数据结构方面采用集合（自动去重属实是太好用了^_^）</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* 使用BornKerbosch算法寻找最大团
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param R 存在于极大团中的点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param P 可能可以加入极大团的点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param X 用于判重的点集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param ans 将最后寻找到的所有极大团保存
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param neighbor 存储每个节点的邻居节点，是一个map
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> bornKerbosch<span style="color:#f92672">(</span>R<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">],</span> P<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">],</span> X<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">],</span> ans<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]],</span>
+</span></span><span style="display:flex;"><span>                 neighbor<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Map</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span>, <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]])</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Unit</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>P<span style="color:#f92672">.</span>toList<span style="color:#f92672">.</span>isEmpty <span style="color:#f92672">&amp;&amp;</span> X<span style="color:#f92672">.</span>toList<span style="color:#f92672">.</span>isEmpty<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 递归退出的条件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        ans<span style="color:#f92672">.</span>add<span style="color:#f92672">(</span>R<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> pivot<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">VertexId</span> <span style="color:#f92672">=</span> P<span style="color:#f92672">.</span>union<span style="color:#f92672">(</span>X<span style="color:#f92672">).</span>head  <span style="color:#75715e">// 枢纽元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> nu<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> neighbor<span style="color:#f92672">(</span>pivot<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>v <span style="color:#66d9ef">&lt;-</span> P<span style="color:#f92672">.</span>diff<span style="color:#f92672">(</span>nu<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 取一个顶点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">val</span> vNu<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> neighbor<span style="color:#f92672">(</span>v<span style="color:#f92672">)</span>  <span style="color:#75715e">// 所取顶点的邻居节点集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            bornKerbosch<span style="color:#f92672">(</span>R <span style="color:#f92672">+</span> v<span style="color:#f92672">,</span> P<span style="color:#f92672">.</span>intersect<span style="color:#f92672">(</span>vNu<span style="color:#f92672">),</span> X<span style="color:#f92672">.</span>intersect<span style="color:#f92672">(</span>vNu<span style="color:#f92672">),</span> ans<span style="color:#f92672">,</span> neighbor<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>            P<span style="color:#f92672">.</span>remove<span style="color:#f92672">(</span>v<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>            X<span style="color:#f92672">.</span>add<span style="color:#f92672">(</span>v<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><ul>
+<li>之后我觉得较为关键的是合并社团，直观上合并并不难，只需要创建出CPM算法所需要的矩阵并按照矩阵数值和矩阵索引进行合并即可。比较难的过程可能是如何用数据结构将这些过程保存下来。在算法实现中我使用了二维Set来保存最后的合并的社区顶点。创建矩阵时采用数组嵌套Set的方式保存每个社区应该和哪些索引的社区合并。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 记录应该合并的团，也就是得到cpm算法的矩阵
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param community 传入的所有的社团集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return 得到的是与社团集合相对应的集合，其中每个存放的是相应社团与哪些索引社团应该合并
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> cpmMatrix<span style="color:#f92672">(</span>community<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]])</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 创建矩阵，因为如果是真正的矩阵空间占用较大，这里选择创建集合型矩阵
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> matrix<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]](</span>community<span style="color:#f92672">.</span>size<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> i<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        community<span style="color:#f92672">.</span>foreach<span style="color:#f92672">(</span>item <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> j<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>            community<span style="color:#f92672">.</span>foreach<span style="color:#f92672">(</span>item2 <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 两者之间交集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">val</span> lap<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>intersect<span style="color:#f92672">(</span>item2<span style="color:#f92672">).</span>size
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> j <span style="color:#f92672">&amp;&amp;</span> lap <span style="color:#f92672">&gt;=</span> config<span style="color:#f92672">.</span>kVal<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 表示对角线，如果是对角线要大于k
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>add<span style="color:#f92672">(</span>j<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">!=</span> j <span style="color:#f92672">&amp;&amp;</span> lap <span style="color:#f92672">&gt;=</span> config<span style="color:#f92672">.</span>kVal <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 表示非对角线，需要大于k-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>add<span style="color:#f92672">(</span>j<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                j <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">})</span>
+</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">})</span>
+</span></span><span style="display:flex;"><span>        matrix
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 进行合并操作，将需要合并的社团所有顶点放在集合中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param community 使用BK算法划分好的极大团集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param idxStore 存储每个社团和哪些社团（索引）合并
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return 返回所有合并后的社团，每个社团的顶点放在一个集合里
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> mergeAll<span style="color:#f92672">(</span>community<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]],</span> idxStore<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]])</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> tmpSeq<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Seq</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> community<span style="color:#f92672">.</span>toSeq  <span style="color:#75715e">// 转换为可索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> res<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>  <span style="color:#75715e">// 返回结果集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> lenS<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> idxStore<span style="color:#f92672">.</span>length
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#66d9ef">&lt;-</span> <span style="color:#ae81ff">0</span> until lenS<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> tmpSet<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// idx变量是此集合和索引的哪个集合并集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            idxStore<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>foreach<span style="color:#f92672">(</span>idx <span style="color:#66d9ef">=&gt;</span> tmpSet <span style="color:#66d9ef">=</span> tmpSet<span style="color:#f92672">.</span>union<span style="color:#f92672">(</span>tmpSeq<span style="color:#f92672">(</span>idx<span style="color:#f92672">)))</span>
+</span></span><span style="display:flex;"><span>            res<span style="color:#f92672">.</span>add<span style="color:#f92672">(</span>tmpSet<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        res
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span></code></pre></div><blockquote>
+<hr>
+<p><em>遗憾的是没有实现相关的评估手段，待日后想起或再次需要的时候再进行修改吧。</em></p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Flask实现Web应用（三）</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Flask实现Web应用（二）</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Flask实现Web应用（一）</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2023 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#社区发现概述">社区发现概述</a>
+      <ul>
+        <li><a href="#什么是社区">什么是社区</a></li>
+        <li><a href="#社区发现的目的及简单思路">社区发现的目的及简单思路</a></li>
+      </ul>
+    </li>
+    <li><a href="#cpm算法">CPM算法</a>
+      <ul>
+        <li><a href="#算法步骤">算法步骤</a></li>
+        <li><a href="#算法缺点">算法缺点</a></li>
+        <li><a href="#模块度">模块度</a></li>
+      </ul>
+    </li>
+    <li><a href="#算法实现">算法实现</a></li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>

@@ -6,7 +6,33 @@
     <description>Recent content in 实践 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/categories/%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/categories/%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>社区发现 | CPM算法及其实现</title>
+      <link>https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Wed, 01 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/</guid>
+      <description>前言 近日有了解社区发现相关内容以及实现这个比较古老的算法的需要，索性就了解一下社区发现，并尝试着复现这个算法。
+社区发现概述 什么是社区 在现代人们的日常生活中，每个人都会进行社交，这在无形中就形成了一个社交网络。在这个网络中，每个人可以视为一个点，而用户之间的点赞、关注以及其他行为形成了边。在这样的一个网络中，有的用户之间联系较为紧密，有的用户之间联系较为稀疏。联系较为紧密的几个用户可以形成一个社区，在社区内，每个节点的链接都较为紧密，而两个社区之间的联系就较为稀疏。整体的结构可以被称为社团结构。如下图，圈起来的部分即为社区。
+社团中的边结构其实是一种逻辑抽象，并不是一种空间位置上的关系，而是节点之间的共有关系，假如节点代表的是消费者，那么节点间的边则可能代表消费者购买了共同一类商品，边的权重则可以代表购买物品的数量。
+社区发现的目的及简单思路 社区发现的目的就是为了在图中找到具有一定共同关系或者潜在特定关系的组织，也就是社区。社区发现也就是为了寻找图网络中联系较为紧密的社区也称为块（cluster）。基于这种想法，我们可以想到如果要进行社区发现那么就要寻找一个联系较为紧密的块，我们可以将其解释为具有较大的密度，之后便是考虑用什么方法去评估这种密度，类似于神经网络中的损失函数。
+CPM算法 CPM（派系过滤算法）算法是最早的重叠社区发现算法，它的思想是基于团渗透的，这个算法认为社区是具有共享节点的全连通子集集合，并通过一种团过滤算法来识别网络中的社区结构。在这个算法中遵循以下两个概念
+在图网络中视为团的部分是任意两个节点都存在一条边相连的，也就是完全子图 所有彼此连通的k-团（拥有k个节点）构成一个k-团社区，当两个k-团之间存在$k-1$个节点共享那么认为这两个k-团连通 算法步骤 算法首先需要找到网络中的所有团，并构建一个用来表示团团重叠情况的矩阵（matrix），在这个矩阵中matrix[i][j]表示网络中第i个团和第j个团之间的公共节点数。 根据给定的参数k，将矩阵（matrix）中对角线上小于$k$的元素和非对角线上的小于$k-1$的元素置零，其他元素置为一，这样所有对角线为1的即为k-团，而非对角线为1的即为两个相邻的k-团。 将相邻的k-团合并为一个较大的团社区，并可以使用模块度进行评价。 从上面可以得知算法中首先需要做到是得到k-团，因此为了提高效率，在这里需要使用Born_Kerbosch算法来寻找图中的团。在这里也简单介绍一下这个算法。
+Born_Kerbosch算法 算法的初始化包括了以下三个集合
+R集合：记录当前极大团中已经加入的点 P集合：记录可能可以继续加入极大团中的点（这些点应该与R集合中的所有点都相连） X集合：记录已经加入过极大团的点（用于判重，因为会从每个节点开始，枚举所有的团） 简单流程：
+对于每一个在集合P中的点v，将v加入R集合中，之后更新P集合，确保集合中的节点与v相连。 进行回溯时，将v节点从P集合中取出，并加入X集合，表示包含v节点的极大团已经寻找完毕了 当R集合满足为极大团时，P集合和X集合必须为空。因为P集合中包含的点是可能加入R集合中的点，同样的X集合中的点也与R集合中的点都相邻，因此也属于可能称为R集合中极大团点的情况。 算法缺点 CPM算法较为简单，但存在不能为单节点分配社团以及比较使用于完全子图较多的网络中，也即边密集网络中，在稀疏网络中算法的效率较低。
+模块度 模块度是评估一个社区网络划分好坏度量方法，其含义为社区内节点的边数与随机情况下的边数之差。定义如下：
+$$Q=\frac{1}{2m} \sum_{i, j}[A_{i j}-\frac{k_i k_j}{2m}]\delta(c_i, c_j) \qquad \delta(u, v)=\begin{cases}1,&amp;amp;u==v \newline 0, &amp;amp;else \end{cases}$$
+其中$A_{i j}$是节点$i$和节点$j$之间边的权重，当图网络不带权时，可以将其视为1；$k_i=\sum_j{A_{ij}}$表示所有与节点$i$相连的边的权重之和；$c_i$表示节点$i$所属的社区；$m={1\over2}\sum_{ij}A_{ij}$表示所有边的权重之和。$\frac{k_i k_j}{2m}$表示随机情况下节点$i$与节点$j$之间产生的边。
+对这个公式做进一步简化可以得到如下的公式：
+$$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
+其中$\sum{in}$表示社区$c$内边的权重之和，$\sum{tot}$表示与社区$c$节点相连的边的权重之和。
+可以这么简单的理解模块度，即社区内部边的权重和减去社区外部与社区内部相连的边的权重和。
+算法实现 在这部分将讲述算法实现的一些较为重要的地方，完整的代码可以点此，需要的朋友可以直接前往。
+实现算法要先实现寻找极大团，这里使用Born_Kerbosch算法，这个算法有两个版本，但我这里采用了经过一些剪枝处理的版本，在递归之前需要先确定需要的枢纽元素，数据结构方面采用集合（自动去重属实是太好用了^_^） /** * 使用BornKerbosch算法寻找最大团 * @param R 存在于极大团中的点 * @param P 可能可以加入极大团的点 * @param X 用于判重的点集合 * @param ans 将最后寻找到的所有极大团保存 * @param neighbor 存储每个节点的邻居节点，是一个map */ def bornKerbosch(R: Set[VertexId], P: Set[VertexId], X: Set[VertexId], ans: Set[Set[VertexId]], neighbor: Map[VertexId, Set[VertexId]]): Unit = { if (P.</description>
+    </item>
+    
     <item>
       <title>Flask实现Web应用（三）</title>
       <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/</link>
@@ -49,8 +75,7 @@ window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function ()
 &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;title&amp;gt;语音识别站点&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;录音文件上传&amp;lt;/h1&amp;gt; &amp;lt;form method=&amp;#34;post&amp;#34; action=&amp;#34;&amp;#34; enctype=&amp;#34;multipart/form-data&amp;#34;&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; accept=&amp;#34;.wav&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;submit&amp;#34; value=&amp;#34;提交&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这里需要注意的是，&amp;lt;form&amp;gt;元素的method属性可以是get或post。使用get时，数据将在请求URL的查询字符串中提交，而使用post时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用post方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用multipart/form-data字段则是因为这个字段可以适用于提交文件。accept属性则是可以限制表单可以接受的文件类型。如上使用了.wav进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。
 使用Flask进行文件接收 对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 request.files字典中，可以通过键值 file来访问文件列表，从中得出文件名，再用save保存文件。
 @app.route(&amp;#39;/upload&amp;#39;, methods=[&amp;#39;post&amp;#39;]) def upload_file(): upload_file = request.files[&amp;#39;file&amp;#39;] if upload_file.filename != &amp;#34;&amp;#34;: upload_file.save(upload_file.filename) return redirect(url_for(&amp;#39;upload_file&amp;#39;)) 这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示
- 文件上传效果 
-添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
+文件上传效果 添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
 app.config[&amp;#39;MAX_CONTENT_LENGTH&amp;#39;] = 1024 * 1024 添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。
 可接收文件类型限制 在前面的HTML表单中提到了accept属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。
 app.config[&amp;#39;UPLOAD_EXTENSIONS&amp;#39;] = [&amp;#39;.wav&amp;#39;] 上传路径的限制 由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置
@@ -65,15 +90,14 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
       <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
       <description>想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
 socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
- 
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
 对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式
- 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
+流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。 C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
 服务器工作流程 1、创建服务器socket 在这个阶段我们可以使用socket函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为AF_INET，即表示利用IPv4进行通信。这个函数的返回值为 文件描述符 （类型为整型），当失败时则会返回-1如下
 int listenfd; listenfd = socket(AF_INET, SOCK_STREAM, 0) 2、将服务器用于通信的地址和端口绑定到socket上 在Linux中，地址信息被封装在了结构体sockaddr中，如下
-struct sockaddr { sa_family_t sin_family; //地址族 	char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
-struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 	struct in_addr sin_addr; // IP地址 	char sin_zero; } 但如果你进入到Linux的底层代码会发现，sockaddr_in还有一个参数为sockaddr的构造函数。因此使用这个结构体可以让操作更简单，如下
-struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.</description>
+struct sockaddr { sa_family_t sin_family; //地址族 char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
+struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 struct in_addr sin_addr; // IP地址 char sin_zero; } 但如果你进入到Linux的底层代码会发现，sockaddr_in还有一个参数为sockaddr的构造函数。因此使用这个结构体可以让操作更简单，如下
+struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.sin_port = htons(atoi(argv[1])); // 将主机字节顺序转换为网络字节顺序 之后将端口绑定。</description>
     </item>
     
     <item>
@@ -97,7 +121,7 @@ struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); ser
 · 修改滚动条样式
 · 使文章支持数学公式编辑
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
-&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
+&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.</description>
     </item>
     

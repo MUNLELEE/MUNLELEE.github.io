@@ -15,15 +15,14 @@
       <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
       <description>想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
 socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
- 
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
 对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式
- 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
+流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。 C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
 服务器工作流程 1、创建服务器socket 在这个阶段我们可以使用socket函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为AF_INET，即表示利用IPv4进行通信。这个函数的返回值为 文件描述符 （类型为整型），当失败时则会返回-1如下
 int listenfd; listenfd = socket(AF_INET, SOCK_STREAM, 0) 2、将服务器用于通信的地址和端口绑定到socket上 在Linux中，地址信息被封装在了结构体sockaddr中，如下
-struct sockaddr { sa_family_t sin_family; //地址族 	char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
-struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 	struct in_addr sin_addr; // IP地址 	char sin_zero; } 但如果你进入到Linux的底层代码会发现，sockaddr_in还有一个参数为sockaddr的构造函数。因此使用这个结构体可以让操作更简单，如下
-struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.</description>
+struct sockaddr { sa_family_t sin_family; //地址族 char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
+struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 struct in_addr sin_addr; // IP地址 char sin_zero; } 但如果你进入到Linux的底层代码会发现，sockaddr_in还有一个参数为sockaddr的构造函数。因此使用这个结构体可以让操作更简单，如下
+struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.sin_port = htons(atoi(argv[1])); // 将主机字节顺序转换为网络字节顺序 之后将端口绑定。</description>
     </item>
     
     <item>
@@ -34,12 +33,11 @@ struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); ser
       <guid>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
       <description>HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
 HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
- 
 由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。
 持续和非持续连接 在实际情况中，客户可能会发出一系列请求并且服务器会对每个请求进行响应。而这种客户-服务器的交互是经过TCP进行的，因此这些请求是经过单独的TCP连接还是经过相同的TCP连接就是这种交互方式的关键问题。也因此诞生了持续和非持续的HTTP连接。
 非持续连接： 使用非持续连接，每个TCP连接在服务器 发送一个对象后就关闭 （对象即HTML文件以及网页图像等），每个TCP连接只传输一个请求报文和一个响应报文。
 非持续连接有以下缺点：
- 必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。 每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受.  持续连接： 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。
+必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。 每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受. 持续连接： 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。
 HTTP连接流程 （1）、 客户端连接到Web服务器。 一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80端口），建立一个TCP套接字连接。
 （2）、 发送HTTP请求。 通过TCP套接字，客户端向HTTP服务器发送一个文本的请求报文。
 （3）、 服务器接受请求并返回HTTP响应。 Web服务器解析请求，定位请求资源。服务器将资源副本写到TCP套接字，由客户端读取。
@@ -48,11 +46,9 @@ HTTP连接流程 （1）、 客户端连接到Web服务器。 一个HTTP客户�
 HTTP报文 HTTP请求报文 请求报文格式如下图。其中第一行称为 请求行 ，其后继的行称为 首部行 。
 请求行有三个字段：方法字段、URL字段和HTTP版本字段。方法字段可以区包括GET、POST、HEAD、PUT和DELETE。这些请求方法将会在下文讲述。
 首部行则会包含Host字段，Connection字段以及User-agent字段等。分别指明了对象所在的主机、是否使用持续连接以及用户代理（发送请求的浏览器类型）。其中Host首部行则是Web代理高速缓存所要求的。
- 
 HTTP响应报文 响应报文的格式如下图。分为 状态行 ， 首部行 以及 实体体 三个部分。实体体为报文的主要部分，为所请求的对象本身。同样在首部行会包含一些字段。例如：Date：指示发送该报文的日期和时间；Server：指示发送的服务器；Last-Modified：最后修改的日期和时间等。
- 
 HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状态码字段，这个字段将指示请求的结果。可以将状态码分为以下几类：
- 1xx： 指示信息 ，表示请求已接收，继续处理 2xx： 成功 ，表示请求已被成功接收、理解、接受 3xx： 重定向 ，要完成请求必须进行进一步的操作 4xx： 客户端错误 ，请求有语法错误或请求无法实现 5xx： 服务器端错误 ，服务器未能实现合法请求  常见的状态码如下：</description>
+1xx： 指示信息 ，表示请求已接收，继续处理 2xx： 成功 ，表示请求已被成功接收、理解、接受 3xx： 重定向 ，要完成请求必须进行进一步的操作 4xx： 客户端错误 ，请求有语法错误或请求无法实现 5xx： 服务器端错误 ，服务器未能实现合法请求 常见的状态码如下：</description>
     </item>
     
   </channel>

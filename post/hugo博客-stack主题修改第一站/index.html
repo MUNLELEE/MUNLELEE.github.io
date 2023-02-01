@@ -16,7 +16,7 @@
 · 修改滚动条样式
 · 使文章支持数学公式编辑
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
-&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
+&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'><title>Hugo博客 | stack主题修改第一站</title>
 
 <link rel='canonical' href='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
@@ -55,7 +55,7 @@
 · 修改滚动条样式
 · 使文章支持数学公式编辑
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
-&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
+&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'>
 <meta property='og:url' content='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
 <meta property='og:site_name' content='墨纹'>
@@ -76,7 +76,7 @@
 · 修改滚动条样式
 · 使文章支持数学公式编辑
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
-&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 	(function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
+&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
     :root {
         --article-font-family: "Noto Serif SC", var(--base-font-family);
@@ -209,399 +209,396 @@
 <p>其实修改字体的方案主题的原作者已经给出，有需要的可以参考<a class="link" href="https://docs.stack.jimmycai.com/zh/modify-theme/example-custom-font-family.html"  target="_blank" rel="noopener"
     >修改字体</a>，作为一个中国人，好康的中文永远比好康的英文重要。
 具体做法是在站点根目录中的<code>layouts/partials/head/custom.html</code>中添加如下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">style</span>&gt;
-    :<span style="color:#a6e22e">root</span> {
-        --article-font-family: <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span>, <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>base<span style="color:#f92672">-</span>font<span style="color:#f92672">-</span>family);
-    }
-&lt;/<span style="color:#f92672">style</span>&gt;
-&lt;<span style="color:#f92672">script</span>&gt;  <span style="color:#75715e">// 正文自重300，标题字重700
-</span><span style="color:#75715e"></span>		(<span style="color:#66d9ef">function</span> () {
-		    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customFont</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;link&#39;</span>);
-		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;display=swap&#34;</span>;
-		
-		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;text/css&#34;</span>;
-		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">rel</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;stylesheet&#34;</span>;
-		
-		    document.<span style="color:#a6e22e">head</span>.<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">customFont</span>);
-		}());
-&lt;/<span style="color:#f92672">script</span>&gt;
-</code></pre></div><p>以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了<code>hugo-theme-stack/assets/scss/variable.scss</code>文件，具体就是调整了<code>--zh-font-family</code>和<code>--base-font-family</code>的顺序，代码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">--zh-font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Hiragino Sans GB&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Droid Sans Fallback&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Microsoft YaHei&#34;</span>;
-<span style="color:#a6e22e">--base-font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span><span style="color:#f92672">,</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sys-font-family)<span style="color:#f92672">,</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>zh-font-family)<span style="color:#f92672">,</span> sans-serif;
-</code></pre></div><h3 id="修改站点的图标">修改站点的图标</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">style</span>&gt;
+</span></span><span style="display:flex;"><span>    :<span style="color:#a6e22e">root</span> {
+</span></span><span style="display:flex;"><span>        --article-font-family: <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span>, <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>base<span style="color:#f92672">-</span>font<span style="color:#f92672">-</span>family);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">style</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span>&gt;  <span style="color:#75715e">// 正文自重300，标题字重700
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		(<span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>		    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customFont</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#39;link&#39;</span>);
+</span></span><span style="display:flex;"><span>		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">href</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;display=swap&#34;</span>;
+</span></span><span style="display:flex;"><span>		
+</span></span><span style="display:flex;"><span>		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;text/css&#34;</span>;
+</span></span><span style="display:flex;"><span>		    <span style="color:#a6e22e">customFont</span>.<span style="color:#a6e22e">rel</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;stylesheet&#34;</span>;
+</span></span><span style="display:flex;"><span>		
+</span></span><span style="display:flex;"><span>		    document.<span style="color:#a6e22e">head</span>.<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">customFont</span>);
+</span></span><span style="display:flex;"><span>		}());
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了<code>hugo-theme-stack/assets/scss/variable.scss</code>文件，具体就是调整了<code>--zh-font-family</code>和<code>--base-font-family</code>的顺序，代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">--zh-font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Hiragino Sans GB&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Droid Sans Fallback&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Microsoft YaHei&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">--base-font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Noto Serif SC&#34;</span><span style="color:#f92672">,</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sys-font-family)<span style="color:#f92672">,</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>zh-font-family)<span style="color:#f92672">,</span> sans-serif;
+</span></span></code></pre></div><h3 id="修改站点的图标">修改站点的图标</h3>
 <p>这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为<code>.ico</code>文件（其它类型的图片文件应该也行），如需转换可以借助<a class="link" href="https://convertio.co/zh/ico-converter/"  target="_blank" rel="noopener"
     >这个网站</a>。之后将转换后的文件保存在网站根目录的<code>static</code>文件夹中。之后修改主题的配置文件<code>config.yaml</code>。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">params</span>:
-    <span style="color:#f92672">mainSections</span>:
-        - <span style="color:#ae81ff">post</span>
-    <span style="color:#f92672">featuredImageField</span>: <span style="color:#ae81ff">image</span>
-    <span style="color:#f92672">rssFullContent</span>: <span style="color:#66d9ef">true</span>
-    <span style="color:#f92672">favicon</span>: <span style="color:#ae81ff">favicon.ico</span>
-</code></pre></div><h3 id="修改站点名称">修改站点名称</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">params</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">mainSections</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">post</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">featuredImageField</span>: <span style="color:#ae81ff">image</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rssFullContent</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">favicon</span>: <span style="color:#ae81ff">favicon.ico</span>
+</span></span></code></pre></div><h3 id="修改站点名称">修改站点名称</h3>
 <p>站点名称对大家来说应该不是什么难事，这里就说说居中以及间隔。这里需要修改主题根目录的<code>assets/scss/partials/siderbar.scss</code>文件。如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.site-name</span> {
-    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>accent-color);
-    <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.8</span><span style="color:#66d9ef">rem</span>;
-    <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 站点名称文本居中
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) {
-        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">rem</span>;
-    }
-}
-
-<span style="color:#a6e22e">.site-description</span> {
-    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>body-text-color);
-    <span style="color:#a6e22e">font-weight</span><span style="color:#f92672">:</span> normal;
-    <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.2</span><span style="color:#66d9ef">rem</span>;
-    <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 站点描述居中
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) {
-        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">rem</span>;
-    }
-}
-</code></pre></div><p>当然如果站点名称之间具有一定的间隔的话，应该是会更美观一点的。方法是在<code>layouts/partials/head/custom.html</code>文件上加入以下代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">style</span>&gt;
-	<span style="color:#f92672">h1</span> {
-		<span style="color:#66d9ef">letter-spacing</span>: <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>;
-	}
-&lt;/<span style="color:#f92672">style</span>&gt;
-</code></pre></div><p>这个代码将会对全站的<code>h1</code>标题进行修改，因此业也会导致其它<code>h1</code>标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要在<code>custom.scss</code>文件中追加如下修改：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.section-term</span> {
-	<span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.8</span><span style="color:#66d9ef">rem</span>; 
-    <span style="color:#a6e22e">letter-spacing</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span>;
-}
-</code></pre></div><h3 id="修改选中的样式">修改选中的样式</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.site-name</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>accent-color);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.8</span><span style="color:#66d9ef">rem</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 站点名称文本居中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">rem</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">.site-description</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>body-text-color);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">font-weight</span><span style="color:#f92672">:</span> normal;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.2</span><span style="color:#66d9ef">rem</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 站点描述居中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">rem</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>当然如果站点名称之间具有一定的间隔的话，应该是会更美观一点的。方法是在<code>layouts/partials/head/custom.html</code>文件上加入以下代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">style</span>&gt;
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">h1</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">letter-spacing</span>: <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">style</span>&gt;
+</span></span></code></pre></div><p>这个代码将会对全站的<code>h1</code>标题进行修改，因此业也会导致其它<code>h1</code>标签也发生改变，但目前只注意到进入一个分类页面时，分类的字距变大了，因此我们需要在<code>custom.scss</code>文件中追加如下修改：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.section-term</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.8</span><span style="color:#66d9ef">rem</span>; 
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">letter-spacing</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="修改选中的样式">修改选中的样式</h3>
 <p>原来作者的选中样式和当前的大多数网站是一样的，给我一种十年前互联网的感觉，于是喜欢深色系的我修改了选中样式。需要在<code>assets/scss/custom.scss</code>文件中加入如下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">::selection</span> {
-    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#fff</span>;
-    <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#557697</span>;
-}
-</code></pre></div><h3 id="站点头像居中">站点头像居中</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">::selection</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#fff</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#557697</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="站点头像居中">站点头像居中</h3>
 <p>这个可能只是心理作用。。
 同样是在<code>assets/scss/partials/siderbar.scss</code>文件中加入修改以下代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.site-avatar</span> {
-    <span style="color:#a6e22e">position</span><span style="color:#f92672">:</span> relative;
-    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;  <span style="color:#75715e">// 站点头像居中
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;  <span style="color:#75715e">// 站点头像居中
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-avatar-size);
-    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-avatar-size);
-
-    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-element-separation);
-}
-</code></pre></div><h3 id="主页按钮高亮问题">主页按钮高亮问题</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.site-avatar</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">position</span><span style="color:#f92672">:</span> relative;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;  <span style="color:#75715e">// 站点头像居中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;  <span style="color:#75715e">// 站点头像居中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-avatar-size);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-avatar-size);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar-element-separation);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="主页按钮高亮问题">主页按钮高亮问题</h3>
 <p>这个虽然不算是什么大问题吧，但是主页不高亮我就觉得很难受。。于是就找到了<code>layouts/partials/sidebar/left.html</code>这个文件。我们可以看到一下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $currentPage := . }}
-{{ range .Site.Menus.main }}
-{{ $active := or (eq $currentPage.Title .Name) (or ($currentPage.HasMenuCurrent &#34;main&#34; .)($currentPage.IsMenuCurrent &#34;main&#34; .)) }}
-</code></pre></div><p>这段代码大概的逻辑就是如果当前的页面是菜单中的页面之一就设定为激活状态，而如果要让主页高亮的话需要加入以下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $siteTitle := .Site.Title }}
-{{ $active := or ($active) (and (eq $currentPage.Title $siteTitle) (eq .Identifier &#34;home&#34;)) }}
-</code></pre></div><p>这样就会使若当前的网站的标题等于网站名称就会令其为激活状态，而之后的<code>Identifier</code>则是为了区分主页页面，否则就会出现点击主页所有页面都是高亮的情况。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ $currentPage := . }}
+</span></span><span style="display:flex;"><span>{{ range .Site.Menus.main }}
+</span></span><span style="display:flex;"><span>{{ $active := or (eq $currentPage.Title .Name) (or ($currentPage.HasMenuCurrent &#34;main&#34; .)($currentPage.IsMenuCurrent &#34;main&#34; .)) }}
+</span></span></code></pre></div><p>这段代码大概的逻辑就是如果当前的页面是菜单中的页面之一就设定为激活状态，而如果要让主页高亮的话需要加入以下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ $siteTitle := .Site.Title }}
+</span></span><span style="display:flex;"><span>{{ $active := or ($active) (and (eq $currentPage.Title $siteTitle) (eq .Identifier &#34;home&#34;)) }}
+</span></span></code></pre></div><p>这样就会使若当前的网站的标题等于网站名称就会令其为激活状态，而之后的<code>Identifier</code>则是为了区分主页页面，否则就会出现点击主页所有页面都是高亮的情况。</p>
 <h3 id="主页样式的修改">主页样式的修改</h3>
 <p>第一次看到这个主题时就对它的主页布局感到不舒服，尤其是在笔记本电脑上挤满了整个屏幕令人难受，于是希望左右两边能够有一定的留白，这样可以美观一些。</p>
 <p>从开发者工具中我们可以得知主页的<code>class</code>是<code>container</code>，经过查找可以知道其样式是在<code>assets/scss/grid.css</code>中定义的。于是可以发现如下这段代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.container</span> {
-    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;
-    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;
-
-    <span style="color:#a6e22e">.left-sidebar</span> {
-        <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>left<span style="color:#f92672">-</span>sidebar-max-width);
-        <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">%</span>;
-    }
-
-    <span style="color:#a6e22e">.right-sidebar</span> {
-        <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>right<span style="color:#f92672">-</span>sidebar-max-width);
-
-        <span style="color:#75715e">/// Display right sidebar when min-width: lg
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
-            <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> block;
-        }
-    }
-
-    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.extended</span> {
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
-            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
-            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
-        }
-
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
-            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">%</span>;
-            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
-        }
-
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(xl) {
-            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1536</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">%</span>;
-            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
-        }
-    }
-}
-
-</code></pre></div><p>这段代码对左边栏和右边栏进行了最大宽度的限制，这也就是我们要修改的地方。但是这其中的各个<code>@include</code>函数又代表什么呢？我们可以观察<code>asset/scss/breakpoints.scss</code>这个文件，如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss">$breakpoints<span style="color:#f92672">:</span> (
-    <span style="color:#a6e22e">sm</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">640</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
-    <span style="color:#a6e22e">md</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">768</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
-    <span style="color:#a6e22e">lg</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
-    <span style="color:#a6e22e">xl</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
-    <span style="color:#a6e22e">2xl</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1536</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
-);
-
-<span style="color:#66d9ef">@mixin</span><span style="color:#a6e22e"> respond</span>($breakpoint) {
-    <span style="color:#66d9ef">@if</span> <span style="color:#f92672">not</span> <span style="color:#a6e22e">map-has-key</span>($breakpoints<span style="color:#f92672">,</span> $breakpoint) {
-        <span style="color:#66d9ef">@warn</span> <span style="color:#e6db74">&#34;&#39;</span><span style="color:#e6db74">#{</span>$breakpoint<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39; is not a valid breakpoint&#34;</span>;
-    } <span style="color:#66d9ef">@else</span> {
-        <span style="color:#66d9ef">@media</span> (<span style="color:#a6e22e">min-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">map-get</span>($breakpoints<span style="color:#f92672">,</span> $breakpoint)) {
-            <span style="color:#66d9ef">@content</span>;
-        }
-    }
-}
-
-</code></pre></div><p>没有学过<code>css</code>的我也就只能大致看出这是封装了各种屏幕尺寸类似于<code>map</code>，而在笔记本电脑上，屏幕宽度是<code>1024px</code>以上的，因此我们只需要修改<code>@include respond(lg)</code>函数下的样式就可以了。在<code>asset/scss/custom.scss</code>下添加如下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.container</span> {
-    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;
-    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;
-
-    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.extended</span> {
-        <span style="color:#75715e">/* range: 768-1024 */</span>
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
-            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
-            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
-        }
-
-        <span style="color:#75715e">/* range: 1024-1280 */</span>
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {  <span style="color:#75715e">// 修改主页的三个组件的显示比例
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
-            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">22</span><span style="color:#66d9ef">%</span>;
-        }
-    }
-
-    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.compact</span> {
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
-            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
-            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">768</span><span style="color:#66d9ef">px</span>;
-        }
-
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
-            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">%</span>;
-        }
-
-        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(xl) {
-            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
-        }
-    }
-}
-
-</code></pre></div><p>至此，主页的修改也告一段落了。以上都是从<a class="link" href="https://xrg.fj.cn/"  target="_blank" rel="noopener"
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.container</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.left-sidebar</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>left<span style="color:#f92672">-</span>sidebar-max-width);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.right-sidebar</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>right<span style="color:#f92672">-</span>sidebar-max-width);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/// Display right sidebar when min-width: lg
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> block;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.extended</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(xl) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1536</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这段代码对左边栏和右边栏进行了最大宽度的限制，这也就是我们要修改的地方。但是这其中的各个<code>@include</code>函数又代表什么呢？我们可以观察<code>asset/scss/breakpoints.scss</code>这个文件，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span>$breakpoints<span style="color:#f92672">:</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">sm</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">640</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">md</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">768</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">lg</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">xl</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">2xl</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1536</span><span style="color:#66d9ef">px</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">@mixin</span><span style="color:#a6e22e"> respond</span>($breakpoint) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">@if</span> <span style="color:#f92672">not</span> <span style="color:#a6e22e">map-has-key</span>($breakpoints<span style="color:#f92672">,</span> $breakpoint) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@warn</span> <span style="color:#e6db74">&#34;&#39;</span><span style="color:#e6db74">#{</span>$breakpoint<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39; is not a valid breakpoint&#34;</span>;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">@else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@media</span> (<span style="color:#a6e22e">min-width</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">map-get</span>($breakpoints<span style="color:#f92672">,</span> $breakpoint)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">@content</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>没有学过<code>css</code>的我也就只能大致看出这是封装了各种屏幕尺寸类似于<code>map</code>，而在笔记本电脑上，屏幕宽度是<code>1024px</code>以上的，因此我们只需要修改<code>@include respond(lg)</code>函数下的样式就可以了。在<code>asset/scss/custom.scss</code>下添加如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.container</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.extended</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* range: 768-1024 */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* range: 1024-1280 */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {  <span style="color:#75715e">// 修改主页的三个组件的显示比例
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--right-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">22</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">.compact</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(md) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">768</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(lg) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1024</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">--left-sidebar-max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(xl) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1280</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>至此，主页的修改也告一段落了。以上都是从<a class="link" href="https://xrg.fj.cn/"  target="_blank" rel="noopener"
     >这位大佬那里学来</a>。</p>
 <h3 id="修改左侧边栏头像的大小">修改左侧边栏头像的大小</h3>
 <p>左侧边栏的元素太多，显得实在有点挤，于是索性修改了一下博客的头像大小。需要在主题根目录下的<code>assets/scss/partials/sidebar.scss</code>文件。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) <span style="color:#a6e22e">{
-</span><span style="color:#a6e22e">--sidebar-avatar-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">125</span><span style="color:#66d9ef">px</span>;  <span style="color:#75715e">// 修改头像大小的代码  
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">--sidebar-element-separation</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
-}
-</code></pre></div><h3 id="返回顶部按钮的添加">返回顶部按钮的添加</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#66d9ef">@include</span><span style="color:#a6e22e"> respond</span>(<span style="color:#ae81ff">2</span><span style="color:#66d9ef">xl</span>) <span style="color:#a6e22e">{
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">--sidebar-avatar-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">125</span><span style="color:#66d9ef">px</span>;  <span style="color:#75715e">// 修改头像大小的代码  
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">--sidebar-element-separation</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="返回顶部按钮的添加">返回顶部按钮的添加</h3>
 <p>在参考过其它使用这个主题的博主之后发现，如果一篇文章太长，没有返回顶部这个按钮可能会在某些情况下造成体验的不舒适，于是决定加上这个功能。最开始是希望能够在一个页面的右下角添加这个按钮，但是无法解决页面缩放时显示位置与主页面之间的关系的问题，因此决定借助目录放置于目录的下方。</p>
 <p>首先是按钮的函数，参考了<code>slim</code>主题，具体是在<code>layouts/partials/head/script.html</code>中加入如下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-
-&lt;<span style="color:#f92672">script</span>&gt;
-    <span style="color:#75715e">// Check to see if the window is top if not then display button
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">$</span>(window).<span style="color:#a6e22e">scroll</span>(<span style="color:#66d9ef">function</span>() {
-    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">scrollTop</span>()) {
-        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">fadeIn</span>();
-    } <span style="color:#66d9ef">else</span> {
-        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">fadeOut</span>();
-    }
-    });
-
-    <span style="color:#75715e">// Click event to scroll to top
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">click</span>(<span style="color:#66d9ef">function</span>() {
-    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;html, body&#39;</span>).<span style="color:#a6e22e">animate</span>({<span style="color:#a6e22e">scrollTop</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>}, <span style="color:#ae81ff">1000</span>);
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
-    });
-&lt;/<span style="color:#f92672">script</span>&gt;
-</code></pre></div><p>这段代码可以监听窗口抖动，从而控制按钮的显示和隐藏。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Check to see if the window is top if not then display button
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">$</span>(window).<span style="color:#a6e22e">scroll</span>(<span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">scrollTop</span>()) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">fadeIn</span>();
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">fadeOut</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Click event to scroll to top
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;#back-to-top&#39;</span>).<span style="color:#a6e22e">click</span>(<span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;html, body&#39;</span>).<span style="color:#a6e22e">animate</span>({<span style="color:#a6e22e">scrollTop</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>}, <span style="color:#ae81ff">1000</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>这段代码可以监听窗口抖动，从而控制按钮的显示和隐藏。</p>
 <p>然后是添加返回顶部的按钮，由于这个按钮需要和文章目录保持一个相对固定的位置，因此需要修改<code>layouts/_default/single.html</code>，在<code>aside</code>标签下加入如下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ $topImg := resources.Get (&#34;img/top.png&#34;) }}
-{{ $topImg := $topImg.Resize &#34;40x&#34; }}
-&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;back-to-top&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span>&gt;
-    &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $topImg.RelPermalink }}&#34;</span> /&gt;
-&lt;/<span style="color:#f92672">a</span>&gt;
-</code></pre></div><p>利用一张图片作为返回顶部的链接。最后我们需要通过<code>css</code>来为这个按钮添加样式。首先我们需要找到之前提过的<code>custom.scss</code>文件，在文件中加入如下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss">#go-top {
-    <span style="color:#a6e22e">bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> none;
-    <span style="color:#a6e22e">position</span><span style="color:#f92672">:</span> absolute;  
-    <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
-        <span style="color:#a6e22e">filter</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">opacity</span>(<span style="color:#ae81ff">60</span><span style="color:#66d9ef">%</span>);  <span style="color:#75715e">// 悬停淡化
-</span><span style="color:#75715e"></span>    }
-</code></pre></div><p>其中<code>bottom</code>值是我觉得可以避免当目录过长时会几乎占满整个屏幕，导致按钮没有地方放的问题。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ $topImg := resources.Get (&#34;img/top.png&#34;) }}
+</span></span><span style="display:flex;"><span>{{ $topImg := $topImg.Resize &#34;40x&#34; }}
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;back-to-top&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $topImg.RelPermalink }}&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">a</span>&gt;
+</span></span></code></pre></div><p>利用一张图片作为返回顶部的链接。最后我们需要通过<code>css</code>来为这个按钮添加样式。首先我们需要找到之前提过的<code>custom.scss</code>文件，在文件中加入如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span>#go-top {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> none;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">position</span><span style="color:#f92672">:</span> absolute;  
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">filter</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">opacity</span>(<span style="color:#ae81ff">60</span><span style="color:#66d9ef">%</span>);  <span style="color:#75715e">// 悬停淡化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span></code></pre></div><p>其中<code>bottom</code>值是我觉得可以避免当目录过长时会几乎占满整个屏幕，导致按钮没有地方放的问题。</p>
 <h3 id="修改toc样式">修改Toc样式</h3>
 <p>由于Toc每个标题之间的行间距有点大，于是就缩了缩，在<code>custom.scss</code>文件中又追加了如下的修改：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.widget--toc</span> {
-    <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>card-background);
-    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>card-border-radius);
-    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> flex;
-    <span style="color:#a6e22e">flex-direction</span><span style="color:#f92672">:</span> column;
-    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>card-text-color-main);
-    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
-    <span style="color:#75715e">// display:inline-block;
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
-
-    #TableOfContents {
-        <span style="color:#a6e22e">overflow-x</span><span style="color:#f92672">:</span> auto;
-        <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
-        <span style="color:#f92672">ul</span> {
-            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>; 
-            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-        }
-        <span style="color:#f92672">ol</span> {
-            <span style="color:#a6e22e">list-style-type</span><span style="color:#f92672">:</span> none;
-            <span style="color:#a6e22e">counter-reset</span><span style="color:#f92672">:</span> item;
-            <span style="color:#f92672">li</span><span style="color:#a6e22e">:before</span> {
-                <span style="color:#a6e22e">counter-increment</span><span style="color:#f92672">:</span> item;
-                <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">counters</span>(item<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;.&#34;</span>) <span style="color:#e6db74">&#34;. &#34;</span>;
-                <span style="color:#a6e22e">font-weight</span><span style="color:#f92672">:</span> bold;
-                <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span>;
-            }
-        }
-        <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ul</span> {
-            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
-        }
-        <span style="color:#f92672">li</span> {
-            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>; 
-            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
-            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ul</span> {
-                <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
-                <span style="color:#a6e22e">padding-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>;
-                <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>;
-                <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">li</span><span style="color:#a6e22e">:last-child</span> {
-                    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-                }
-            }
-        }
-    }
-}
-</code></pre></div><p>追加了一些修改，在使用了一段时间后发现，每个目录项前面的小点在一定程度上占了空间，挤压了目录字，导致每个目录项容易换行，以及在<code>margin</code>和<code>padding</code>上还可以有缩减的空间，于是在<code>custom.scss</code>文件上做了以下修改（删了一些无用代码，注释了小点，并修改了一些间距）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.widget--toc</span> {
-    <span style="color:#75715e">// display:inline-block;
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
-
-    #TableOfContents {
-        <span style="color:#a6e22e">overflow-x</span><span style="color:#f92672">:</span> auto;
-        <span style="color:#a6e22e">max-height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">70</span><span style="color:#66d9ef">vh</span>;
-        <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
-        <span style="color:#f92672">ul</span> {
-            <span style="color:#a6e22e">list-style-type</span><span style="color:#f92672">:</span> none;
-            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>; 
-            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-        }
-        <span style="color:#75715e">// &amp; &gt; ul {
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">//     padding: 0 1em;
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// }
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">li</span> {
-            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>; 
-            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
-            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ul</span> {
-                <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
-                <span style="color:#a6e22e">padding-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">8</span><span style="color:#66d9ef">px</span>;
-                <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>;
-                <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">li</span><span style="color:#a6e22e">:last-child</span> {
-                    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-                }
-            }
-        }
-    }
-}
-</code></pre></div><h3 id="修改分类标签样式">修改分类标签样式</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.widget--toc</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>card-background);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>card-border-radius);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> flex;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flex-direction</span><span style="color:#f92672">:</span> column;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>card-text-color-main);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// display:inline-block;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    #TableOfContents {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">overflow-x</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ul</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>; 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ol</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">list-style-type</span><span style="color:#f92672">:</span> none;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">counter-reset</span><span style="color:#f92672">:</span> item;
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">li</span><span style="color:#a6e22e">:before</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">counter-increment</span><span style="color:#f92672">:</span> item;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">counters</span>(item<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;.&#34;</span>) <span style="color:#e6db74">&#34;. &#34;</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">font-weight</span><span style="color:#f92672">:</span> bold;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ul</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">li</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>; 
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ul</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">padding-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">li</span><span style="color:#a6e22e">:last-child</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>追加了一些修改，在使用了一段时间后发现，每个目录项前面的小点在一定程度上占了空间，挤压了目录字，导致每个目录项容易换行，以及在<code>margin</code>和<code>padding</code>上还可以有缩减的空间，于是在<code>custom.scss</code>文件上做了以下修改（删了一些无用代码，注释了小点，并修改了一些间距）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.widget--toc</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// display:inline-block;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    #TableOfContents {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">overflow-x</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">max-height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">70</span><span style="color:#66d9ef">vh</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ul</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">list-style-type</span><span style="color:#f92672">:</span> none;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>; 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// &amp; &gt; ul {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">//     padding: 0 1em;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">li</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>; 
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ol</span><span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">ul</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">padding-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">8</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">&amp;</span> <span style="color:#f92672">&gt;</span> <span style="color:#f92672">li</span><span style="color:#a6e22e">:last-child</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="修改分类标签样式">修改分类标签样式</h3>
 <p>这个stack主题属实是有点迷，一样的主题推送到GitHub居然能产生不同的效果，无奈的我只能又去修改原先又大又丑的分类标签，根据我个人的喜好，将标签修改为小巧一点，放弃了原来的图片修饰，相关的代码写于<code>custom.scss</code>文件中：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.subsection-list</span> {
-    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>section-separation);
-    <span style="color:#a6e22e">overflow-x</span><span style="color:#f92672">:</span> auto;
-
-    <span style="color:#a6e22e">.article-list--tile</span> {
-        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> flex;
-        <span style="color:#a6e22e">padding-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
-
-        <span style="color:#f92672">article</span> {
-            <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span><span style="color:#66d9ef">px</span>;  <span style="color:#75715e">// 修改分类的标签大小
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>; 
-            <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>; 
-            <span style="color:#a6e22e">flex-shrink</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-            <span style="color:#75715e">// box-shadow: var(--shadow-l2); 
-</span><span style="color:#75715e"></span>
-            <span style="color:#a6e22e">.article-title</span> {
-                <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
-                <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.5</span><span style="color:#66d9ef">rem</span>; 
-                <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 保证字居中美观一点
-</span><span style="color:#75715e"></span>            }
-
-            <span style="color:#a6e22e">.article-details</span> {
-                <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
-                <span style="color:#a6e22e">justify-content</span><span style="color:#f92672">:</span> center; 
-            }
-        }
-    }
-}
-</code></pre></div><h3 id="修改相关文章图标-样式">修改相关文章图标 样式</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.subsection-list</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>section-separation);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">overflow-x</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.article-list--tile</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> flex;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">padding-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">article</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span><span style="color:#66d9ef">px</span>;  <span style="color:#75715e">// 修改分类的标签大小
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>; 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>; 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">flex-shrink</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// box-shadow: var(--shadow-l2); 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">.article-title</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.5</span><span style="color:#66d9ef">rem</span>; 
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">text-align</span><span style="color:#f92672">:</span> center;  <span style="color:#75715e">// 保证字居中美观一点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">.article-details</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">justify-content</span><span style="color:#f92672">:</span> center; 
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="修改相关文章图标-样式">修改相关文章图标 样式</h3>
 <p>在第一次推送到GitHub之后发现，相关文章的推荐标签有点与当前屏幕不相符，于是决定将相关文章的标签的大小调整到与分类的大小差不多大，于是我们依旧在<code>custom.scss</code>文件中追加修改样式的代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#a6e22e">.related-contents--wrapper</span> {
-    <span style="color:#a6e22e">.related-contents</span> {
-        <span style="color:#f92672">article</span> {
-            <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">85</span><span style="color:#66d9ef">px</span>;
-            <span style="color:#a6e22e">.article-title</span> {
-                <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">rem</span>;
-            }
-        }
-    }
-}
-</code></pre></div><h3 id="修改滚动条样式">修改滚动条样式</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#a6e22e">.related-contents--wrapper</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.related-contents</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">article</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">85</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">.article-title</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">rem</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="修改滚动条样式">修改滚动条样式</h3>
 <p>当文章的目录太长时便会产生滚动条，而默认的滚动条实在是丑得不想形容。由于不是很想再调试了，于是再次参考<a class="link" href="https://xrg.fj.cn/p/hugo-stack%E4%B8%BB%E9%A2%98%E6%9B%B4%E6%96%B0%E5%B0%8F%E8%AE%B0/#%E6%BB%9A%E5%8A%A8%E6%9D%A1%E7%BE%8E%E5%8C%96"  target="_blank" rel="noopener"
     >大佬的操作</a>，而且既然想改滚动条了，索性一步到位直接全改，我们需要在<code>custom.scss</code>文件中添加如下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#f92672">html</span> {
-    <span style="color:#a6e22e">::-webkit-scrollbar</span> {
-        <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
-      }
-      
-      <span style="color:#a6e22e">::-webkit-scrollbar-track</span> {
-        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> transparent;
-      }
-      
-      <span style="color:#a6e22e">::-webkit-scrollbar-thumb</span> {
-        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#d6dee1</span>;
-        <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
-        <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> solid transparent;
-        <span style="color:#a6e22e">background-clip</span><span style="color:#f92672">:</span> content-box;
-      }
-      
-      <span style="color:#a6e22e">::-webkit-scrollbar-thumb:hover</span> {
-        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#a8bbbf</span>;
-      }
-}
-</code></pre></div><h3 id="支持数学公式编辑">支持数学公式编辑</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#f92672">html</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">::-webkit-scrollbar</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">::-webkit-scrollbar-track</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> transparent;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">::-webkit-scrollbar-thumb</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#d6dee1</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> solid transparent;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">background-clip</span><span style="color:#f92672">:</span> content-box;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">::-webkit-scrollbar-thumb:hover</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">background-color</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">#a8bbbf</span>;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="支持数学公式编辑">支持数学公式编辑</h3>
 <p>在一次使用了markdown内联的$LaTeX$公式发现部署上去之后没有反应时，便一直想使文章能够支持数学公式的编辑。于是在时隔多日之后终于有了解决办法。</p>
 <p>我们需要在主题根目录的<code>/layouts/partials</code>创建<code>math.html</code>文件，之后在这个文件中加入如下代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">{{ if or .Params.math .Site.Params.math }}
-{{ partial &#34;math.html&#34; . }}
-{{ end }}
-
-&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>&gt;
-&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">defer</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">defer</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>
-    <span style="color:#a6e22e">onload</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;renderMathInElement(document.body);&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-</code></pre></div><p>这段代码能够自动渲染数学公式，当然这样还是不够的，我们还需要在每篇文章的markdown的<strong>header</strong>加上<code>math=&quot;true&quot;</code>的选择字段。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ if or .Params.math .Site.Params.math }}
+</span></span><span style="display:flex;"><span>{{ partial &#34;math.html&#34; . }}
+</span></span><span style="display:flex;"><span>{{ end }}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">defer</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">defer</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js&#34;</span> <span style="color:#a6e22e">integrity</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR&#34;</span> <span style="color:#a6e22e">crossorigin</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;anonymous&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">onload</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;renderMathInElement(document.body);&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>这段代码能够自动渲染数学公式，当然这样还是不够的，我们还需要在每篇文章的markdown的<strong>header</strong>加上<code>math=&quot;true&quot;</code>的选择字段。</p>
 
 </section>
 
@@ -632,6 +629,18 @@
                 
                     
 <article class="">
+    <a href="/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">社区发现 | CPM算法及其实现</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
     <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/">
         
         
@@ -654,18 +663,6 @@
     </a>
 </article>
                 
-                    
-<article class="">
-    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Flask实现Web应用（一）</h2>
-        </div>
-    </a>
-</article>
-                
             </div>
         </div>
     
@@ -680,7 +677,7 @@
     <section class="copyright">
         &copy; 
         
-        2022 墨纹
+        2023 墨纹
     </section>
     
     <section class="powerby">

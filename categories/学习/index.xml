@@ -15,9 +15,8 @@
       <guid>https://MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/</guid>
       <description>K近邻算法 K近邻是一种有监督学习算法。因为没有对数据进行训练，而是通过新数据与旧数据的比较得到相应的结果。因此是一种隐式的学习过程和训练过程。K近邻算法可以用来解决分类问题，也可以用来解决回归问题。
 步骤 对未知类别的属性的数据集中的每个点依次执行以下操作：
- 计算已知类别数据集中点与当前点之间的距离 按照距离递增次序排序 选取与当前点距离最小的k个点 确定前k个点所在的类别出现的频率 返回前k个点出现频率最高的类别作为当前点的预测分类  在确定样本和当前点的距离时，通常采用的是欧式距离公式$$d=\sqrt{(x_1-x_0)+(y_1-y_0)}$$ 当公式中的指数变化时，随之也会得到相应的不同的距离公式。
+计算已知类别数据集中点与当前点之间的距离 按照距离递增次序排序 选取与当前点距离最小的k个点 确定前k个点所在的类别出现的频率 返回前k个点出现频率最高的类别作为当前点的预测分类 在确定样本和当前点的距离时，通常采用的是欧式距离公式$$d=\sqrt{(x_1-x_0)+(y_1-y_0)}$$ 当公式中的指数变化时，随之也会得到相应的不同的距离公式。
 如下图所示的例子中
- 
 1、当采用实线的圆作为k近邻的范围，也就是$k=3$时，此时与绿点距离更近的三个点中，三角形出现的频率更大，因此将绿点归为三角形一类
 2、当采用虚线的圆作为k近邻的范围，也就是$k=5$，时，此时与绿点距离更近的五个点中，正方形的频率更大，因此将绿点归为正方形一类。
 以下采用鸢尾花作为例子进行KNN测试
@@ -31,7 +30,7 @@
       
       <guid>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
       <description>在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
- 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长  图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
+岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长 图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
 DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
 之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
 class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x + 1, pos_y); dfs(grid, pos_x, pos_y + 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下</description>
@@ -45,12 +44,11 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
       <guid>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
       <description>HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
 HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
- 
 由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。
 持续和非持续连接 在实际情况中，客户可能会发出一系列请求并且服务器会对每个请求进行响应。而这种客户-服务器的交互是经过TCP进行的，因此这些请求是经过单独的TCP连接还是经过相同的TCP连接就是这种交互方式的关键问题。也因此诞生了持续和非持续的HTTP连接。
 非持续连接： 使用非持续连接，每个TCP连接在服务器 发送一个对象后就关闭 （对象即HTML文件以及网页图像等），每个TCP连接只传输一个请求报文和一个响应报文。
 非持续连接有以下缺点：
- 必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。 每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受.  持续连接： 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。
+必须为每个请求的对象建立和维护一个全新的连接。对于这样的连接要分配TCP缓冲区和保持TCP变量。造成服务器负担。 每个对象经受两倍的RTT交付时间，即一个RTT用于创建，一个RTT用于请求和接受. 持续连接： 服务器在发送响应后保持该TCP连接打开。在相同的客户与服务器之间，后续的请求和响应报文能够通过相同的连接进行传送，而如果一条连接经过一定时间间隔（配置好的超时间隔）仍未被使用，HTTP服务器就应该关闭这个连接。
 HTTP连接流程 （1）、 客户端连接到Web服务器。 一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80端口），建立一个TCP套接字连接。
 （2）、 发送HTTP请求。 通过TCP套接字，客户端向HTTP服务器发送一个文本的请求报文。
 （3）、 服务器接受请求并返回HTTP响应。 Web服务器解析请求，定位请求资源。服务器将资源副本写到TCP套接字，由客户端读取。
@@ -59,11 +57,9 @@ HTTP连接流程 （1）、 客户端连接到Web服务器。 一个HTTP客户�
 HTTP报文 HTTP请求报文 请求报文格式如下图。其中第一行称为 请求行 ，其后继的行称为 首部行 。
 请求行有三个字段：方法字段、URL字段和HTTP版本字段。方法字段可以区包括GET、POST、HEAD、PUT和DELETE。这些请求方法将会在下文讲述。
 首部行则会包含Host字段，Connection字段以及User-agent字段等。分别指明了对象所在的主机、是否使用持续连接以及用户代理（发送请求的浏览器类型）。其中Host首部行则是Web代理高速缓存所要求的。
- 
 HTTP响应报文 响应报文的格式如下图。分为 状态行 ， 首部行 以及 实体体 三个部分。实体体为报文的主要部分，为所请求的对象本身。同样在首部行会包含一些字段。例如：Date：指示发送该报文的日期和时间；Server：指示发送的服务器；Last-Modified：最后修改的日期和时间等。
- 
 HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状态码字段，这个字段将指示请求的结果。可以将状态码分为以下几类：
- 1xx： 指示信息 ，表示请求已接收，继续处理 2xx： 成功 ，表示请求已被成功接收、理解、接受 3xx： 重定向 ，要完成请求必须进行进一步的操作 4xx： 客户端错误 ，请求有语法错误或请求无法实现 5xx： 服务器端错误 ，服务器未能实现合法请求  常见的状态码如下：</description>
+1xx： 指示信息 ，表示请求已接收，继续处理 2xx： 成功 ，表示请求已被成功接收、理解、接受 3xx： 重定向 ，要完成请求必须进行进一步的操作 4xx： 客户端错误 ，请求有语法错误或请求无法实现 5xx： 服务器端错误 ，服务器未能实现合法请求 常见的状态码如下：</description>
     </item>
     
     <item>
@@ -85,15 +81,20 @@ HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状�
 （3）、内存分配失败时的返回值。new内存分配失败时，会抛出bad_alloc异常，不会返回NULL，malloc分配内存失败时返回NULL
 （4）、是否需要指定内存大小。 使用new操作符时进行内存分配时无需指定内存块的大小，使用malloc需要显式的指定内存的大小。
 class A {...} A *ptr = new A; A *ptr = (A*)malloc(sizeof(A)); （5）、是否调用构造函数。 使用new操作符分配对象内存时经历如下的几个步骤：
-  ·调用operator new函数（数组是operator new[]）来分配内存空间
-  ·编译器运行相应的构造函数创建对象，并赋初值
-  ·返回指向这个对象的指针
-  使用delete操作符释放内存空间时会经历如下步骤：
-  ·调用对象的析构函数
-  ·编译器调用operator delete（operator delete[]）释放内存空间
-  使用malloc分配内存则不会调用构造函数
+·调用operator new函数（数组是operator new[]）来分配内存空间
+·编译器运行相应的构造函数创建对象，并赋初值
+·返回指向这个对象的指针
+使用delete操作符释放内存空间时会经历如下步骤：
+·调用对象的析构函数
+·编译器调用operator delete（operator delete[]）释放内存空间
+使用malloc分配内存则不会调用构造函数
 （6）、对数组的处理。 C++提供了new []和delete []来专门处理数组类型，而malloc需要自己指定数组的大小
-int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作</description>
+int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数组 （7）、是否能够重新分配内存。 使用malloc分配内存后，如果在使用过程中发现内存不足，可以使用realloc函数进行内存的重新分配内存（先判断当前指针所指内存是否有足够的的连续空间，如果有，原地扩大可分配的地址，并且返回原来的指针；如果空间不够，先按照指定大小分配空间，将原有数据从头到尾拷贝到新分配的内存区域，而后释放原来的内存）。new没有扩充内存的配套操作
+（8）、客户处理内存分配不足。new会有异常机制，而malloc只能返回NULL
+3、虚函数 虚函数一般在继承下发挥作用，基类声明一个虚函数，子类重载这一函数，这样当使用基类指针指向子类，并希望调用这个函数时，得到的就是子类重载过的函数。（在多态中还会有关于虚函数的讲解），通过使用虚函数来完成运行时决议，与传统的编译时决定有本质区别。
+虚函数的实现是由两个部分组成的，虚函数指针和虚函数表。
+当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。
+3.1、虚函数指针 本质上就是一个指向函数的指针，指向用户定义的虚函数。在一个被实例化的对象中，它总是被存放在该对象的地址首位。 只有拥有虚函数的类才会拥有虚函数指针 ，每个虚函数也都会对应一个虚函数指针。</description>
     </item>
     
     <item>
@@ -104,10 +105,8 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
       <guid>https://MUNLELEE.github.io/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</guid>
       <description>题目描述 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
 为了让您更好地理解问题，以下面的二叉搜索树为例：
- 
 我们希望将这个二叉搜索树转化为双向循环链表。链表中的每个节点都有一个前驱和后继指针。对于双向循环链表，第一个节点的前驱是最后一个节点，最后一个节点的后继是第一个节点。
 下图展示了上面的二叉搜索树转化成的链表。“head” 表示指向链表中有最小元素的节点
- 
 特别地，我们希望可以就地完成转换操作。当转化完成以后，树中节点的左指针需要指向前驱，树中节点的右指针需要指向后继。还需要返回链表中的第一个节点的指针。
 解题想法 题目给出的是一棵二叉搜索树，而要我们整理成一个升序的双向链表，可以很自然的想到二叉搜索树的中序遍历即为升序序列。面对双向链表，我们还需要建立相邻结点之间的关系，因此需要设置前驱结点pre和当前结点cur两个指针来组织结点之间的关系。（具体即为pre-&amp;gt;right = cur和cur-&amp;gt;left = pre），最后则是连接头结点和尾结点。
 中序遍历流程 令recur为中序遍历函数
@@ -119,7 +118,7 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
 （c）、更新前驱结点pre，即pre = cur
 4、递归右子树，recur（cur-&amp;gt;right）
 最后在执行函数中，需要利用head和pre指针建立双向链表的头尾关系，即head-&amp;gt;left = pre，pre-&amp;gt;right = head，因为当递归完二叉搜索树时，pre会指向中序的最后一个元素。
-代码 /* // Definition for a Node. class Node { public: int val; Node* left; Node* right; Node() {} Node(int _val) { val = _val; left = NULL; right = NULL; } Node(int _val, Node* _left, Node* _right) { val = _val; left = _left; right = _right; } }; */ class Solution { private: Node *head, *pre; void recur(Node *root) { if (root == NULL) return; recur(root-&amp;gt;left); // 如果pre为空，说明当前访问的是头结点  if (pre) pre-&amp;gt;right = root; else head = root; root-&amp;gt;left = pre; // 修改当前的结点为前驱结点  pre = root; recur(root-&amp;gt;right); } public: Node* treeToDoublyList(Node* root) { if (root == NULL) return NULL; recur(root); head-&amp;gt;left = pre; pre-&amp;gt;right = head; return head; } }; </description>
+代码 /* // Definition for a Node. class Node { public: int val; Node* left; Node* right; Node() {} Node(int _val) { val = _val; left = NULL; right = NULL; } Node(int _val, Node* _left, Node* _right) { val = _val; left = _left; right = _right; } }; */ class Solution { private: Node *head, *pre; void recur(Node *root) { if (root == NULL) return; recur(root-&amp;gt;left); // 如果pre为空，说明当前访问的是头结点 if (pre) pre-&amp;gt;right = root; else head = root; root-&amp;gt;left = pre; // 修改当前的结点为前驱结点 pre = root; recur(root-&amp;gt;right); } public: Node* treeToDoublyList(Node* root) { if (root == NULL) return NULL; recur(root); head-&amp;gt;left = pre; pre-&amp;gt;right = head; return head; } }; </description>
     </item>
     
     <item>
@@ -131,9 +130,8 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
       <description>题目描述 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
 例如，在下面的 3×4 的矩阵中包含单词 &amp;ldquo;ABCCED&amp;rdquo;（单词中的字母已标出）。
- 
 示例：
-输入：board = [[&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;E&amp;quot;],[&amp;quot;S&amp;quot;,&amp;quot;F&amp;quot;,&amp;quot;C&amp;quot;,&amp;quot;S&amp;quot;],[&amp;quot;A&amp;quot;,&amp;quot;D&amp;quot;,&amp;quot;E&amp;quot;,&amp;quot;E&amp;quot;]], word = &amp;quot;ABCCED&amp;quot;输出：true输入：board = [[&amp;quot;a&amp;quot;,&amp;quot;b&amp;quot;],[&amp;quot;c&amp;quot;,&amp;quot;d&amp;quot;]], word = &amp;quot;abcd&amp;quot;输出：false解题想法 这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。
+输入：board = [[&amp;#34;A&amp;#34;,&amp;#34;B&amp;#34;,&amp;#34;C&amp;#34;,&amp;#34;E&amp;#34;],[&amp;#34;S&amp;#34;,&amp;#34;F&amp;#34;,&amp;#34;C&amp;#34;,&amp;#34;S&amp;#34;],[&amp;#34;A&amp;#34;,&amp;#34;D&amp;#34;,&amp;#34;E&amp;#34;,&amp;#34;E&amp;#34;]], word = &amp;#34;ABCCED&amp;#34;输出：true 输入：board = [[&amp;#34;a&amp;#34;,&amp;#34;b&amp;#34;],[&amp;#34;c&amp;#34;,&amp;#34;d&amp;#34;]], word = &amp;#34;abcd&amp;#34;输出：false 解题想法 这道题一开始想到的是使用BFS，但是细想发现BFS好像很难处理回溯的问题，应该采用DFS。然后，就是递归的痛了，也借这道题学习一下DFS的写法吧。
 **DFS：**即是暴力遍历矩阵的所有元素，来搜索一条可行的路径，通过递归，可以在一条路径中搜索到底，最后回溯到之前已经匹配的节点。
 **剪枝：**在DFS过程中如果当前的矩阵字符与字符串字符不等，可以直接回溯。或者路径已经访问过，可以直接跳过。
 DFS解析 1、递归终止条件：
@@ -143,7 +141,7 @@ DFS解析 1、递归终止条件：
 （a）、选定当前元素，将当前元素标记为空字符，表明当前元素已经访问过，防止走回头路。
 （b）、搜索下一个元素，向四个方向分别匹配字符，如果有一个方向可以匹配就继续递归这个方向的DFS算法，并返回true，否则返回false
 （c）、还原当前元素，需要在DFS算法退出之前，将空字符还原为原来的字符，用于回溯时重新寻找路径，否则回溯将找不到正确路径。
-代码 class Solution { public: bool exist(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt;&amp;amp; board, string word) { rows = board.size(); cols = board[0].size(); for (int i = 0; i &amp;lt; rows; ++i) { for (int j = 0; j &amp;lt; cols; ++j) { if (dfs(board, word, i, j, 0)) return true; } } return false; } private: int rows, cols; // k为单词索引  bool dfs(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt; &amp;amp;board, string word, int i, int j, int k) { // 如果越界或者字符不相等，就停止递归  if (i &amp;gt;= rows || i &amp;lt; 0 || j &amp;gt;= cols || j &amp;lt; 0 || board[i][j] !</description>
+代码 class Solution { public: bool exist(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt;&amp;amp; board, string word) { rows = board.size(); cols = board[0].size(); for (int i = 0; i &amp;lt; rows; ++i) { for (int j = 0; j &amp;lt; cols; ++j) { if (dfs(board, word, i, j, 0)) return true; } } return false; } private: int rows, cols; // k为单词索引 bool dfs(vector&amp;lt;vector&amp;lt;char&amp;gt;&amp;gt; &amp;amp;board, string word, int i, int j, int k) { // 如果越界或者字符不相等，就停止递归 if (i &amp;gt;= rows || i &amp;lt; 0 || j &amp;gt;= cols || j &amp;lt; 0 || board[i][j] !</description>
     </item>
     
     <item>
@@ -154,7 +152,7 @@ DFS解析 1、递归终止条件：
       <guid>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</guid>
       <description>题目描述 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
 示例
-输入: &amp;quot;abcabcbb&amp;quot;输出: 3 解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。输入: &amp;quot;bbbbb&amp;quot;输出: 1解释: 因为无重复字符的最长子串是 &amp;quot;b&amp;quot;，所以其长度为 1。输入: &amp;quot;pwwkew&amp;quot;输出: 3解释: 因为无重复字符的最长子串是 &amp;quot;wke&amp;quot;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;quot;pwke&amp;quot; 是一个子序列，不是子串。解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
+输入: &amp;#34;abcabcbb&amp;#34;输出: 3 解释: 因为无重复字符的最长子串是 &amp;#34;abc&amp;#34;，所以其长度为 3。 输入: &amp;#34;bbbbb&amp;#34;输出: 1解释: 因为无重复字符的最长子串是 &amp;#34;b&amp;#34;，所以其长度为 1。 输入: &amp;#34;pwwkew&amp;#34;输出: 3解释: 因为无重复字符的最长子串是 &amp;#34;wke&amp;#34;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;#34;pwke&amp;#34; 是一个子序列，不是子串。 解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
 动态规划 1、状态的定义，本题依旧需要一个一维的动态规划数组，dp[i]则表示以第i个字符为结尾的子字符串可以得到的最长的含不重复字符的子字符串长度。
 2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
 （a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] + 1（即最长长度等于遍历到前一字符的长度 + 1）
@@ -173,7 +171,7 @@ DFS解析 1、递归终止条件：
       <guid>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</guid>
       <description>题目描述 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
 示例：
-输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)+(n-2)+&amp;hellip;+2+1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
+输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。 输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。 解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)+(n-2)+&amp;hellip;+2+1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
 动态规划思路 1、状态的定义，首先需要声明一个动态规划数组dp，其中dp[i]表示以第i天为最后一天的子数组所能获得的最大利润。
 2、状态转移方程，由于股票只能买卖一次，因此dp[i]（也就是前i天的最大利润），应该是前i-1天的最大利润与第i天卖出股票的利润的最大值，于是就有了$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$即为dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))，最终返回dp[n-1]为所求。
 优化 我们还可以进行空间和时间上的优化，时间上，可以借助一个变量cost来维护最小值，这样每次进行状态转移时只需要dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量maxprofit来代替整个动态规划列表，这样状态转移就简化为了maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))
@@ -189,8 +187,8 @@ DFS解析 1、递归终止条件：
       <description>题目描述 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
 B是A的子结构， 即 A中有出现和B相同的结构和节点值。
 例如: 给定的树 A:
- 3/ \4 5/ \1 2给定的树 B：
- 4/1返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
+3/ \4 5/ \1 2 给定的树 B：
+4/1 返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
 解题想法 树的题目是真的让人头疼。在经过几次暴力解的尝试之后我还是放弃了，最后几组数据总是通过不了。还是去翻了题解，发现又是我最烦的递归（永远的痛）
 1、首先子结构要么是其本身要么在树的左子树或者右子树里，因此在isSubStructure函数中需要判断是本身匹配还是左子树或者是右子树匹配，这是最外层递归。最外层递归中，如果B树（也就是子结构树）为空，那么直接返回false，同理如果A树（要从这棵树中寻找子结构）为空也可以直接返回false
 2、对于子结构是否匹配的判断也需要通过递归实现（也就是isContain函数），但具有以下几种情况，其中包含退出递归的条件
@@ -198,7 +196,7 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
 （b）、如果当前的B树非空，但At树为空，说明此时已经遍历过了A树的叶节点，那么B树一定与At树不匹配，可以直接返回false
 （c）、如果此时At树和B树都不为空，且当前匹配中的结点的值不相等，那么B树一定与At树不匹配，可以直接返回false
 （d）、如果At树和B树都不为空，且当前匹配中的结点的值相等，那么就继续匹配两棵树当前结点的左结点和右结点（也就是内层的递归）
-代码 /** * Definition for a binary tree node. * struct TreeNode { * int val; * TreeNode *left; * TreeNode *right; * TreeNode(int x) : val(x), left(NULL), right(NULL) {} * }; */ class Solution { public: bool isContain(TreeNode *A, TreeNode *B) { // 递归判断是否包含  // 如果此时B为空树，说明已经递归完了B树，因此是包含的  if (B == NULL) return true; // 如果大树为空，匹配树不是空，那么说明不包含  if (A == NULL) return false; // 如果当前匹配的结点值不相等，那么也是不包含  if (A-&amp;gt;val !</description>
+代码 /** * Definition for a binary tree node. * struct TreeNode { * int val; * TreeNode *left; * TreeNode *right; * TreeNode(int x) : val(x), left(NULL), right(NULL) {} * }; */ class Solution { public: bool isContain(TreeNode *A, TreeNode *B) { // 递归判断是否包含 // 如果此时B为空树，说明已经递归完了B树，因此是包含的 if (B == NULL) return true; // 如果大树为空，匹配树不是空，那么说明不包含 if (A == NULL) return false; // 如果当前匹配的结点值不相等，那么也是不包含 if (A-&amp;gt;val !</description>
     </item>
     
     <item>
@@ -209,9 +207,9 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
       <guid>https://MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</guid>
       <description>题目描述 从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
 例如: 给定二叉树: [3,9,20,null,null,15,7],
- 3/ \9 20/ \15 7返回其层次遍历结果：
-[[3],[9,20],[15,7]]解题想法  这道题本身并不是什么难题，也很明显可以看出是一个层序遍历的变种，解决问题的关键就在于如何区分当前层和下一层，最开始是打算使用pair将每个结点与其相应的层序号对应起来。但在实际写代码时发现有点困难，最后还是去翻了题解，发现了利用空指针作为层与层之间分隔的方法。具体做法就是在第一次入队时再入队一个空指针，之后利用队头元素不为空指针作为内循环的判断，如果队头为空，则表明了已经循环完了一层。而由于二叉树的特点，在使用层序遍历时，遍历完一层也即代表着下一层的非空结点已经完全入队，这时便可以再入队一个空指针作为下一个分隔结点。利用这样的循环就能做到以层为序来打印层序遍历。
-代码 /** * Definition for a binary tree node. * struct TreeNode { * int val; * TreeNode *left; * TreeNode *right; * TreeNode(int x) : val(x), left(NULL), right(NULL) {} * }; */ class Solution { public: vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt; levelOrder(TreeNode* root) { vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt; res; if (root == NULL) { return res; } queue&amp;lt;TreeNode*&amp;gt; que; // 用于层序遍历  que.</description>
+3/ \9 20/ \15 7 返回其层次遍历结果：
+[[3],[9,20],[15,7]] 解题想法 这道题本身并不是什么难题，也很明显可以看出是一个层序遍历的变种，解决问题的关键就在于如何区分当前层和下一层，最开始是打算使用pair将每个结点与其相应的层序号对应起来。但在实际写代码时发现有点困难，最后还是去翻了题解，发现了利用空指针作为层与层之间分隔的方法。具体做法就是在第一次入队时再入队一个空指针，之后利用队头元素不为空指针作为内循环的判断，如果队头为空，则表明了已经循环完了一层。而由于二叉树的特点，在使用层序遍历时，遍历完一层也即代表着下一层的非空结点已经完全入队，这时便可以再入队一个空指针作为下一个分隔结点。利用这样的循环就能做到以层为序来打印层序遍历。
+代码 /** * Definition for a binary tree node. * struct TreeNode { * int val; * TreeNode *left; * TreeNode *right; * TreeNode(int x) : val(x), left(NULL), right(NULL) {} * }; */ class Solution { public: vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt; levelOrder(TreeNode* root) { vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt; res; if (root == NULL) { return res; } queue&amp;lt;TreeNode*&amp;gt; que; // 用于层序遍历 que.</description>
     </item>
     
     <item>
@@ -221,10 +219,9 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
       
       <guid>https://MUNLELEE.github.io/post/leetcode-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</guid>
       <description>题目描述 请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
-示例  
-输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]解题 题目的意思很简单，就是返回一个一模一样的链表头结点。由于随机指针的存在，链表的复制不能够像正常链表那样直接遍历，也因此没想明白要怎么做，最后翻了题解，才发现又是我最烦的递归。
+示例 输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]输出：[[7,null],[13,0],[11,4],[10,2],[1,0]] 解题 题目的意思很简单，就是返回一个一模一样的链表头结点。由于随机指针的存在，链表的复制不能够像正常链表那样直接遍历，也因此没想明白要怎么做，最后翻了题解，才发现又是我最烦的递归。
 这道题采用的递归解法其实本质就是遇到问题再解决问题，在还没有开始复制之前，所有的复制结点都是虚无的，要让这些结点和已知的结点一一对应起来就需要一个map数据结构。用来对应新旧两个链表的结点。这样从第一个结点入手，当这个结点不在map中时，就立刻创建这个结点并于原链表中的相应结点建立对应关系。之后的每一个结点都可以根据这样的逻辑进行创建，而因为有map这个数据结构的存在，这样每个结点都不是虚空存在的，而是可以在map中找到与之对应的结点。可以解决随机结点创建的问题。具体代码如下：
-class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来存储两个链表，结点之间一一对应  Node* copyRandomList(Node* head) { if (head == NULL) { // 如果链表本就为空，那么直接返回空  return NULL; } // 遵循边遍历边创建的原则  if (!um.count(head)) { // 如果此时哈希表中没有这个结点，就直接创建  Node* headNew = new Node(head-&amp;gt;val); // 初始化一个相同的结点  um.insert(make_pair(head, headNew)); // 将这两个位置一样的结点对应起来  headNew-&amp;gt;next = copyRandomList(head-&amp;gt;next); // 同理下一个结点也应该这样拷贝，依旧遵循上面的原则  headNew-&amp;gt;random = copyRandomList(head-&amp;gt;random); } // 如果这个结点已经在哈希表中存在，那么就直接返回  return um[head]; } }; </description>
+class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来存储两个链表，结点之间一一对应 Node* copyRandomList(Node* head) { if (head == NULL) { // 如果链表本就为空，那么直接返回空 return NULL; } // 遵循边遍历边创建的原则 if (!um.count(head)) { // 如果此时哈希表中没有这个结点，就直接创建 Node* headNew = new Node(head-&amp;gt;val); // 初始化一个相同的结点 um.insert(make_pair(head, headNew)); // 将这两个位置一样的结点对应起来 headNew-&amp;gt;next = copyRandomList(head-&amp;gt;next); // 同理下一个结点也应该这样拷贝，依旧遵循上面的原则 headNew-&amp;gt;random = copyRandomList(head-&amp;gt;random); } // 如果这个结点已经在哈希表中存在，那么就直接返回 return um[head]; } }; </description>
     </item>
     
     <item>
@@ -236,10 +233,8 @@ class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来
       <description>题目描述 给定一个链表，判断链表中是否有环。
 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
 如果链表中存在环，则返回 true 。 否则，返回 false 。
-示例  在这里插入图片描述 
-输入：head = [3,2,0,-4], pos = 1输出：true解释：链表中有一个环，其尾部连接到第二个节点。 在这里插入图片描述 
-输入：head = [1,2], pos = 0输出：true解释：链表中有一个环，其尾部连接到第一个节点。 在这里插入图片描述 
-输入：head = [1], pos = -1输出：false解释：链表中没有环。提示 链表中节点的数目范围是 [0, 104]-105 &amp;lt;= Node.val &amp;lt;= 105pos 为 -1 或者链表中的一个 有效索引 。解题想法 这道题在leetcode上属于简单题，但由于第一次遇见这种解法（也由于第一次想错了，根本不是正解）所以就想记录一下。 很明显题目要判断链表中是否有环，于是可以想到如果在链表中有两个指针分别向前跑，当两个指针指向的结点相同的时候便证明链表中有环存在。这个时候就需要一个循环来判断两个指针是否相等。此时条件应该是first !</description>
+示例 在这里插入图片描述 输入：head = [3,2,0,-4], pos = 1输出：true解释：链表中有一个环，其尾部连接到第二个节点。 在这里插入图片描述 输入：head = [1,2], pos = 0输出：true解释：链表中有一个环，其尾部连接到第一个节点。 在这里插入图片描述 输入：head = [1], pos = -1输出：false解释：链表中没有环。 提示 链表中节点的数目范围是 [0, 104]-105 &amp;lt;= Node.val &amp;lt;= 105pos 为 -1 或者链表中的一个 有效索引 。 解题想法 这道题在leetcode上属于简单题，但由于第一次遇见这种解法（也由于第一次想错了，根本不是正解）所以就想记录一下。 很明显题目要判断链表中是否有环，于是可以想到如果在链表中有两个指针分别向前跑，当两个指针指向的结点相同的时候便证明链表中有环存在。这个时候就需要一个循环来判断两个指针是否相等。此时条件应该是first != second因此如果我们初始化两个指针在同一个位置，那么将无法进入循环，因此需要将两个指针分别初始化在头结点以及头结点的下一个结点，还要注意的是，first指针的速度应该要快于second指针的速度，这样，当链表中有环时，first指针会先进入环中，并一直在环中循环，而当second指针进入环时，由于first指针速度快，将会在某个循环时刻追上second指针，这样当两个指针重合后就能够判断出链表存在环，下面附上C++代码
+/** * Definition for singly-linked list.</description>
     </item>
     
     <item>
@@ -250,7 +245,7 @@ class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来
       <guid>https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</guid>
       <description>题目描述 返回 A 的最短的非空连续子数组的长度，该子数组的和至少为 K 。
 如果没有和至少为 K 的非空子数组，返回 -1
-示例 输入：A = [1], K = 1输出：1输入：A = [1,2], K = 4输出：-1输入：A = [2,-1,2], K = 3输出：3提示 1. 1 &amp;lt;= A.length &amp;lt;= 500002. -10 ^ 5 &amp;lt;= A[i] &amp;lt;= 10 ^ 53. 1 &amp;lt;= K &amp;lt;= 10 ^ 9首先对于我这样一个不怎么有基础的人来说，这道题着实是令我作呕。。解题也是通过了其它题解的启发。下面就开始吧。
+示例 输入：A = [1], K = 1输出：1输入：A = [1,2], K = 4输出：-1输入：A = [2,-1,2], K = 3输出：3 提示 1. 1 &amp;lt;= A.length &amp;lt;= 500002. -10 ^ 5 &amp;lt;= A[i] &amp;lt;= 10 ^ 53. 1 &amp;lt;= K &amp;lt;= 10 ^ 9 首先对于我这样一个不怎么有基础的人来说，这道题着实是令我作呕。。解题也是通过了其它题解的启发。下面就开始吧。
 解题想法 由于题目中已经明确表示了数组的长度为50000，因此如果要使用暴力接法，势必造成O(n^2)的时间复杂度。因此就要想办法让i， j两个循环变量只跑一遍。而对于这道题因为绕不开要求取数组中的区间和。所以可以采用的一个方法是前缀和思想。大致的意思就是sum[i] = array[0] + array[1] + &amp;hellip; + array[i - 1]利用这个前缀和数组就可以较为方便的得到一个数组的区间和，例如要知道区间[1, 3]的和，我们可以利用前缀和数组得到sum[4] - sum[1]（这里需要注意的是，为了便于计算前缀和数组的第零个元素默认为零）</description>
     </item>
     

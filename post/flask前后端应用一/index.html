@@ -7,8 +7,7 @@
 &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;title&amp;gt;语音识别站点&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;录音文件上传&amp;lt;/h1&amp;gt; &amp;lt;form method=&amp;#34;post&amp;#34; action=&amp;#34;&amp;#34; enctype=&amp;#34;multipart/form-data&amp;#34;&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; accept=&amp;#34;.wav&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;submit&amp;#34; value=&amp;#34;提交&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这里需要注意的是，&amp;lt;form&amp;gt;元素的method属性可以是get或post。使用get时，数据将在请求URL的查询字符串中提交，而使用post时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用post方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用multipart/form-data字段则是因为这个字段可以适用于提交文件。accept属性则是可以限制表单可以接受的文件类型。如上使用了.wav进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。
 使用Flask进行文件接收 对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 request.files字典中，可以通过键值 file来访问文件列表，从中得出文件名，再用save保存文件。
 @app.route(&amp;#39;/upload&amp;#39;, methods=[&amp;#39;post&amp;#39;]) def upload_file(): upload_file = request.files[&amp;#39;file&amp;#39;] if upload_file.filename != &amp;#34;&amp;#34;: upload_file.save(upload_file.filename) return redirect(url_for(&amp;#39;upload_file&amp;#39;)) 这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示
- 文件上传效果 
-添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
+文件上传效果 添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
 app.config[&amp;#39;MAX_CONTENT_LENGTH&amp;#39;] = 1024 * 1024 添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。
 可接收文件类型限制 在前面的HTML表单中提到了accept属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。
 app.config[&amp;#39;UPLOAD_EXTENSIONS&amp;#39;] = [&amp;#39;.wav&amp;#39;] 上传路径的限制 由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置
@@ -41,8 +40,7 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
 &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;title&amp;gt;语音识别站点&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;录音文件上传&amp;lt;/h1&amp;gt; &amp;lt;form method=&amp;#34;post&amp;#34; action=&amp;#34;&amp;#34; enctype=&amp;#34;multipart/form-data&amp;#34;&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; accept=&amp;#34;.wav&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;submit&amp;#34; value=&amp;#34;提交&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这里需要注意的是，&amp;lt;form&amp;gt;元素的method属性可以是get或post。使用get时，数据将在请求URL的查询字符串中提交，而使用post时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用post方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用multipart/form-data字段则是因为这个字段可以适用于提交文件。accept属性则是可以限制表单可以接受的文件类型。如上使用了.wav进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。
 使用Flask进行文件接收 对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 request.files字典中，可以通过键值 file来访问文件列表，从中得出文件名，再用save保存文件。
 @app.route(&amp;#39;/upload&amp;#39;, methods=[&amp;#39;post&amp;#39;]) def upload_file(): upload_file = request.files[&amp;#39;file&amp;#39;] if upload_file.filename != &amp;#34;&amp;#34;: upload_file.save(upload_file.filename) return redirect(url_for(&amp;#39;upload_file&amp;#39;)) 这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示
- 文件上传效果 
-添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
+文件上传效果 添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
 app.config[&amp;#39;MAX_CONTENT_LENGTH&amp;#39;] = 1024 * 1024 添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。
 可接收文件类型限制 在前面的HTML表单中提到了accept属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。
 app.config[&amp;#39;UPLOAD_EXTENSIONS&amp;#39;] = [&amp;#39;.wav&amp;#39;] 上传路径的限制 由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置
@@ -57,8 +55,7 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
 &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;title&amp;gt;语音识别站点&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;录音文件上传&amp;lt;/h1&amp;gt; &amp;lt;form method=&amp;#34;post&amp;#34; action=&amp;#34;&amp;#34; enctype=&amp;#34;multipart/form-data&amp;#34;&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; accept=&amp;#34;.wav&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;submit&amp;#34; value=&amp;#34;提交&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这里需要注意的是，&amp;lt;form&amp;gt;元素的method属性可以是get或post。使用get时，数据将在请求URL的查询字符串中提交，而使用post时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用post方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用multipart/form-data字段则是因为这个字段可以适用于提交文件。accept属性则是可以限制表单可以接受的文件类型。如上使用了.wav进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。
 使用Flask进行文件接收 对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 request.files字典中，可以通过键值 file来访问文件列表，从中得出文件名，再用save保存文件。
 @app.route(&amp;#39;/upload&amp;#39;, methods=[&amp;#39;post&amp;#39;]) def upload_file(): upload_file = request.files[&amp;#39;file&amp;#39;] if upload_file.filename != &amp;#34;&amp;#34;: upload_file.save(upload_file.filename) return redirect(url_for(&amp;#39;upload_file&amp;#39;)) 这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示
- 文件上传效果 
-添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
+文件上传效果 添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
 app.config[&amp;#39;MAX_CONTENT_LENGTH&amp;#39;] = 1024 * 1024 添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。
 可接收文件类型限制 在前面的HTML表单中提到了accept属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。
 app.config[&amp;#39;UPLOAD_EXTENSIONS&amp;#39;] = [&amp;#39;.wav&amp;#39;] 上传路径的限制 由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置
@@ -178,30 +175,30 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
 <p>这个Web应用说来其实应该是很简单的，但是由于没有前后端开发经验，对我来说也算是一个挑战。这个应用旨在实现能够通过前端上传录音文件，通过后端的处理将文本返回给前端页面以及能够调用本地的麦克风进行录音最后通过这段录音能够返回文本内容。项目不大，也应该不会太过华丽，所以选用了Flask框架处理。</p>
 <h2 id="基本文件上传表单">基本文件上传表单</h2>
 <p>从客户端的角度来讲，上传文件和提交表单数据一样，因此我们需要定义一个包含文件字段的HTML表单。一个简单的HTML表单如下。这个表单可以接收一个文件。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
-&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
-&lt;<span style="color:#f92672">head</span>&gt;
-    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
-    &lt;<span style="color:#f92672">title</span>&gt;语音识别站点&lt;/<span style="color:#f92672">title</span>&gt;
-&lt;/<span style="color:#f92672">head</span>&gt;
-&lt;<span style="color:#f92672">body</span>&gt;
-    &lt;<span style="color:#f92672">h1</span>&gt;录音文件上传&lt;/<span style="color:#f92672">h1</span>&gt;
-    &lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">method</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;post&#34;</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span> <span style="color:#a6e22e">enctype</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;multipart/form-data&#34;</span>&gt;
-        &lt;<span style="color:#f92672">p</span>&gt;&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#a6e22e">accept</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;.wav&#34;</span>&gt;&lt;/<span style="color:#f92672">p</span>&gt;
-        &lt;<span style="color:#f92672">p</span>&gt;&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;submit&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;提交&#34;</span>&gt;&lt;/<span style="color:#f92672">p</span>&gt;
-    &lt;/<span style="color:#f92672">form</span>&gt;
-&lt;/<span style="color:#f92672">body</span>&gt;
-&lt;/<span style="color:#f92672">html</span>&gt;
-</code></pre></div><p>这里需要注意的是，<code>&lt;form&gt;</code>元素的<code>method</code>属性可以是<code>get</code>或<code>post</code>。使用<code>get</code>时，数据将在请求URL的查询字符串中提交，而使用<code>post</code>时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用<code>post</code>方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用<code>multipart/form-data</code>字段则是因为这个字段可以适用于提交文件。<code>accept</code>属性则是可以限制表单可以接受的文件类型。如上使用了<code>.wav</code>进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">title</span>&gt;语音识别站点&lt;/<span style="color:#f92672">title</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">head</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">h1</span>&gt;录音文件上传&lt;/<span style="color:#f92672">h1</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">method</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;post&#34;</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span> <span style="color:#a6e22e">enctype</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;multipart/form-data&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">p</span>&gt;&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span> <span style="color:#a6e22e">accept</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;.wav&#34;</span>&gt;&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">p</span>&gt;&lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;submit&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;提交&#34;</span>&gt;&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">form</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">body</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">html</span>&gt;
+</span></span></code></pre></div><p>这里需要注意的是，<code>&lt;form&gt;</code>元素的<code>method</code>属性可以是<code>get</code>或<code>post</code>。使用<code>get</code>时，数据将在请求URL的查询字符串中提交，而使用<code>post</code>时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用<code>post</code>方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用<code>multipart/form-data</code>字段则是因为这个字段可以适用于提交文件。<code>accept</code>属性则是可以限制表单可以接受的文件类型。如上使用了<code>.wav</code>进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。</p>
 <h2 id="使用flask进行文件接收">使用Flask进行文件接收</h2>
 <p>对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 <code>request.files</code>字典中，可以通过键值 <code>file</code>来访问文件列表，从中得出文件名，再用save保存文件。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/upload&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;post&#39;</span>])
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_file</span>():
-    upload_file <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>files[<span style="color:#e6db74">&#39;file&#39;</span>]
-    <span style="color:#66d9ef">if</span> upload_file<span style="color:#f92672">.</span>filename <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>:
-        upload_file<span style="color:#f92672">.</span>save(upload_file<span style="color:#f92672">.</span>filename)
-    <span style="color:#66d9ef">return</span> redirect(url_for(<span style="color:#e6db74">&#39;upload_file&#39;</span>))
-</code></pre></div><p>这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/upload&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;post&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_file</span>():
+</span></span><span style="display:flex;"><span>    upload_file <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>files[<span style="color:#e6db74">&#39;file&#39;</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> upload_file<span style="color:#f92672">.</span>filename <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>:
+</span></span><span style="display:flex;"><span>        upload_file<span style="color:#f92672">.</span>save(upload_file<span style="color:#f92672">.</span>filename)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> redirect(url_for(<span style="color:#e6db74">&#39;upload_file&#39;</span>))
+</span></span></code></pre></div><p>这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示</p>
 <p><figure 
 	>
 	<a href="https://pic.imgdb.cn/item/624965bea971a0e5c7288807.png" >
@@ -219,15 +216,15 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
 <h2 id="添加一些限制">添加一些限制</h2>
 <h3 id="文件大小限制">文件大小限制</h3>
 <p>为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;MAX_CONTENT_LENGTH&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1024</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1024</span>
-</code></pre></div><p>添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;MAX_CONTENT_LENGTH&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1024</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1024</span>
+</span></span></code></pre></div><p>添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。</p>
 <h3 id="可接收文件类型限制">可接收文件类型限制</h3>
 <p>在前面的HTML表单中提到了<code>accept</code>属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_EXTENSIONS&#39;</span>] <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;.wav&#39;</span>]
-</code></pre></div><h3 id="上传路径的限制">上传路径的限制</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_EXTENSIONS&#39;</span>] <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;.wav&#39;</span>]
+</span></span></code></pre></div><h3 id="上传路径的限制">上传路径的限制</h3>
 <p>由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_PATH&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;uploads&#39;</span>
-</code></pre></div><p>这样当文件上传之后，你就可以看到文件在uploads的文件夹下出现</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_PATH&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;uploads&#39;</span>
+</span></span></code></pre></div><p>这样当文件上传之后，你就可以看到文件在uploads的文件夹下出现</p>
 <p><figure 
 	>
 	<a href="https://pic.imgdb.cn/item/625293ff239250f7c5a5733e.png" >
@@ -243,17 +240,17 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
 	
 </figure></p>
 <p>综合以上几点限制之后我们可以得到后端接收录音文件的完整代码如下。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/upload&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;post&#39;</span>])
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_file</span>():
-    upload_file <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>files[<span style="color:#e6db74">&#39;file&#39;</span>]
-    filename <span style="color:#f92672">=</span> secure_filename(upload_file<span style="color:#f92672">.</span>filename)
-    <span style="color:#66d9ef">if</span> filename <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>:
-        file_ext <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>splitext(filename)[<span style="color:#ae81ff">1</span>]
-        <span style="color:#66d9ef">if</span> file_ext <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_EXTENSIONS&#39;</span>]:
-            abort(<span style="color:#ae81ff">400</span>)
-        upload_file<span style="color:#f92672">.</span>save(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_PATH&#39;</span>], filename))
-    <span style="color:#66d9ef">return</span> redirect(url_for(<span style="color:#e6db74">&#39;upload_file&#39;</span>))
-</code></pre></div><h2 id="使用dropzone的css框架">使用dropzone的css框架</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/upload&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;post&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload_file</span>():
+</span></span><span style="display:flex;"><span>    upload_file <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>files[<span style="color:#e6db74">&#39;file&#39;</span>]
+</span></span><span style="display:flex;"><span>    filename <span style="color:#f92672">=</span> secure_filename(upload_file<span style="color:#f92672">.</span>filename)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> filename <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>:
+</span></span><span style="display:flex;"><span>        file_ext <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>splitext(filename)[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> file_ext <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_EXTENSIONS&#39;</span>]:
+</span></span><span style="display:flex;"><span>            abort(<span style="color:#ae81ff">400</span>)
+</span></span><span style="display:flex;"><span>        upload_file<span style="color:#f92672">.</span>save(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_PATH&#39;</span>], filename))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> redirect(url_for(<span style="color:#e6db74">&#39;upload_file&#39;</span>))
+</span></span></code></pre></div><h2 id="使用dropzone的css框架">使用dropzone的css框架</h2>
 <p>当采用HTML自带的表单文件上传时，生成的页面显示的更像是一个登录的文本框，在我看来如果要提交一个文件的话这样的文本框未免太小气了，因此在查阅相关资料后，发现了dropzone这个css框架，通过这个框架可以得到一个范围较大且可拖拽上传的文本框以及一个上传动画（虽然HTML表单也可以拖拽）。</p>
 <p><figure 
 	>
@@ -270,10 +267,10 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
 	
 </figure></p>
 <p>要使用这个框架我们只需要在前端页面中添加如下的代码即可</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css&#34;</span>&gt;
-&lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ url_for(&#39;upload_file&#39;) }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dropzone&#34;</span>&gt;&lt;/<span style="color:#f92672">form</span>&gt;
-&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-</code></pre></div><p>此处的<code>action</code>属性即是Flask后端中用来接收上传文件的处理函数。这样一个简单的录音文件上传的前后端应用就已经初具模样了。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">form</span> <span style="color:#a6e22e">action</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ url_for(&#39;upload_file&#39;) }}&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dropzone&#34;</span>&gt;&lt;/<span style="color:#f92672">form</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>此处的<code>action</code>属性即是Flask后端中用来接收上传文件的处理函数。这样一个简单的录音文件上传的前后端应用就已经初具模样了。</p>
 <h2 id="最后的页面效果">最后的页面效果</h2>
 <p><figure 
 	>
@@ -367,7 +364,7 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
     <section class="copyright">
         &copy; 
         
-        2022 墨纹
+        2023 墨纹
     </section>
     
     <section class="powerby">

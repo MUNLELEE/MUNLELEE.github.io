@@ -3,7 +3,7 @@
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='题目描述 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
 示例
-输入: &amp;quot;abcabcbb&amp;quot;输出: 3 解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。输入: &amp;quot;bbbbb&amp;quot;输出: 1解释: 因为无重复字符的最长子串是 &amp;quot;b&amp;quot;，所以其长度为 1。输入: &amp;quot;pwwkew&amp;quot;输出: 3解释: 因为无重复字符的最长子串是 &amp;quot;wke&amp;quot;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;quot;pwke&amp;quot; 是一个子序列，不是子串。解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
+输入: &amp;#34;abcabcbb&amp;#34;输出: 3 解释: 因为无重复字符的最长子串是 &amp;#34;abc&amp;#34;，所以其长度为 3。 输入: &amp;#34;bbbbb&amp;#34;输出: 1解释: 因为无重复字符的最长子串是 &amp;#34;b&amp;#34;，所以其长度为 1。 输入: &amp;#34;pwwkew&amp;#34;输出: 3解释: 因为无重复字符的最长子串是 &amp;#34;wke&amp;#34;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;#34;pwke&amp;#34; 是一个子序列，不是子串。 解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
 动态规划 1、状态的定义，本题依旧需要一个一维的动态规划数组，dp[i]则表示以第i个字符为结尾的子字符串可以得到的最长的含不重复字符的子字符串长度。
 2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
 （a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] &#43; 1（即最长长度等于遍历到前一字符的长度 &#43; 1）
@@ -36,7 +36,7 @@
 <meta property='og:title' content='LeetCode 最长不含重复字符的子字符串'>
 <meta property='og:description' content='题目描述 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
 示例
-输入: &amp;quot;abcabcbb&amp;quot;输出: 3 解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。输入: &amp;quot;bbbbb&amp;quot;输出: 1解释: 因为无重复字符的最长子串是 &amp;quot;b&amp;quot;，所以其长度为 1。输入: &amp;quot;pwwkew&amp;quot;输出: 3解释: 因为无重复字符的最长子串是 &amp;quot;wke&amp;quot;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;quot;pwke&amp;quot; 是一个子序列，不是子串。解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
+输入: &amp;#34;abcabcbb&amp;#34;输出: 3 解释: 因为无重复字符的最长子串是 &amp;#34;abc&amp;#34;，所以其长度为 3。 输入: &amp;#34;bbbbb&amp;#34;输出: 1解释: 因为无重复字符的最长子串是 &amp;#34;b&amp;#34;，所以其长度为 1。 输入: &amp;#34;pwwkew&amp;#34;输出: 3解释: 因为无重复字符的最长子串是 &amp;#34;wke&amp;#34;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;#34;pwke&amp;#34; 是一个子序列，不是子串。 解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
 动态规划 1、状态的定义，本题依旧需要一个一维的动态规划数组，dp[i]则表示以第i个字符为结尾的子字符串可以得到的最长的含不重复字符的子字符串长度。
 2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
 （a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] &#43; 1（即最长长度等于遍历到前一字符的长度 &#43; 1）
@@ -51,7 +51,7 @@
 <meta name="twitter:title" content="LeetCode 最长不含重复字符的子字符串">
 <meta name="twitter:description" content="题目描述 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
 示例
-输入: &amp;quot;abcabcbb&amp;quot;输出: 3 解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。输入: &amp;quot;bbbbb&amp;quot;输出: 1解释: 因为无重复字符的最长子串是 &amp;quot;b&amp;quot;，所以其长度为 1。输入: &amp;quot;pwwkew&amp;quot;输出: 3解释: 因为无重复字符的最长子串是 &amp;quot;wke&amp;quot;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;quot;pwke&amp;quot; 是一个子序列，不是子串。解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
+输入: &amp;#34;abcabcbb&amp;#34;输出: 3 解释: 因为无重复字符的最长子串是 &amp;#34;abc&amp;#34;，所以其长度为 3。 输入: &amp;#34;bbbbb&amp;#34;输出: 1解释: 因为无重复字符的最长子串是 &amp;#34;b&amp;#34;，所以其长度为 1。 输入: &amp;#34;pwwkew&amp;#34;输出: 3解释: 因为无重复字符的最长子串是 &amp;#34;wke&amp;#34;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;#34;pwke&amp;#34; 是一个子序列，不是子串。 解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
 动态规划 1、状态的定义，本题依旧需要一个一维的动态规划数组，dp[i]则表示以第i个字符为结尾的子字符串可以得到的最长的含不重复字符的子字符串长度。
 2、状态转移方程，首先我们需要固定右边界i，也就是遍历时的索引，设与s[i]相同且距离最近的字符为s[pos]（pos初始化为-1。此时不重复字符子串长度应该是i - pos，但是题目所求为最长，因此根据动态规划的思想就有以下的情况
 （a）、当$pos&amp;lt;0$时，说明在s[i]的左侧没有与s[i]相同的字符，那么dp[i] = dp[i - 1] &#43; 1（即最长长度等于遍历到前一字符的长度 &#43; 1）
@@ -173,16 +173,16 @@
     <h2 id="题目描述">题目描述</h2>
 <p>请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。</p>
 <p><strong>示例</strong></p>
-<pre tabindex="0"><code>输入: &quot;abcabcbb&quot;
+<pre tabindex="0"><code>输入: &#34;abcabcbb&#34;
 输出: 3 
-解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。
-</code></pre><pre tabindex="0"><code>输入: &quot;bbbbb&quot;
+解释: 因为无重复字符的最长子串是 &#34;abc&#34;，所以其长度为 3。
+</code></pre><pre tabindex="0"><code>输入: &#34;bbbbb&#34;
 输出: 1
-解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。
-</code></pre><pre tabindex="0"><code>输入: &quot;pwwkew&quot;
+解释: 因为无重复字符的最长子串是 &#34;b&#34;，所以其长度为 1。
+</code></pre><pre tabindex="0"><code>输入: &#34;pwwkew&#34;
 输出: 3
-解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。
-     请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。
+解释: 因为无重复字符的最长子串是 &#34;wke&#34;，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，&#34;pwke&#34; 是一个子序列，不是子串。
 </code></pre><h2 id="解题想法">解题想法</h2>
 <p>这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。</p>
 <h3 id="动态规划">动态规划</h3>
@@ -200,47 +200,47 @@
 <p>（b）、若<code>right</code>指针对应的字符在哈希表中存在，那么需要将<code>left</code>更改为当前的<code>left</code>指针与哈希表中对应索引的最大值（这里很重要，如果没有取两者之间的最大值那么虽然可以避免在左右两个端点处重复，但可能会导致在字符串内存在重复字符）。</p>
 <p>在每次更新最长字符串的值之前都要更新哈希表中的相应表项。</p>
 <h2 id="代码">代码</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/*动态规划*/</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> lengthOfLongestSubstring(string s) {
-        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>s.size()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">if</span> (s.size() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 优先判断两种特殊情况
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, len <span style="color:#f92672">=</span> s.size();
-        unordered_map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> um;  <span style="color:#75715e">// 用于存储字符的索引位置
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">// temp用来存储上一次的dp值
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>i) {
-            <span style="color:#66d9ef">int</span> pos;  <span style="color:#75715e">// 用来获取是否有当前字符的索引
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (um.count(s[i])) pos <span style="color:#f92672">=</span> um[s[i]];
-            <span style="color:#66d9ef">else</span> pos <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-            um[s[i]] <span style="color:#f92672">=</span> i;  <span style="color:#75715e">// 更新哈希表的索引
-</span><span style="color:#75715e"></span>            temp <span style="color:#f92672">=</span> (i <span style="color:#f92672">-</span> pos) <span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">?</span> temp <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> (i <span style="color:#f92672">-</span> pos);
-            res <span style="color:#f92672">=</span> max(res, temp);
-        }
-        <span style="color:#66d9ef">return</span> res;
-    }
-};
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/*滑动窗口*/</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> lengthOfLongestSubstring(string s) {
-        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>s.size()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">if</span> (s.size() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 优先判断两种特殊情况
-</span><span style="color:#75715e"></span>        unordered_map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> um;
-        <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, len <span style="color:#f92672">=</span> s.size();
-        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; right <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>right) {
-            <span style="color:#66d9ef">if</span> (um.count(s[right])) {  <span style="color:#75715e">// 表明这时候已经出现的重复的字符
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// 这时候需要移动左指针
-</span><span style="color:#75715e"></span>                left <span style="color:#f92672">=</span> max(left, um[s[right]]);  <span style="color:#75715e">// 如果不取两者最大，那么会可能会导致字符串内重复
-</span><span style="color:#75715e"></span>            }
-            um[s[right]] <span style="color:#f92672">=</span> right;  <span style="color:#75715e">// 更新索引
-</span><span style="color:#75715e"></span>            res <span style="color:#f92672">=</span> max(res, right <span style="color:#f92672">-</span> left);
-        }
-        <span style="color:#66d9ef">return</span> res;
-    }
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">/*动态规划*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> lengthOfLongestSubstring(string s) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>s.size()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (s.size() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 优先判断两种特殊情况
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, len <span style="color:#f92672">=</span> s.size();
+</span></span><span style="display:flex;"><span>        unordered_map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> um;  <span style="color:#75715e">// 用于存储字符的索引位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">// temp用来存储上一次的dp值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> pos;  <span style="color:#75715e">// 用来获取是否有当前字符的索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (um.count(s[i])) pos <span style="color:#f92672">=</span> um[s[i]];
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> pos <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>            um[s[i]] <span style="color:#f92672">=</span> i;  <span style="color:#75715e">// 更新哈希表的索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            temp <span style="color:#f92672">=</span> (i <span style="color:#f92672">-</span> pos) <span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">?</span> temp <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> (i <span style="color:#f92672">-</span> pos);
+</span></span><span style="display:flex;"><span>            res <span style="color:#f92672">=</span> max(res, temp);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">/*滑动窗口*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> lengthOfLongestSubstring(string s) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>s.size()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (s.size() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// 优先判断两种特殊情况
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        unordered_map<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> um;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, len <span style="color:#f92672">=</span> s.size();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; right <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>right) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (um.count(s[right])) {  <span style="color:#75715e">// 表明这时候已经出现的重复的字符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#75715e">// 这时候需要移动左指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                left <span style="color:#f92672">=</span> max(left, um[s[right]]);  <span style="color:#75715e">// 如果不取两者最大，那么会可能会导致字符串内重复
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            }
+</span></span><span style="display:flex;"><span>            um[s[right]] <span style="color:#f92672">=</span> right;  <span style="color:#75715e">// 更新索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            res <span style="color:#f92672">=</span> max(res, right <span style="color:#f92672">-</span> left);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> res;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </section>
 
 
@@ -341,7 +341,7 @@
     <section class="copyright">
         &copy; 
         
-        2022 墨纹
+        2023 墨纹
     </section>
     
     <section class="powerby">

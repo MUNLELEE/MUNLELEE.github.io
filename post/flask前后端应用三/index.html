@@ -157,76 +157,76 @@
 <p>在这个页面中，需要实现录音功能，而录音功能在参考了网上的相关资料之后，决定采用<code>recorder.js</code>的现行库（因为如果要造轮子的话需要自己去了解语音采样等过程），<a class="link" href="https://github.com/2fps/recorder"  target="_blank" rel="noopener"
     >这是库的链接</a>。</p>
 <p>对于我这种前端小白本来是没看懂要怎么使用的，后来才发现在其项目目录下有<code>dist/recorder.js</code>文件，如果你使用是Flask框架只需要在<code>static</code>文件夹中导入<code>recorder.js</code>以及<code>recorder.js.map</code>两个文件并采用如下方法引入</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ url_for(&#39;static&#39;, filename=&#39;recorder.js&#39;) }}&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-</code></pre></div><p>通过<code>recorder</code>我决定设置录音相关的六个按钮分别是开始、暂停、继续、结束、上传、播放。于是就有了以下的HTML代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-HTML" data-lang="HTML">&lt;<span style="color:#f92672">body</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;background-size: 100%; background-image:url({{ url_for(&#39;static&#39;, filename=&#39;cool-2.png&#39;) }})&#34;</span>&gt;
-    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;items&#34;</span>&gt;
-        &lt;<span style="color:#f92672">div</span>&gt;
-            &lt;<span style="color:#f92672">p</span>&gt;麦克风录制&lt;/<span style="color:#f92672">p</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;开始录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;record_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;暂停录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stop_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;继续录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;resume_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn&#34;</span>&gt;
-            &lt;<span style="color:#f92672">br</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;结束录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;end_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;播放录音&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;play_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;上传录音&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;submit_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn&#34;</span>&gt;
-        &lt;/<span style="color:#f92672">div</span>&gt;
-        &lt;<span style="color:#f92672">div</span>&gt;
-            &lt;<span style="color:#f92672">p</span>&gt;识别文本&lt;/<span style="color:#f92672">p</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;res_text&#34;</span> <span style="color:#a6e22e">disabled</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;disabled&#34;</span>&gt;
-            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;返回主页&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;back()&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;back_btn&#34;</span>&gt;
-        &lt;/<span style="color:#f92672">div</span>&gt;
-    &lt;/<span style="color:#f92672">div</span>&gt;
-&lt;/<span style="color:#f92672">body</span>&gt;
-</code></pre></div><h2 id="前端css样式">前端CSS样式</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ url_for(&#39;static&#39;, filename=&#39;recorder.js&#39;) }}&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>通过<code>recorder</code>我决定设置录音相关的六个按钮分别是开始、暂停、继续、结束、上传、播放。于是就有了以下的HTML代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-HTML" data-lang="HTML"><span style="display:flex;"><span>&lt;<span style="color:#f92672">body</span> <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;background-size: 100%; background-image:url({{ url_for(&#39;static&#39;, filename=&#39;cool-2.png&#39;) }})&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;items&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">p</span>&gt;麦克风录制&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;开始录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;record_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;暂停录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stop_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;继续录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;resume_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">br</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;结束录制&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;end_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;播放录音&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;play_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn_left&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;上传录音&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;submit_btn&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item_btn&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">p</span>&gt;识别文本&lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;res_text&#34;</span> <span style="color:#a6e22e">disabled</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;disabled&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;button&#34;</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;返回主页&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;back()&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;back_btn&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">body</span>&gt;
+</span></span></code></pre></div><h2 id="前端css样式">前端CSS样式</h2>
 <p>没有什么CSS基础又想让界面好看一点的我，在这个页面的按钮样式上参考了其他大佬的所写的CSS代码样式，并修改了其大小和变化时间长短，所以这里并没有太多可以讲述的东西。直接附上<a class="link" href="https://www.blog.duomly.com/html-button-hover-effects/"  target="_blank" rel="noopener"
     >相关链接</a>以及我修改后的CSS代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">item_btn</span> {
-    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
-    <span style="color:#66d9ef">align-items</span>: <span style="color:#66d9ef">center</span>;
-    <span style="color:#66d9ef">justify-content</span>: <span style="color:#66d9ef">center</span>;
-    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
-}
-.<span style="color:#a6e22e">item_btn_left</span> {
-    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
-    <span style="color:#66d9ef">align-items</span>: <span style="color:#66d9ef">center</span>;
-    <span style="color:#66d9ef">justify-content</span>: <span style="color:#66d9ef">center</span>;
-    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">float</span>: <span style="color:#66d9ef">left</span>;
-    <span style="color:#66d9ef">margin-right</span>: <span style="color:#ae81ff">55</span><span style="color:#66d9ef">px</span>;
-}
-#back_btn {
-    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
-    <span style="color:#66d9ef">align-items</span>: <span style="color:#66d9ef">center</span>;
-    <span style="color:#66d9ef">justify-content</span>: <span style="color:#66d9ef">center</span>;
-    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">left</span>: <span style="color:#ae81ff">75</span><span style="color:#66d9ef">%</span>;
-    <span style="color:#66d9ef">margin-top</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
-}
-#back_btn<span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn</span><span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn_left</span> {
-    <span style="color:#66d9ef">border</span>: <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">border-radius</span>: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#2ec4b6</span>;
-    <span style="color:#66d9ef">text-transform</span>: <span style="color:#66d9ef">uppercase</span>;
-    <span style="color:#66d9ef">color</span>: <span style="color:#66d9ef">white</span>;
-    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">font-weight</span>: <span style="color:#66d9ef">bold</span>;
-    <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">outline</span>: <span style="color:#66d9ef">none</span>;
-    <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
-    <span style="color:#66d9ef">transition</span>: <span style="color:#66d9ef">border-radius</span> <span style="color:#ae81ff">1.5</span><span style="color:#66d9ef">s</span>;
-    <span style="color:#66d9ef">-webkit-</span><span style="color:#66d9ef">transition</span>: <span style="color:#66d9ef">border-radius</span> <span style="color:#ae81ff">1.5</span><span style="color:#66d9ef">s</span>;
-}
-#back_btn:<span style="color:#a6e22e">hover</span><span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn</span>:<span style="color:#a6e22e">hover</span><span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn_left</span>:<span style="color:#a6e22e">hover</span> {
-    <span style="color:#66d9ef">border-bottom-right-radius</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">border-top-left-radius</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">border-bottom-left-radius</span>: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#66d9ef">border-top-right-radius</span>: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
-}
-</code></pre></div><p>通过以上的CSS可以实现如下的鼠标悬停效果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-css" data-lang="css"><span style="display:flex;"><span>.<span style="color:#a6e22e">item_btn</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">align-items</span>: <span style="color:#66d9ef">center</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">justify-content</span>: <span style="color:#66d9ef">center</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>.<span style="color:#a6e22e">item_btn_left</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">align-items</span>: <span style="color:#66d9ef">center</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">justify-content</span>: <span style="color:#66d9ef">center</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">float</span>: <span style="color:#66d9ef">left</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">margin-right</span>: <span style="color:#ae81ff">55</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>#back_btn {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">align-items</span>: <span style="color:#66d9ef">center</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">justify-content</span>: <span style="color:#66d9ef">center</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">left</span>: <span style="color:#ae81ff">75</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">margin-top</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>#back_btn<span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn</span><span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn_left</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">border</span>: <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">border-radius</span>: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#2ec4b6</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">text-transform</span>: <span style="color:#66d9ef">uppercase</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">color</span>: <span style="color:#66d9ef">white</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">font-weight</span>: <span style="color:#66d9ef">bold</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">30</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">outline</span>: <span style="color:#66d9ef">none</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">transition</span>: <span style="color:#66d9ef">border-radius</span> <span style="color:#ae81ff">1.5</span><span style="color:#66d9ef">s</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">-webkit-</span><span style="color:#66d9ef">transition</span>: <span style="color:#66d9ef">border-radius</span> <span style="color:#ae81ff">1.5</span><span style="color:#66d9ef">s</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>#back_btn:<span style="color:#a6e22e">hover</span><span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn</span>:<span style="color:#a6e22e">hover</span><span style="color:#f92672">,</span> .<span style="color:#a6e22e">item_btn_left</span>:<span style="color:#a6e22e">hover</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">border-bottom-right-radius</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">border-top-left-radius</span>: <span style="color:#ae81ff">50</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">border-bottom-left-radius</span>: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">border-top-right-radius</span>: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>通过以上的CSS可以实现如下的鼠标悬停效果</p>
 <p><figure 
 	>
 	<a href="https://pic.imgdb.cn/item/6253c826239250f7c561da9c.gif" >
@@ -244,81 +244,81 @@
 <h2 id="前端功能实现">前端功能实现</h2>
 <h3 id="实现基础的录音功能">实现基础的录音功能</h3>
 <p>参阅<code>recorder.js</code>API可以发现这个库提供基础的录音功能，且实现较为简单。以下为使用API的jQuery代码，用来实现相关的功能。这里需要注意的是当使用了jQuery中的<code>on</code>函数来绑定相关的事件时，就不需要在HTML元素中使用属性<code>onclick</code>来绑定相关函数了，这个问题一度折磨了我许久，最后还是感谢好友的修改。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">script</span><span style="color:#f92672">&gt;</span>
-	window.<span style="color:#a6e22e">onload</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
-    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">recorder</span>;
-    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#record_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">e</span>) {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;开始录制&#34;</span>);
-        <span style="color:#a6e22e">recorder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Recorder</span>({
-            <span style="color:#a6e22e">sampleBits</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span>,
-            <span style="color:#a6e22e">sampleRate</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16000</span>,
-            <span style="color:#a6e22e">numChannels</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>
-        });
-        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">start</span>().<span style="color:#a6e22e">then</span>(
-        () =&gt; {<span style="color:#75715e">// 开始录音
-</span><span style="color:#75715e"></span>        },
-        (<span style="color:#a6e22e">error</span>) =&gt; {<span style="color:#75715e">// 出错了
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">error</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> : </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">error</span>.<span style="color:#a6e22e">message</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
-        });
-    });
-    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#stop_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;暂停录制&#34;</span>);
-        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">pause</span>();
-    });
-    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#resume_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;继续录制&#34;</span>);
-        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">resume</span>();
-    });
-    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#end_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;结束录制&#34;</span>);
-        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">stop</span>();
-    });
-    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#play_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;播放&#34;</span>);
-        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">play</span>();
-    });
-<span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/script&gt;</span>
-</code></pre></div><h3 id="实现录音上传的功能">实现录音上传的功能</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">script</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>	window.<span style="color:#a6e22e">onload</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">recorder</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#record_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">e</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;开始录制&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">recorder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Recorder</span>({
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">sampleBits</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">sampleRate</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16000</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">numChannels</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">start</span>().<span style="color:#a6e22e">then</span>(
+</span></span><span style="display:flex;"><span>        () =&gt; {<span style="color:#75715e">// 开始录音
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        },
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">error</span>) =&gt; {<span style="color:#75715e">// 出错了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">error</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> : </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">error</span>.<span style="color:#a6e22e">message</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#stop_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;暂停录制&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">pause</span>();
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#resume_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;继续录制&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">resume</span>();
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#end_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;结束录制&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">stop</span>();
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#play_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;播放&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">play</span>();
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/script&gt;</span>
+</span></span></code></pre></div><h3 id="实现录音上传的功能">实现录音上传的功能</h3>
 <p>要实现录音上传首先我们要先获取录音文件，<code>recorder.js</code>库提供了相应的API（<code>getWAVBlob</code>）得到录音文件的<code>.wav</code>形式的文件。</p>
 <p>要上传这个文件就需要通过AJAX技术来上传，此时需要创建一个<code>FormData</code>来提交这个文件，通过append函数来接收这个文件，并将其命名为<code>audio.wav</code>。最后创建一个AJAX对象来上传这个文件。</p>
 <p>在这个AJAX对象中，我们需要将提交方法设置为POST，并指定一个url来作为提交的目的。在这里有一个参数<code>processData</code>默认值为<code>true</code>，表示在上传文件时，jQuery会对数据进行序列化处理，在使用<code>true</code>为参数值时，产生了提交文件的错误，所以这里建议将参数设置为<code>false</code>。</p>
 <p>最后通过<code>recorder.js</code>的API将录音文件删除，以便下一次调用。JS代码如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#submit_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
-	<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">wav_blob</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">getWAVBlob</span>();
-	<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">formData</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">FormData</span>();
-	<span style="color:#a6e22e">formData</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#39;file&#39;</span>, <span style="color:#a6e22e">wav_blob</span>, <span style="color:#e6db74">&#39;audio.wav&#39;</span>);  {<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">添加文件到表单中</span> <span style="color:#960050;background-color:#1e0010">#</span>}
-    	<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>({
-            <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;POST&#34;</span>,
-            <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/micro_upload&#34;</span>,   
-            <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">formData</span>,
-            <span style="color:#a6e22e">cache</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
-            <span style="color:#a6e22e">processData</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
-            <span style="color:#a6e22e">contentType</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
-            <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">data</span>) {
-            	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">data</span>.<span style="color:#a6e22e">msg</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;success&#39;</span>) {
-                	<span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">destroy</span>().<span style="color:#a6e22e">then</span>(<span style="color:#66d9ef">function</span> () {
-                    	<span style="color:#a6e22e">recorder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
-                    });
-                }
-                <span style="color:#66d9ef">else</span> {
-                	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>.<span style="color:#a6e22e">msg</span>);
-                    <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">destroy</span>().<span style="color:#a6e22e">then</span>(<span style="color:#66d9ef">function</span> () {
-                    	<span style="color:#a6e22e">recorder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
-                    });
-                }
-            }
-      })
- })
-</code></pre></div><h2 id="后端接收">后端接收</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;#submit_btn&#34;</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;click&#39;</span>, <span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">wav_blob</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">getWAVBlob</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">formData</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">FormData</span>();
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">formData</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#39;file&#39;</span>, <span style="color:#a6e22e">wav_blob</span>, <span style="color:#e6db74">&#39;audio.wav&#39;</span>);  {<span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">添加文件到表单中</span> <span style="color:#960050;background-color:#1e0010">#</span>}
+</span></span><span style="display:flex;"><span>    	<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>({
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;POST&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;/micro_upload&#34;</span>,   
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">formData</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">cache</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">processData</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">contentType</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">data</span>) {
+</span></span><span style="display:flex;"><span>            	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">data</span>.<span style="color:#a6e22e">msg</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;success&#39;</span>) {
+</span></span><span style="display:flex;"><span>                	<span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">destroy</span>().<span style="color:#a6e22e">then</span>(<span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>                    	<span style="color:#a6e22e">recorder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>                    });
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>.<span style="color:#a6e22e">msg</span>);
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">recorder</span>.<span style="color:#a6e22e">destroy</span>().<span style="color:#a6e22e">then</span>(<span style="color:#66d9ef">function</span> () {
+</span></span><span style="display:flex;"><span>                    	<span style="color:#a6e22e">recorder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>                    });
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>      })
+</span></span><span style="display:flex;"><span> })
+</span></span></code></pre></div><h2 id="后端接收">后端接收</h2>
 <p>在后端接收中，我们需要将上述对应的url利用装饰器映射到相应的接收函数中，在这个函数中可以参考之前的接收文件函数，提交的文件将保存在Flask中的<code>request.file</code>中。</p>
 <p>利用<code>secure_filename</code>函数对文件名进行保留，最后保存至相应的工程目录中。相关代码如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#39;/micro_upload&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;post&#39;</span>])
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">micro_upload</span>():
-    audio_input <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>files[<span style="color:#e6db74">&#39;file&#39;</span>]
-    filename <span style="color:#f92672">=</span> secure_filename(audio_input<span style="color:#f92672">.</span>filename)
-    audio_input<span style="color:#f92672">.</span>save(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_PATH&#39;</span>], filename))
-    <span style="color:#66d9ef">return</span>
-</code></pre></div><h2 id="页面实现效果">页面实现效果</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#39;/micro_upload&#39;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;post&#39;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">micro_upload</span>():
+</span></span><span style="display:flex;"><span>    audio_input <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>files[<span style="color:#e6db74">&#39;file&#39;</span>]
+</span></span><span style="display:flex;"><span>    filename <span style="color:#f92672">=</span> secure_filename(audio_input<span style="color:#f92672">.</span>filename)
+</span></span><span style="display:flex;"><span>    audio_input<span style="color:#f92672">.</span>save(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(app<span style="color:#f92672">.</span>config[<span style="color:#e6db74">&#39;UPLOAD_PATH&#39;</span>], filename))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>
+</span></span></code></pre></div><h2 id="页面实现效果">页面实现效果</h2>
 <p><figure 
 	>
 	<a href="https://pic.imgdb.cn/item/6253defe239250f7c587f4d1.png" >
@@ -413,7 +413,7 @@
     <section class="copyright">
         &copy; 
         
-        2022 墨纹
+        2023 墨纹
     </section>
     
     <section class="powerby">

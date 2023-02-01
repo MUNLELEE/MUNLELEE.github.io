@@ -49,8 +49,7 @@ window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function ()
 &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&amp;#34;en&amp;#34;&amp;gt; &amp;lt;head&amp;gt; &amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt; &amp;lt;title&amp;gt;语音识别站点&amp;lt;/title&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;录音文件上传&amp;lt;/h1&amp;gt; &amp;lt;form method=&amp;#34;post&amp;#34; action=&amp;#34;&amp;#34; enctype=&amp;#34;multipart/form-data&amp;#34;&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; accept=&amp;#34;.wav&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;p&amp;gt;&amp;lt;input type=&amp;#34;submit&amp;#34; value=&amp;#34;提交&amp;#34;&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; 这里需要注意的是，&amp;lt;form&amp;gt;元素的method属性可以是get或post。使用get时，数据将在请求URL的查询字符串中提交，而使用post时，数据将进入请求主体。当一个HTML表单中包含文件时，必须使用post方法，因为我们不可能在请求URL字符串中处理提交的文件数据。采用multipart/form-data字段则是因为这个字段可以适用于提交文件。accept属性则是可以限制表单可以接受的文件类型。如上使用了.wav进行限制，当点击选择文件时，系统的资源管理器会帮你过滤类型不匹配的文件。
 使用Flask进行文件接收 对于常规表单，Flask提供了对提交表单字段的访问。其中文件字段就包含在 request.files字典中，可以通过键值 file来访问文件列表，从中得出文件名，再用save保存文件。
 @app.route(&amp;#39;/upload&amp;#39;, methods=[&amp;#39;post&amp;#39;]) def upload_file(): upload_file = request.files[&amp;#39;file&amp;#39;] if upload_file.filename != &amp;#34;&amp;#34;: upload_file.save(upload_file.filename) return redirect(url_for(&amp;#39;upload_file&amp;#39;)) 这样，每当提交一次文件时，就会将文件保存到你的工程目录中。如下图所示
- 文件上传效果 
-添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
+文件上传效果 添加一些限制 文件大小限制 为了防止上传十分大的文件，我们在后端中添加对文件大小进行限制的配置。
 app.config[&amp;#39;MAX_CONTENT_LENGTH&amp;#39;] = 1024 * 1024 添加了如上的配置之后，文件大小将会被限制在1MB，超过此大小的文件将会被拒收。这样在一定程度上也可以防止客户端采用上传大文件的方式过多的占用服务器资源以及，通过大容量文件对服务器进行攻击。
 可接收文件类型限制 在前面的HTML表单中提到了accept属性，通过这个属性系统资源管理器会对文件的扩展名进行筛选。在发现了Flask框架可以对文件类型进行限制的时候我决定转到后台进行文件类型的限制。
 app.config[&amp;#39;UPLOAD_EXTENSIONS&amp;#39;] = [&amp;#39;.wav&amp;#39;] 上传路径的限制 由于之后需要使用到这个录音文件，所以我将这个录音文件保存在相应的工程路径中，便于之后的获取。据此添加了相关配置
@@ -65,15 +64,14 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
       <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
       <description>想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
 socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
- 
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
 对于网络层的两大协议TCP和UDP，socket也分为了流和数据报的两种通信形式
- 流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。  C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
+流：基于TCP协议，因此有序，可靠。可以实现可靠传输。 数据报：基于UDP，不需要建立和维持连接，不可靠，但是通信速度较快。 C/S模式 在计算机网络中，两个程序的通信模式是，客户/服务器模式，双方借助socket建立连接后便能实现通信。
 服务器工作流程 1、创建服务器socket 在这个阶段我们可以使用socket函数来创建一个服务器的套接字。需要注意的是在socket编程中只能指定协议族为AF_INET，即表示利用IPv4进行通信。这个函数的返回值为 文件描述符 （类型为整型），当失败时则会返回-1如下
 int listenfd; listenfd = socket(AF_INET, SOCK_STREAM, 0) 2、将服务器用于通信的地址和端口绑定到socket上 在Linux中，地址信息被封装在了结构体sockaddr中，如下
-struct sockaddr { sa_family_t sin_family; //地址族 	char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
-struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 	struct in_addr sin_addr; // IP地址 	char sin_zero; } 但如果你进入到Linux的底层代码会发现，sockaddr_in还有一个参数为sockaddr的构造函数。因此使用这个结构体可以让操作更简单，如下
-struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.</description>
+struct sockaddr { sa_family_t sin_family; //地址族 char sa_data[14]; //14字节，包含套接字中的目标地址和端口信息 }; 想必可以很明显的看到，在这个结构体中目标地址和端口信息是存放在一个数组中的，因此不便于区分，所以我们使用另外一个结构体sockaddr_in，这个结构体如下
+struct sockaddr_in { sa_family_t sin_family; uint16_t sin_port; // 端口号 struct in_addr sin_addr; // IP地址 char sin_zero; } 但如果你进入到Linux的底层代码会发现，sockaddr_in还有一个参数为sockaddr的构造函数。因此使用这个结构体可以让操作更简单，如下
+struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); servaddr.sin_family = AF_INET; servaddr.sin_addr.s_addr = htonl(INADDR_ANY); // 指定为任意IP地址 servaddr.sin_port = htons(atoi(argv[1])); // 将主机字节顺序转换为网络字节顺序 之后将端口绑定。</description>
     </item>
     
   </channel>

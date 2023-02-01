@@ -3,7 +3,7 @@
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='题目描述 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
 示例：
-输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)&#43;(n-2)&#43;&amp;hellip;&#43;2&#43;1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
+输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。 输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。 解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)&#43;(n-2)&#43;&amp;hellip;&#43;2&#43;1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
 动态规划思路 1、状态的定义，首先需要声明一个动态规划数组dp，其中dp[i]表示以第i天为最后一天的子数组所能获得的最大利润。
 2、状态转移方程，由于股票只能买卖一次，因此dp[i]（也就是前i天的最大利润），应该是前i-1天的最大利润与第i天卖出股票的利润的最大值，于是就有了$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$即为dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))，最终返回dp[n-1]为所求。
 优化 我们还可以进行空间和时间上的优化，时间上，可以借助一个变量cost来维护最小值，这样每次进行状态转移时只需要dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量maxprofit来代替整个动态规划列表，这样状态转移就简化为了maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))
@@ -32,7 +32,7 @@
 <meta property='og:title' content='LeetCode 股票的最大利润'>
 <meta property='og:description' content='题目描述 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
 示例：
-输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)&#43;(n-2)&#43;&amp;hellip;&#43;2&#43;1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
+输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。 输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。 解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)&#43;(n-2)&#43;&amp;hellip;&#43;2&#43;1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
 动态规划思路 1、状态的定义，首先需要声明一个动态规划数组dp，其中dp[i]表示以第i天为最后一天的子数组所能获得的最大利润。
 2、状态转移方程，由于股票只能买卖一次，因此dp[i]（也就是前i天的最大利润），应该是前i-1天的最大利润与第i天卖出股票的利润的最大值，于是就有了$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$即为dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))，最终返回dp[n-1]为所求。
 优化 我们还可以进行空间和时间上的优化，时间上，可以借助一个变量cost来维护最小值，这样每次进行状态转移时只需要dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量maxprofit来代替整个动态规划列表，这样状态转移就简化为了maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))
@@ -43,7 +43,7 @@
 <meta name="twitter:title" content="LeetCode 股票的最大利润">
 <meta name="twitter:description" content="题目描述 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
 示例：
-输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)&#43;(n-2)&#43;&amp;hellip;&#43;2&#43;1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
+输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。 输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。 解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)&#43;(n-2)&#43;&amp;hellip;&#43;2&#43;1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
 动态规划思路 1、状态的定义，首先需要声明一个动态规划数组dp，其中dp[i]表示以第i天为最后一天的子数组所能获得的最大利润。
 2、状态转移方程，由于股票只能买卖一次，因此dp[i]（也就是前i天的最大利润），应该是前i-1天的最大利润与第i天卖出股票的利润的最大值，于是就有了$前i天最大利润=max（前i-1天最大利润，第i天价格-前i天最低价格）$即为dp[i] = max(dp[i - 1], prices[i] - min(prices[0:i]))，最终返回dp[n-1]为所求。
 优化 我们还可以进行空间和时间上的优化，时间上，可以借助一个变量cost来维护最小值，这样每次进行状态转移时只需要dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量maxprofit来代替整个动态规划列表，这样状态转移就简化为了maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))
@@ -176,41 +176,41 @@
 <h3 id="优化">优化</h3>
 <p>我们还可以进行空间和时间上的优化，时间上，可以借助一个变量<code>cost</code>来维护最小值，这样每次进行状态转移时只需要<code>dp[i] = max(dp[i - 1], prices[i] - min(cost, prices[i]))</code>，空间上，由于本道题的状态转移只需要前一次的状态，因此可以采用一个变量<code>maxprofit</code>来代替整个动态规划列表，这样状态转移就简化为了<code>maxprofit = max(maxprofit, prices[i] - min(cost, prices[i]))</code></p>
 <h2 id="代码">代码</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/*未优化*/</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> maxProfit(vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> prices) {
-        <span style="color:#66d9ef">if</span> (prices.empty()) {
-            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-        }
-        array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">100004</span><span style="color:#f92672">&gt;</span> dp {};
-        <span style="color:#66d9ef">int</span> cost <span style="color:#f92672">=</span> prices[<span style="color:#ae81ff">0</span>];
-        dp[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; 
-        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> prices.size(); <span style="color:#f92672">++</span>i) {
-            <span style="color:#66d9ef">if</span> (prices[i] <span style="color:#f92672">&lt;</span> cost) {
-                cost <span style="color:#f92672">=</span> prices[i];
-            }
-            dp[i] <span style="color:#f92672">=</span> max(dp[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>], prices[i] <span style="color:#f92672">-</span> cost);
-        }
-        <span style="color:#66d9ef">return</span> dp[prices.size() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];
-    }
-};
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">/*优化后*/</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> maxProfit(vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> prices) {
-        <span style="color:#66d9ef">if</span> (prices.empty()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">int</span> cost <span style="color:#f92672">=</span> prices[<span style="color:#ae81ff">0</span>], maxprofit <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> prices.size(); <span style="color:#f92672">++</span>i) {
-            <span style="color:#66d9ef">if</span> (prices[i] <span style="color:#f92672">&lt;</span> cost) {
-                cost <span style="color:#f92672">=</span> prices[i];
-            }
-            maxprofit <span style="color:#f92672">=</span> max(maxprofit, prices[i] <span style="color:#f92672">-</span> cost);
-        }
-        <span style="color:#66d9ef">return</span> maxprofit;
-    }
-};
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">/*未优化*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> maxProfit(vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> prices) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (prices.empty()) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">100004</span><span style="color:#f92672">&gt;</span> dp {};
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> cost <span style="color:#f92672">=</span> prices[<span style="color:#ae81ff">0</span>];
+</span></span><span style="display:flex;"><span>        dp[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; 
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> prices.size(); <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (prices[i] <span style="color:#f92672">&lt;</span> cost) {
+</span></span><span style="display:flex;"><span>                cost <span style="color:#f92672">=</span> prices[i];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            dp[i] <span style="color:#f92672">=</span> max(dp[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>], prices[i] <span style="color:#f92672">-</span> cost);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> dp[prices.size() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">/*优化后*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> maxProfit(vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> prices) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (prices.empty()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> cost <span style="color:#f92672">=</span> prices[<span style="color:#ae81ff">0</span>], maxprofit <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> prices.size(); <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (prices[i] <span style="color:#f92672">&lt;</span> cost) {
+</span></span><span style="display:flex;"><span>                cost <span style="color:#f92672">=</span> prices[i];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            maxprofit <span style="color:#f92672">=</span> max(maxprofit, prices[i] <span style="color:#f92672">-</span> cost);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> maxprofit;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div>
 </section>
 
 
@@ -313,7 +313,7 @@
     <section class="copyright">
         &copy; 
         
-        2022 墨纹
+        2023 墨纹
     </section>
     
     <section class="powerby">
