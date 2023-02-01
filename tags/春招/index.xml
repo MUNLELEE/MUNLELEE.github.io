@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>春招 on 墨纹</title>
-    <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E6%98%A5%E6%8B%9B/</link>
+    <link>https://MUNLELEE.github.io/tags/%E6%98%A5%E6%8B%9B/</link>
     <description>Recent content in 春招 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E6%98%A5%E6%8B%9B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%98%A5%E6%8B%9B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>应用层协议——HTTP</title>
-      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
+      <link>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
       <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
+      <guid>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
       <description>HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
 HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
 由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。
@@ -35,10 +35,10 @@ HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状�
     
     <item>
       <title>春招 | 知识点留档</title>
-      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
+      <link>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
       <pubDate>Wed, 02 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
+      <guid>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
       <description>春节已然过去了，处于人生的又一个十字路口且充满后顾之忧的我决定开始准备春招，时间看着是比较紧的，我也不知道自己最后能够准备到什么程度。
 1、重载、隐藏、重写（覆盖）三者的区别 重载：是指同一可访问区内被声明的几个具有不同参数列（参数的类型、个数、顺序不同）的同名函数，根据参数列表确定调用哪个函数。
 隐藏：指的是派生类类型的对象、指针引用访问基类和派生类都有的同名函数时 （只要求同名，不管参数列表是否相同），访问的是派生类的函数，即隐藏了基类的同名函数。

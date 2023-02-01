@@ -19,9 +19,9 @@
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'><title>Hugo博客 | stack主题修改第一站</title>
 
-<link rel='canonical' href='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
+<link rel='canonical' href='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
 
-<link rel="stylesheet" href="/github.com/MUNLELEE/MUNLELEE.github.io/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -57,7 +57,7 @@
 具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
 &amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto&#43;Serif&#43;SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
 --zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.'>
-<meta property='og:url' content='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/'>
 <meta property='og:site_name' content='墨纹'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='博客搭建' /><meta property='article:published_time' content='2022-01-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-01-15T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="Hugo博客 | stack主题修改第一站">
@@ -131,7 +131,7 @@
 ">
     
         <div id="article-toolbar">
-            <a href="/github.com/MUNLELEE/MUNLELEE.github.io" class="back-home">
+            <a href="/" class="back-home">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <polyline points="15 6 9 12 15 18" />
@@ -151,7 +151,7 @@
     
     <header class="article-category">
         
-            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/categories/%E5%AE%9E%E8%B7%B5/" >
+            <a href="/categories/%E5%AE%9E%E8%B7%B5/" >
                 实践
             </a>
         
@@ -159,7 +159,7 @@
     
 
     <h2 class="article-title">
-        <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/">Hugo博客 | stack主题修改第一站</a>
+        <a href="/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/">Hugo博客 | stack主题修改第一站</a>
     </h2>
 
     
@@ -607,7 +607,7 @@
     
     <section class="article-tags">
         
-            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>
+            <a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>
         
     </section>
 
@@ -629,7 +629,7 @@
                 
                     
 <article class="">
-    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/">
+    <a href="/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/">
         
         
 
@@ -641,7 +641,7 @@
                 
                     
 <article class="">
-    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/">
+    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/">
         
         
 
@@ -653,7 +653,7 @@
                 
                     
 <article class="">
-    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/">
+    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/">
         
         
 
@@ -817,7 +817,7 @@
                 
                 
                 <a class="go-top" id="go-top" href="#top">
-                    <img src="/github.com/MUNLELEE/MUNLELEE.github.io/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
             </section>
         </aside>
@@ -828,7 +828,7 @@
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
                 defer="false"
                 >
-            </script><script type="text/javascript" src="/github.com/MUNLELEE/MUNLELEE.github.io/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

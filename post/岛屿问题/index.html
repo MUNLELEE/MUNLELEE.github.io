@@ -7,9 +7,9 @@ DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先�
 之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
 class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x &#43; 1, pos_y); dfs(grid, pos_x, pos_y &#43; 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下'><title>岛屿问题 | DFS框架</title>
 
-<link rel='canonical' href='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/'>
+<link rel='canonical' href='https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/'>
 
-<link rel="stylesheet" href="/github.com/MUNLELEE/MUNLELEE.github.io/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -33,7 +33,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
 DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
 之后DFS就要考虑下一步搜索与前一轮搜索之间的区别。岛屿问题中最主要的区别便是遍历方格的四个邻格，其余的区别便需要依题目而定。因此我们可以得到以下的岛屿类问题的DFS框架
 class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int x, int y) { if (x &amp;gt;= 0 &amp;amp;&amp;amp; x &amp;lt; grid.size() &amp;amp;&amp;amp; y &amp;gt;= 0 &amp;amp;&amp;amp; y &amp;lt; grid[0].size()) { return true; } return false; } void dfs(vector&amp;lt;vector&amp;lt;int&amp;gt;&amp;gt;&amp;amp; grid, int pos_x, int pos_y) { if (!inRange(grid, pos_x, pos_y)) return; if (grid[pos_x][pos_y] != 1) return; dfs(grid, pos_x - 1, pos_y); dfs(grid, pos_x &#43; 1, pos_y); dfs(grid, pos_x, pos_y &#43; 1); dfs(grid, pos_x, pos_y - 1); } } 避免重复遍历 在DFS中一个重要的问题就是要避免重复遍历，不然可能会造成程序原地打转的现象。在岛屿一类的问题中，可以将已经遍历过的方块修改其元素为$0$或者为非题中给出元素。因此我们可以修改上述的DFS模板如下'>
-<meta property='og:url' content='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/'>
 <meta property='og:site_name' content='墨纹'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='算法' /><meta property='article:published_time' content='2022-04-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-04-02T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="岛屿问题 | DFS框架">
@@ -95,7 +95,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
 ">
     
         <div id="article-toolbar">
-            <a href="/github.com/MUNLELEE/MUNLELEE.github.io" class="back-home">
+            <a href="/" class="back-home">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <polyline points="15 6 9 12 15 18" />
@@ -115,7 +115,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
     
     <header class="article-category">
         
-            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/categories/%E5%AD%A6%E4%B9%A0/" >
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
                 学习
             </a>
         
@@ -123,7 +123,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
     
 
     <h2 class="article-title">
-        <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/">岛屿问题 | DFS框架</a>
+        <a href="/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/">岛屿问题 | DFS框架</a>
     </h2>
 
     
@@ -372,7 +372,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
     
     <section class="article-tags">
         
-            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/">算法</a>
+            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
         
     </section>
 
@@ -417,7 +417,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
                 
                     
 <article class="">
-    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/">
+    <a href="/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/">
         
         
 
@@ -429,7 +429,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
                 
                     
 <article class="">
-    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/">
+    <a href="/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/">
         
         
 
@@ -441,7 +441,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
                 
                     
 <article class="">
-    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <a href="/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/">
         
         
 
@@ -596,7 +596,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
                 
                 
                 <a class="go-top" id="go-top" href="#top">
-                    <img src="/github.com/MUNLELEE/MUNLELEE.github.io/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
             </section>
         </aside>
@@ -607,7 +607,7 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
                 defer="false"
                 >
-            </script><script type="text/javascript" src="/github.com/MUNLELEE/MUNLELEE.github.io/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');
