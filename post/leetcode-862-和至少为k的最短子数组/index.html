@@ -6,9 +6,9 @@
 示例 输入：A = [1], K = 1输出：1输入：A = [1,2], K = 4输出：-1输入：A = [2,-1,2], K = 3输出：3 提示 1. 1 &amp;lt;= A.length &amp;lt;= 500002. -10 ^ 5 &amp;lt;= A[i] &amp;lt;= 10 ^ 53. 1 &amp;lt;= K &amp;lt;= 10 ^ 9 首先对于我这样一个不怎么有基础的人来说，这道题着实是令我作呕。。解题也是通过了其它题解的启发。下面就开始吧。
 解题想法 由于题目中已经明确表示了数组的长度为50000，因此如果要使用暴力接法，势必造成O(n^2)的时间复杂度。因此就要想办法让i， j两个循环变量只跑一遍。而对于这道题因为绕不开要求取数组中的区间和。所以可以采用的一个方法是前缀和思想。大致的意思就是sum[i] = array[0] &#43; array[1] &#43; &amp;hellip; &#43; array[i - 1]利用这个前缀和数组就可以较为方便的得到一个数组的区间和，例如要知道区间[1, 3]的和，我们可以利用前缀和数组得到sum[4] - sum[1]（这里需要注意的是，为了便于计算前缀和数组的第零个元素默认为零）'><title>LeetCode 862 和至少为K的最短子数组</title>
 
-<link rel='canonical' href='https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/'>
+<link rel='canonical' href='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/'>
 
-<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/github.com/MUNLELEE/MUNLELEE.github.io/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -31,7 +31,7 @@
 如果没有和至少为 K 的非空子数组，返回 -1
 示例 输入：A = [1], K = 1输出：1输入：A = [1,2], K = 4输出：-1输入：A = [2,-1,2], K = 3输出：3 提示 1. 1 &amp;lt;= A.length &amp;lt;= 500002. -10 ^ 5 &amp;lt;= A[i] &amp;lt;= 10 ^ 53. 1 &amp;lt;= K &amp;lt;= 10 ^ 9 首先对于我这样一个不怎么有基础的人来说，这道题着实是令我作呕。。解题也是通过了其它题解的启发。下面就开始吧。
 解题想法 由于题目中已经明确表示了数组的长度为50000，因此如果要使用暴力接法，势必造成O(n^2)的时间复杂度。因此就要想办法让i， j两个循环变量只跑一遍。而对于这道题因为绕不开要求取数组中的区间和。所以可以采用的一个方法是前缀和思想。大致的意思就是sum[i] = array[0] &#43; array[1] &#43; &amp;hellip; &#43; array[i - 1]利用这个前缀和数组就可以较为方便的得到一个数组的区间和，例如要知道区间[1, 3]的和，我们可以利用前缀和数组得到sum[4] - sum[1]（这里需要注意的是，为了便于计算前缀和数组的第零个元素默认为零）'>
-<meta property='og:url' content='https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/'>
+<meta property='og:url' content='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/'>
 <meta property='og:site_name' content='墨纹'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='LeetCode' /><meta property='article:tag' content='难题集' /><meta property='article:published_time' content='2021-01-18T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-01-18T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="LeetCode 862 和至少为K的最短子数组">
@@ -92,7 +92,7 @@
 ">
     
         <div id="article-toolbar">
-            <a href="/" class="back-home">
+            <a href="/github.com/MUNLELEE/MUNLELEE.github.io" class="back-home">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <polyline points="15 6 9 12 15 18" />
@@ -112,7 +112,7 @@
     
     <header class="article-category">
         
-            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/categories/%E5%AD%A6%E4%B9%A0/" >
                 学习
             </a>
         
@@ -120,7 +120,7 @@
     
 
     <h2 class="article-title">
-        <a href="/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/">LeetCode 862 和至少为K的最短子数组</a>
+        <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/">LeetCode 862 和至少为K的最短子数组</a>
     </h2>
 
     
@@ -205,9 +205,9 @@
     
     <section class="article-tags">
         
-            <a href="/tags/leetcode/">LeetCode</a>
+            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/tags/leetcode/">LeetCode</a>
         
-            <a href="/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/">难题集</a>
+            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/">难题集</a>
         
     </section>
 
@@ -229,7 +229,7 @@
                 
                     
 <article class="">
-    <a href="/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">
+    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">
         
         
 
@@ -241,7 +241,7 @@
                 
                     
 <article class="">
-    <a href="/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/">
+    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/">
         
         
 
@@ -253,7 +253,7 @@
                 
                     
 <article class="">
-    <a href="/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/">
+    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/">
         
         
 
@@ -398,7 +398,7 @@
                 
                 
                 <a class="go-top" id="go-top" href="#top">
-                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                    <img src="/github.com/MUNLELEE/MUNLELEE.github.io/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
             </section>
         </aside>
@@ -409,7 +409,7 @@
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
                 defer="false"
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/github.com/MUNLELEE/MUNLELEE.github.io/ts/main.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

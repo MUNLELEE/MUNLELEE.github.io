@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>学习 on 墨纹</title>
-    <link>https://MUNLELEE.github.io/categories/%E5%AD%A6%E4%B9%A0/</link>
+    <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/categories/%E5%AD%A6%E4%B9%A0/</link>
     <description>Recent content in 学习 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 06 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/categories/%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/categories/%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>机器学习算法 | K近邻</title>
-      <link>https://MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/</link>
       <pubDate>Wed, 06 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/</guid>
       <description>K近邻算法 K近邻是一种有监督学习算法。因为没有对数据进行训练，而是通过新数据与旧数据的比较得到相应的结果。因此是一种隐式的学习过程和训练过程。K近邻算法可以用来解决分类问题，也可以用来解决回归问题。
 步骤 对未知类别的属性的数据集中的每个点依次执行以下操作：
 计算已知类别数据集中点与当前点之间的距离 按照距离递增次序排序 选取与当前点距离最小的k个点 确定前k个点所在的类别出现的频率 返回前k个点出现频率最高的类别作为当前点的预测分类 在确定样本和当前点的距离时，通常采用的是欧式距离公式$$d=\sqrt{(x_1-x_0)+(y_1-y_0)}$$ 当公式中的指数变化时，随之也会得到相应的不同的距离公式。
@@ -25,10 +25,10 @@
     
     <item>
       <title>岛屿问题 | DFS框架</title>
-      <link>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</link>
       <pubDate>Sat, 02 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
       <description>在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长 图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
 DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
@@ -38,10 +38,10 @@ class Solution { private: bool inRange(vector&amp;lt;vector&amp;lt;int&amp;gt;&a
     
     <item>
       <title>应用层协议——HTTP</title>
-      <link>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
       <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
       <description>HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
 HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
 由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。
@@ -64,10 +64,10 @@ HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状�
     
     <item>
       <title>春招 | 知识点留档</title>
-      <link>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
       <pubDate>Wed, 02 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E6%98%A5%E6%8B%9B-%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
       <description>春节已然过去了，处于人生的又一个十字路口且充满后顾之忧的我决定开始准备春招，时间看着是比较紧的，我也不知道自己最后能够准备到什么程度。
 1、重载、隐藏、重写（覆盖）三者的区别 重载：是指同一可访问区内被声明的几个具有不同参数列（参数的类型、个数、顺序不同）的同名函数，根据参数列表确定调用哪个函数。
 隐藏：指的是派生类类型的对象、指针引用访问基类和派生类都有的同名函数时 （只要求同名，不管参数列表是否相同），访问的是派生类的函数，即隐藏了基类的同名函数。
@@ -99,10 +99,10 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
     
     <item>
       <title>LeetCode 二叉搜索树与双向链表</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Mon, 31 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/</guid>
       <description>题目描述 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。
 为了让您更好地理解问题，以下面的二叉搜索树为例：
 我们希望将这个二叉搜索树转化为双向循环链表。链表中的每个节点都有一个前驱和后继指针。对于双向循环链表，第一个节点的前驱是最后一个节点，最后一个节点的后继是第一个节点。
@@ -123,10 +123,10 @@ int *ptr = (int*)malloc(sizeof(int) * 10) // 分配一个十个int大小的数�
     
     <item>
       <title>LeetCode 矩阵中的路径</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</link>
       <pubDate>Sat, 29 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/</guid>
       <description>题目描述 给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。
 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
 例如，在下面的 3×4 的矩阵中包含单词 &amp;ldquo;ABCCED&amp;rdquo;（单词中的字母已标出）。
@@ -146,10 +146,10 @@ DFS解析 1、递归终止条件：
     
     <item>
       <title>LeetCode 最长不含重复字符的子字符串</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</link>
       <pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8D%E5%90%AB%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2/</guid>
       <description>题目描述 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
 示例
 输入: &amp;#34;abcabcbb&amp;#34;输出: 3 解释: 因为无重复字符的最长子串是 &amp;#34;abc&amp;#34;，所以其长度为 3。 输入: &amp;#34;bbbbb&amp;#34;输出: 1解释: 因为无重复字符的最长子串是 &amp;#34;b&amp;#34;，所以其长度为 1。 输入: &amp;#34;pwwkew&amp;#34;输出: 3解释: 因为无重复字符的最长子串是 &amp;#34;wke&amp;#34;，所以其长度为 3。请注意，你的答案必须是 子串 的长度，&amp;#34;pwke&amp;#34; 是一个子序列，不是子串。 解题想法 这道题想通了发现也是一道比较常规的动态规划题，但是开始时没有考虑好的细节确实是折磨了我一阵。以及没有想到用哈希表处理属实比较蠢。
@@ -165,10 +165,10 @@ DFS解析 1、递归终止条件：
     
     <item>
       <title>LeetCode 股票的最大利润</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</link>
       <pubDate>Sat, 22 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E5%88%A9%E6%B6%A6/</guid>
       <description>题目描述 假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
 示例：
 输入: [7,1,5,3,6,4]输出: 5解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。 输入: [7,6,4,3,1]输出: 0解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。 解题想法 这道题首先可以采用暴力的求解方法，只要计算在某一天中，其后的每一天卖出的价钱所得的利润最大，依次遍历每一天，最终就可以求得最大利润，这样可以得到的时间复杂度为$$(n-1)+(n-2)+&amp;hellip;+2+1=n(n-1)/2$$也就是$O(n^2)$，不出所料，在这种解法中，你需要将一些冗余的操作去除，才能通过力扣的判题机。于是就有了下面的解法，也就是动态规划。
@@ -180,10 +180,10 @@ DFS解析 1、递归终止条件：
     
     <item>
       <title>LeetCode 树的子结构</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</link>
       <pubDate>Fri, 21 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/</guid>
       <description>题目描述 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
 B是A的子结构， 即 A中有出现和B相同的结构和节点值。
 例如: 给定的树 A:
@@ -201,10 +201,10 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
     
     <item>
       <title>LeetCode 从上到下打印链表</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Thu, 20 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E4%BB%8E%E4%B8%8A%E5%88%B0%E4%B8%8B%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/</guid>
       <description>题目描述 从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
 例如: 给定二叉树: [3,9,20,null,null,15,7],
 3/ \9 20/ \15 7 返回其层次遍历结果：
@@ -214,10 +214,10 @@ B是A的子结构， 即 A中有出现和B相同的结构和节点值。
     
     <item>
       <title>LeetCode 复杂链表的复制</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</link>
       <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/</guid>
       <description>题目描述 请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
 示例 输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]输出：[[7,null],[13,0],[11,4],[10,2],[1,0]] 解题 题目的意思很简单，就是返回一个一模一样的链表头结点。由于随机指针的存在，链表的复制不能够像正常链表那样直接遍历，也因此没想明白要怎么做，最后翻了题解，才发现又是我最烦的递归。
 这道题采用的递归解法其实本质就是遇到问题再解决问题，在还没有开始复制之前，所有的复制结点都是虚无的，要让这些结点和已知的结点一一对应起来就需要一个map数据结构。用来对应新旧两个链表的结点。这样从第一个结点入手，当这个结点不在map中时，就立刻创建这个结点并于原链表中的相应结点建立对应关系。之后的每一个结点都可以根据这样的逻辑进行创建，而因为有map这个数据结构的存在，这样每个结点都不是虚空存在的，而是可以在map中找到与之对应的结点。可以解决随机结点创建的问题。具体代码如下：
@@ -226,10 +226,10 @@ class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来
     
     <item>
       <title>LeetCode 141 环形链表</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</guid>
       <description>题目描述 给定一个链表，判断链表中是否有环。
 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
 如果链表中存在环，则返回 true 。 否则，返回 false 。
@@ -239,10 +239,10 @@ class Solution { public: unordered_map&amp;lt;Node*, Node*&amp;gt; um; // 用来
     
     <item>
       <title>LeetCode 862 和至少为K的最短子数组</title>
-      <link>https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</link>
       <pubDate>Mon, 18 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/leetcode-862-%E5%92%8C%E8%87%B3%E5%B0%91%E4%B8%BAk%E7%9A%84%E6%9C%80%E7%9F%AD%E5%AD%90%E6%95%B0%E7%BB%84/</guid>
       <description>题目描述 返回 A 的最短的非空连续子数组的长度，该子数组的和至少为 K 。
 如果没有和至少为 K 的非空子数组，返回 -1
 示例 输入：A = [1], K = 1输出：1输入：A = [1,2], K = 4输出：-1输入：A = [2,-1,2], K = 3输出：3 提示 1. 1 &amp;lt;= A.length &amp;lt;= 500002. -10 ^ 5 &amp;lt;= A[i] &amp;lt;= 10 ^ 53. 1 &amp;lt;= K &amp;lt;= 10 ^ 9 首先对于我这样一个不怎么有基础的人来说，这道题着实是令我作呕。。解题也是通过了其它题解的启发。下面就开始吧。

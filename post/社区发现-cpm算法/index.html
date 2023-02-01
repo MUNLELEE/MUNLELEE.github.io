@@ -20,9 +20,9 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
 算法实现 在这部分将讲述算法实现的一些较为重要的地方，完整的代码可以点此，需要的朋友可以直接前往。
 实现算法要先实现寻找极大团，这里使用Born_Kerbosch算法，这个算法有两个版本，但我这里采用了经过一些剪枝处理的版本，在递归之前需要先确定需要的枢纽元素，数据结构方面采用集合（自动去重属实是太好用了^_^） /** * 使用BornKerbosch算法寻找最大团 * @param R 存在于极大团中的点 * @param P 可能可以加入极大团的点 * @param X 用于判重的点集合 * @param ans 将最后寻找到的所有极大团保存 * @param neighbor 存储每个节点的邻居节点，是一个map */ def bornKerbosch(R: Set[VertexId], P: Set[VertexId], X: Set[VertexId], ans: Set[Set[VertexId]], neighbor: Map[VertexId, Set[VertexId]]): Unit = { if (P.'><title>社区发现 | CPM算法及其实现</title>
 
-<link rel='canonical' href='https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/'>
+<link rel='canonical' href='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/'>
 
-<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/github.com/MUNLELEE/MUNLELEE.github.io/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -59,7 +59,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
 可以这么简单的理解模块度，即社区内部边的权重和减去社区外部与社区内部相连的边的权重和。
 算法实现 在这部分将讲述算法实现的一些较为重要的地方，完整的代码可以点此，需要的朋友可以直接前往。
 实现算法要先实现寻找极大团，这里使用Born_Kerbosch算法，这个算法有两个版本，但我这里采用了经过一些剪枝处理的版本，在递归之前需要先确定需要的枢纽元素，数据结构方面采用集合（自动去重属实是太好用了^_^） /** * 使用BornKerbosch算法寻找最大团 * @param R 存在于极大团中的点 * @param P 可能可以加入极大团的点 * @param X 用于判重的点集合 * @param ans 将最后寻找到的所有极大团保存 * @param neighbor 存储每个节点的邻居节点，是一个map */ def bornKerbosch(R: Set[VertexId], P: Set[VertexId], X: Set[VertexId], ans: Set[Set[VertexId]], neighbor: Map[VertexId, Set[VertexId]]): Unit = { if (P.'>
-<meta property='og:url' content='https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/'>
+<meta property='og:url' content='https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/'>
 <meta property='og:site_name' content='墨纹'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='算法' /><meta property='article:published_time' content='2023-02-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2023-02-01T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="社区发现 | CPM算法及其实现">
@@ -134,7 +134,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
 ">
     
         <div id="article-toolbar">
-            <a href="/" class="back-home">
+            <a href="/github.com/MUNLELEE/MUNLELEE.github.io" class="back-home">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <polyline points="15 6 9 12 15 18" />
@@ -154,7 +154,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
     
     <header class="article-category">
         
-            <a href="/categories/%E5%AE%9E%E8%B7%B5/" >
+            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/categories/%E5%AE%9E%E8%B7%B5/" >
                 实践
             </a>
         
@@ -162,7 +162,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
     
 
     <h2 class="article-title">
-        <a href="/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/">社区发现 | CPM算法及其实现</a>
+        <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/">社区发现 | CPM算法及其实现</a>
     </h2>
 
     
@@ -279,52 +279,52 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
 </span></span></code></pre></div><ul>
 <li>之后我觉得较为关键的是合并社团，直观上合并并不难，只需要创建出CPM算法所需要的矩阵并按照矩阵数值和矩阵索引进行合并即可。比较难的过程可能是如何用数据结构将这些过程保存下来。在算法实现中我使用了二维Set来保存最后的合并的社区顶点。创建矩阵时采用数组嵌套Set的方式保存每个社区应该和哪些索引的社区合并。</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span>    <span style="color:#75715e">/**
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 记录应该合并的团，也就是得到cpm算法的矩阵
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param community 传入的所有的社团集合
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return 得到的是与社团集合相对应的集合，其中每个存放的是相应社团与哪些索引社团应该合并
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> cpmMatrix<span style="color:#f92672">(</span>community<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]])</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 创建矩阵，因为如果是真正的矩阵空间占用较大，这里选择创建集合型矩阵
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> matrix<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]](</span>community<span style="color:#f92672">.</span>size<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> i<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>        community<span style="color:#f92672">.</span>foreach<span style="color:#f92672">(</span>item <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> j<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>            matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>
-</span></span><span style="display:flex;"><span>            community<span style="color:#f92672">.</span>foreach<span style="color:#f92672">(</span>item2 <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 两者之间交集
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">val</span> lap<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>intersect<span style="color:#f92672">(</span>item2<span style="color:#f92672">).</span>size
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> j <span style="color:#f92672">&amp;&amp;</span> lap <span style="color:#f92672">&gt;=</span> config<span style="color:#f92672">.</span>kVal<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 表示对角线，如果是对角线要大于k
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>add<span style="color:#f92672">(</span>j<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">!=</span> j <span style="color:#f92672">&amp;&amp;</span> lap <span style="color:#f92672">&gt;=</span> config<span style="color:#f92672">.</span>kVal <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 表示非对角线，需要大于k-1
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>add<span style="color:#f92672">(</span>j<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>                j <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">})</span>
-</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* 记录应该合并的团，也就是得到cpm算法的矩阵
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param community 传入的所有的社团集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @return 得到的是与社团集合相对应的集合，其中每个存放的是相应社团与哪些索引社团应该合并
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> cpmMatrix<span style="color:#f92672">(</span>community<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]])</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 创建矩阵，因为如果是真正的矩阵空间占用较大，这里选择创建集合型矩阵
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> matrix<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]](</span>community<span style="color:#f92672">.</span>size<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> i<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    community<span style="color:#f92672">.</span>foreach<span style="color:#f92672">(</span>item <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> j<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>        community<span style="color:#f92672">.</span>foreach<span style="color:#f92672">(</span>item2 <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 两者之间交集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">val</span> lap<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> item<span style="color:#f92672">.</span>intersect<span style="color:#f92672">(</span>item2<span style="color:#f92672">).</span>size
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> j <span style="color:#f92672">&amp;&amp;</span> lap <span style="color:#f92672">&gt;=</span> config<span style="color:#f92672">.</span>kVal<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 表示对角线，如果是对角线要大于k
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>add<span style="color:#f92672">(</span>j<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">!=</span> j <span style="color:#f92672">&amp;&amp;</span> lap <span style="color:#f92672">&gt;=</span> config<span style="color:#f92672">.</span>kVal <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 表示非对角线，需要大于k-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                matrix<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>add<span style="color:#f92672">(</span>j<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            j <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#f92672">})</span>
-</span></span><span style="display:flex;"><span>        matrix
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">})</span>
+</span></span><span style="display:flex;"><span>    matrix
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 进行合并操作，将需要合并的社团所有顶点放在集合中
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param community 使用BK算法划分好的极大团集合
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param idxStore 存储每个社团和哪些社团（索引）合并
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return 返回所有合并后的社团，每个社团的顶点放在一个集合里
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> mergeAll<span style="color:#f92672">(</span>community<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]],</span> idxStore<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]])</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> tmpSeq<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Seq</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> community<span style="color:#f92672">.</span>toSeq  <span style="color:#75715e">// 转换为可索引
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> res<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>  <span style="color:#75715e">// 返回结果集合
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">val</span> lenS<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> idxStore<span style="color:#f92672">.</span>length
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#66d9ef">&lt;-</span> <span style="color:#ae81ff">0</span> until lenS<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> tmpSet<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// idx变量是此集合和索引的哪个集合并集
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            idxStore<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>foreach<span style="color:#f92672">(</span>idx <span style="color:#66d9ef">=&gt;</span> tmpSet <span style="color:#66d9ef">=</span> tmpSet<span style="color:#f92672">.</span>union<span style="color:#f92672">(</span>tmpSeq<span style="color:#f92672">(</span>idx<span style="color:#f92672">)))</span>
-</span></span><span style="display:flex;"><span>            res<span style="color:#f92672">.</span>add<span style="color:#f92672">(</span>tmpSet<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        res
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* 进行合并操作，将需要合并的社团所有顶点放在集合中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param community 使用BK算法划分好的极大团集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @param idxStore 存储每个社团和哪些社团（索引）合并
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* @return 返回所有合并后的社团，每个社团的顶点放在一个集合里
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> mergeAll<span style="color:#f92672">(</span>community<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]],</span> idxStore<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Array</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">]])</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">val</span> tmpSeq<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Seq</span><span style="color:#f92672">[</span><span style="color:#66d9ef">mutable.Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> community<span style="color:#f92672">.</span>toSeq  <span style="color:#75715e">// 转换为可索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> res<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>  <span style="color:#75715e">// 返回结果集合
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">val</span> lenS<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> idxStore<span style="color:#f92672">.</span>length
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#66d9ef">&lt;-</span> <span style="color:#ae81ff">0</span> until lenS<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> tmpSet<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Set</span><span style="color:#f92672">[</span><span style="color:#66d9ef">VertexId</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// idx变量是此集合和索引的哪个集合并集
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        idxStore<span style="color:#f92672">(</span>i<span style="color:#f92672">).</span>foreach<span style="color:#f92672">(</span>idx <span style="color:#66d9ef">=&gt;</span> tmpSet <span style="color:#66d9ef">=</span> tmpSet<span style="color:#f92672">.</span>union<span style="color:#f92672">(</span>tmpSeq<span style="color:#f92672">(</span>idx<span style="color:#f92672">)))</span>
+</span></span><span style="display:flex;"><span>        res<span style="color:#f92672">.</span>add<span style="color:#f92672">(</span>tmpSet<span style="color:#f92672">)</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    res
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span></code></pre></div><blockquote>
 <hr>
 <p><em>遗憾的是没有实现相关的评估手段，待日后想起或再次需要的时候再进行修改吧。</em></p>
@@ -337,7 +337,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
     
     <section class="article-tags">
         
-            <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+            <a href="/github.com/MUNLELEE/MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/">算法</a>
         
     </section>
 
@@ -382,7 +382,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
                 
                     
 <article class="">
-    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/">
+    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/">
         
         
 
@@ -394,7 +394,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
                 
                     
 <article class="">
-    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/">
+    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/">
         
         
 
@@ -406,7 +406,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
                 
                     
 <article class="">
-    <a href="/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/">
+    <a href="/github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/">
         
         
 
@@ -562,7 +562,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
                 
                 
                 <a class="go-top" id="go-top" href="#top">
-                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                    <img src="/github.com/MUNLELEE/MUNLELEE.github.io/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
             </section>
         </aside>
@@ -573,7 +573,7 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
                 defer="false"
                 >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+            </script><script type="text/javascript" src="/github.com/MUNLELEE/MUNLELEE.github.io/ts/main.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

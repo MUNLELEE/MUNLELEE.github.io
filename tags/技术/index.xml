@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>技术 on 墨纹</title>
-    <link>https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/</link>
+    <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/</link>
     <description>Recent content in 技术 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Flask实现Web应用（三）</title>
-      <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/</link>
       <pubDate>Mon, 11 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%89/</guid>
       <description>这篇博文应该是这个应用的最后一个部分，主要是实现调用本地麦克风录音的前后端。
 前端页面的实现 在这个页面中，需要实现录音功能，而录音功能在参考了网上的相关资料之后，决定采用recorder.js的现行库（因为如果要造轮子的话需要自己去了解语音采样等过程），这是库的链接。
 对于我这种前端小白本来是没看懂要怎么使用的，后来才发现在其项目目录下有dist/recorder.js文件，如果你使用是Flask框架只需要在static文件夹中导入recorder.js以及recorder.js.map两个文件并采用如下方法引入
@@ -22,10 +22,10 @@
     
     <item>
       <title>Flask实现Web应用（二）</title>
-      <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/</link>
       <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8C/</guid>
       <description>书接上回，这篇博文主要是要讲一讲前端页面以及相应的css的变化，虽然是一个简单的web应用，但是在一定程度上还是需要符合人的审美。
 基础页面 由于我需要实现两个功能，调用本地麦克风录制和上传录音文件，最开始我是想把这两个功能放在同一个页面，但是最后觉得为了美观和页面逻辑，我就决定设计一个主页面，包含了这两个功能的可选项，之后再通过选择重定向至另一个页面。
 因此在基础页面中就有了如下的HTML代码
@@ -39,10 +39,10 @@ window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function ()
     
     <item>
       <title>Flask实现Web应用（一）</title>
-      <link>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</link>
       <pubDate>Tue, 15 Mar 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/flask%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BA%94%E7%94%A8%E4%B8%80/</guid>
       <description>为了让之后的项目能够专注于算法，于是打算先在近几日解决一定的应用层面的内容。因此也就诞生了这篇文章。
 背景 这个Web应用说来其实应该是很简单的，但是由于没有前后端开发经验，对我来说也算是一个挑战。这个应用旨在实现能够通过前端上传录音文件，通过后端的处理将文本返回给前端页面以及能够调用本地的麦克风进行录音最后通过这段录音能够返回文本内容。项目不大，也应该不会太过华丽，所以选用了Flask框架处理。
 基本文件上传表单 从客户端的角度来讲，上传文件和提交表单数据一样，因此我们需要定义一个包含文件字段的HTML表单。一个简单的HTML表单如下。这个表单可以接收一个文件。
@@ -58,10 +58,10 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
     
     <item>
       <title>Linux下的socket网络通信</title>
-      <link>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>
       <pubDate>Mon, 28 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
       <description>想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
 socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。

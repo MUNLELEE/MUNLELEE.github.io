@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>计算机网络 on 墨纹</title>
-    <link>https://MUNLELEE.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
+    <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
     <description>Recent content in 计算机网络 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux下的socket网络通信</title>
-      <link>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</link>
       <pubDate>Mon, 28 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/socket%E7%BC%96%E7%A8%8B/</guid>
       <description>想来虽然学了计网，但却没有真正的用程序来实现一下计网的理论，于是就学习了一下socket的通信，并进行复现。至于为什么是Linux，是发现网上好像没有太多系统的关于Windows的网络编程，索性就直接放弃了。
 socket socket即为套接字，是对网络中不同主机上的应用进程之间进行双向通信的端点的抽象。提供了应用进程利用网络协议交换数据的机制，上联应用程序，下联网络协议栈。既是应用协议通过网络协议进行通信的接口，也是应用程序与网络协议栈进行交互的接口。
 因此socket将复杂的网络协议族（也就是TCP/IP），隐藏起来，使其对应用程序透明，利用socket可以实现两个程序之间的通信。
@@ -27,10 +27,10 @@ struct sockaddr_in servaddr; memset(&amp;amp;servaddr, 0, sizeof(servaddr)); ser
     
     <item>
       <title>应用层协议——HTTP</title>
-      <link>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</link>
       <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/</guid>
       <description>HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
 HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
 由于TCP为HTTP提供可靠数据传输服务，因此每个报文都能完整地到达服务器或客户，HTTP协议不关心TCP从网络种如何处理报文的各种问题，也不用担心数据丢失。但又由于服务器只为客户服务，并不存储任何关于客户的状态信息，因此HTTP协议是一个 无状态协议 ，如果需要保存客户的登录信息，则 需要引入相关技术来记录状态，如Cookie 。

@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>算法 on 墨纹</title>
-    <link>https://MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/</link>
+    <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/</link>
     <description>Recent content in 算法 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 01 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>社区发现 | CPM算法及其实现</title>
-      <link>https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/</link>
       <pubDate>Wed, 01 Feb 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E7%A4%BE%E5%8C%BA%E5%8F%91%E7%8E%B0-cpm%E7%AE%97%E6%B3%95/</guid>
       <description>前言 近日有了解社区发现相关内容以及实现这个比较古老的算法的需要，索性就了解一下社区发现，并尝试着复现这个算法。
 社区发现概述 什么是社区 在现代人们的日常生活中，每个人都会进行社交，这在无形中就形成了一个社交网络。在这个网络中，每个人可以视为一个点，而用户之间的点赞、关注以及其他行为形成了边。在这样的一个网络中，有的用户之间联系较为紧密，有的用户之间联系较为稀疏。联系较为紧密的几个用户可以形成一个社区，在社区内，每个节点的链接都较为紧密，而两个社区之间的联系就较为稀疏。整体的结构可以被称为社团结构。如下图，圈起来的部分即为社区。
 社团中的边结构其实是一种逻辑抽象，并不是一种空间位置上的关系，而是节点之间的共有关系，假如节点代表的是消费者，那么节点间的边则可能代表消费者购买了共同一类商品，边的权重则可以代表购买物品的数量。
@@ -35,10 +35,10 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
     
     <item>
       <title>岛屿问题 | DFS框架</title>
-      <link>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</link>
+      <link>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</link>
       <pubDate>Sat, 02 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
+      <guid>https://MUNLELEEhttps://github.com/MUNLELEE/MUNLELEE.github.io/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
       <description>在DFS这一块一直是比较弱的，因此就去看了DFS相关的一些题目，并找到了岛屿的一系列问题。
 岛屿数量 岛屿的最大面积 最大人工岛 封闭岛屿的数目 岛屿的周长 图类DFS方法 图通常是由方格组成，通过方格中的元素来对图的DFS进行限制。岛屿问题便是其中经典的一类。在岛屿问题中，通常由$1$表示陆地，由$2$表示海洋，当每个方格都相邻时，组成的一个全$1$方格域即为一个岛屿。（这里不包含对角相邻）
 DFS框架 DFS也是一种意义上的递归，因此在一个DFS程序中首先要做的便是设定递归出口。类似于树结构可以利用指针为空等条件，在岛屿问题中，我们需要判断边界，也需要判断当前方格是否是陆地。因此在递归出口设置中就需要两个条件进行限制。
