@@ -59,7 +59,7 @@
 &lt;li&gt;&lt;strong&gt;当R集合满足为极大团时，P集合和X集合必须为空&lt;/strong&gt;。因为P集合中包含的点是可能加入R集合中的点，同样的X集合中的点也与R集合中的点都相邻，因此也属于可能称为R集合中极大团点的情况。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;算法缺点&#34;&gt;算法缺点&lt;/h3&gt;
-&lt;p&gt;CPM算法较为简单，但存在不能为单节点分配社团以及比较使用于完全子图较多的网络中，也即边密集网络中，在稀疏网络中算法的效率较低。&lt;/p&gt;
+&lt;p&gt;CPM算法较为简单，但存在不能为单节点分配社团以及比较使用于完全子图较多的网络中的问题，也即边密集网络中，在稀疏网络中算法的效率较低。&lt;/p&gt;
 &lt;h3 id=&#34;模块度&#34;&gt;模块度&lt;/h3&gt;
 &lt;p&gt;模块度是评估一个社区网络划分好坏度量方法，其含义为社区内节点的边数与随机情况下的边数之差。定义如下：&lt;/p&gt;
 &lt;p&gt;$$Q=\frac{1}{2m} \sum_{i, j}[A_{i j}-\frac{k_i k_j}{2m}]\delta(c_i, c_j)  \qquad \delta(u, v)=\begin{cases}1,&amp;amp;u==v \newline 0, &amp;amp;else \end{cases}$$&lt;/p&gt;
