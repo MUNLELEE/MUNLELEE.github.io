@@ -21,6 +21,9 @@
 生成token界面 配置PicGo，依次打开 图床设置 -&amp;gt; GitHub，如下图。
 进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 GitHub用户名/作为图床的仓库名，分支名使用 main即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。
 配置项 之后你只要在软件首页选择相应的图床就能够上传图片了。
+注：
+由于GitHub在很多时候需要魔法，已将图床转移至gitee。解决了使用npm安装PicGo插件失败的问题，详情可以参考
+解决执行npm(或pnpm)时报：证书过期 certificate has expired问题_reason: certificate has expired-CSDN博客
 参考 如何利用 Github 搭建自己的免费图床？ - 知乎 (zhihu.com)
 折腾完这些之后发现，好像用git命令上传图片也不是不行。
 算了，聊胜于无吧。</description>

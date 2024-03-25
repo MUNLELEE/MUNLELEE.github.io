@@ -27,8 +27,8 @@
 &lt;p&gt;在生成token界面中，Note用来表示你对这个token使用的描述。主要的还是红框部分，由于这个token会长期使用，而且是私有的这里设置为无限期也问题不大。然后再勾选repo，最后就可以点击generate了。 &lt;strong&gt;要注意的是token生成之后只会显示一次，因此要及时复制，否则你就只能再来一次了&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325212723.png&#34; &gt;
-		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325212723.png&#34;
+	&lt;a href=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325212723.png&#34; &gt;
+		&lt;img src=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325212723.png&#34;
 			
 			
 			
@@ -44,8 +44,8 @@
 &lt;p&gt;配置PicGo，依次打开  图床设置 -&amp;gt; GitHub，如下图。&lt;/p&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213310.png&#34; &gt;
-		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213310.png&#34;
+	&lt;a href=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213310.png&#34; &gt;
+		&lt;img src=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213310.png&#34;
 			
 			
 			
@@ -59,8 +59,8 @@
 &lt;p&gt;进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 &lt;code&gt;GitHub用户名/作为图床的仓库名&lt;/code&gt;，分支名使用 &lt;code&gt;main&lt;/code&gt;即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。&lt;/p&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213740.png&#34; &gt;
-		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213740.png&#34;
+	&lt;a href=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213740.png&#34; &gt;
+		&lt;img src=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213740.png&#34;
 			
 			
 			
@@ -76,6 +76,12 @@
 &lt;p&gt;之后你只要在软件首页选择相应的图床就能够上传图片了。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注：&lt;/p&gt;
+&lt;p&gt;由于GitHub在很多时候需要魔法，已将图床转移至gitee。解决了使用npm安装PicGo插件失败的问题，详情可以参考&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/qq_31594665/article/details/135750276&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;解决执行npm(或pnpm)时报：证书过期 certificate has expired问题_reason: certificate has expired-CSDN博客&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://zhuanlan.zhihu.com/p/347342082&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;如何利用 Github 搭建自己的免费图床？ - 知乎 (zhihu.com)&lt;/a&gt;&lt;/p&gt;
