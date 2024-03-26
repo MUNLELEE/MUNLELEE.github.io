@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='如题所述，本篇博文就是使用AOP方法实现参数校验，同时利用了自定义注解。第一次见到这个做法的时候觉得甚是巧妙，故此记录。
+AOP 首先解释一下什么是AOP，AOP（Aspect Orient Programming）是spring框架中的一个重要部分。直译过来就是面向切面编程，这是一种编程思想，作为面向对象的一种补充。其本质就是在不改变源代码的情况下给程序或一组程序动态统一的添加额外功能。
+用一个具体的例子来讲，假如我们有如下这么个类，用来实现简单的四则运算。
+@NoArgsConstructor @AllArgsConstructor public class Operation { private int num1; private int num2; public int add() { return num1 &#43; num2; } public int sub() { return num1 - num2; } public int mul() { return num1 * num2; } public int div() { return num1 / num2; } } 如果我们希望在每个方法运行前打印出一行日志信息，很容易想到的就是在操作类中的每个方法返回之前加上 logger.info()，虽然很简单，但是当源代码无法修改或者十分繁杂的时候，工程量将会呈几何倍数增加。此时会更希望将这个日志方法抽象为一个类，当每个方法执行时，能够自动的在方法返回之前打印出日志。如下图，AOP其实就是由切面对象和目标对象组成的代理对象。
+AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（ User），它有两个字段 name和 password，希望实现对用户名的非空判断和对密码的长度判断。
+@Data @NoArgsConstructor public class User { private String name; private String password; } 直观的做法就是在控制器方法上，对获得的用户对象或者是相应的请求参数进行if的条件判断。诚然，这十分有效，但如果换个角度，需要进行参数校验的类不止有User，且控制器方法也不止一个。那么还要一个一个的去添加if条件吗？甚至当控制器方法无法修改时呢？于是，使用一个类或者是一个注解抽象出这个功能就显得一劳永逸了。这也就是AOP强大的解耦能力。'><title>优雅的使用AOP实现参数校验</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8aop%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/'>
+
+<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+<meta property='og:title' content='优雅的使用AOP实现参数校验'>
+<meta property='og:description' content='如题所述，本篇博文就是使用AOP方法实现参数校验，同时利用了自定义注解。第一次见到这个做法的时候觉得甚是巧妙，故此记录。
+AOP 首先解释一下什么是AOP，AOP（Aspect Orient Programming）是spring框架中的一个重要部分。直译过来就是面向切面编程，这是一种编程思想，作为面向对象的一种补充。其本质就是在不改变源代码的情况下给程序或一组程序动态统一的添加额外功能。
+用一个具体的例子来讲，假如我们有如下这么个类，用来实现简单的四则运算。
+@NoArgsConstructor @AllArgsConstructor public class Operation { private int num1; private int num2; public int add() { return num1 &#43; num2; } public int sub() { return num1 - num2; } public int mul() { return num1 * num2; } public int div() { return num1 / num2; } } 如果我们希望在每个方法运行前打印出一行日志信息，很容易想到的就是在操作类中的每个方法返回之前加上 logger.info()，虽然很简单，但是当源代码无法修改或者十分繁杂的时候，工程量将会呈几何倍数增加。此时会更希望将这个日志方法抽象为一个类，当每个方法执行时，能够自动的在方法返回之前打印出日志。如下图，AOP其实就是由切面对象和目标对象组成的代理对象。
+AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（ User），它有两个字段 name和 password，希望实现对用户名的非空判断和对密码的长度判断。
+@Data @NoArgsConstructor public class User { private String name; private String password; } 直观的做法就是在控制器方法上，对获得的用户对象或者是相应的请求参数进行if的条件判断。诚然，这十分有效，但如果换个角度，需要进行参数校验的类不止有User，且控制器方法也不止一个。那么还要一个一个的去添加if条件吗？甚至当控制器方法无法修改时呢？于是，使用一个类或者是一个注解抽象出这个功能就显得一劳永逸了。这也就是AOP强大的解耦能力。'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8aop%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='技术' /><meta property='article:published_time' content='2024-03-26T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-03-26T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="优雅的使用AOP实现参数校验">
+<meta name="twitter:description" content="如题所述，本篇博文就是使用AOP方法实现参数校验，同时利用了自定义注解。第一次见到这个做法的时候觉得甚是巧妙，故此记录。
+AOP 首先解释一下什么是AOP，AOP（Aspect Orient Programming）是spring框架中的一个重要部分。直译过来就是面向切面编程，这是一种编程思想，作为面向对象的一种补充。其本质就是在不改变源代码的情况下给程序或一组程序动态统一的添加额外功能。
+用一个具体的例子来讲，假如我们有如下这么个类，用来实现简单的四则运算。
+@NoArgsConstructor @AllArgsConstructor public class Operation { private int num1; private int num2; public int add() { return num1 &#43; num2; } public int sub() { return num1 - num2; } public int mul() { return num1 * num2; } public int div() { return num1 / num2; } } 如果我们希望在每个方法运行前打印出一行日志信息，很容易想到的就是在操作类中的每个方法返回之前加上 logger.info()，虽然很简单，但是当源代码无法修改或者十分繁杂的时候，工程量将会呈几何倍数增加。此时会更希望将这个日志方法抽象为一个类，当每个方法执行时，能够自动的在方法返回之前打印出日志。如下图，AOP其实就是由切面对象和目标对象组成的代理对象。
+AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（ User），它有两个字段 name和 password，希望实现对用户名的非空判断和对密码的长度判断。
+@Data @NoArgsConstructor public class User { private String name; private String password; } 直观的做法就是在控制器方法上，对获得的用户对象或者是相应的请求参数进行if的条件判断。诚然，这十分有效，但如果换个角度，需要进行参数校验的类不止有User，且控制器方法也不止一个。那么还要一个一个的去添加if条件吗？甚至当控制器方法无法修改时呢？于是，使用一个类或者是一个注解抽象出这个功能就显得一劳永逸了。这也就是AOP强大的解耦能力。"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8aop%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">优雅的使用AOP实现参数校验</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 26, 2024</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>如题所述，本篇博文就是使用AOP方法实现参数校验，同时利用了自定义注解。第一次见到这个做法的时候觉得甚是巧妙，故此记录。</p>
+<h2 id="aop">AOP</h2>
+<p>首先解释一下什么是AOP，AOP（Aspect Orient Programming）是spring框架中的一个重要部分。直译过来就是面向切面编程，这是一种编程思想，作为面向对象的一种补充。其本质就是在不改变源代码的情况下给程序或一组程序动态统一的添加额外功能。</p>
+<p>用一个具体的例子来讲，假如我们有如下这么个类，用来实现简单的四则运算。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@NoArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@AllArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Operation</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>  	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">+</span> num2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sub</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">-</span> num2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mul</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">*</span> num2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">div</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">/</span> num2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>如果我们希望在每个方法运行前打印出一行日志信息，很容易想到的就是在操作类中的每个方法返回之前加上 <code>logger.info()</code>，虽然很简单，但是当源代码无法修改或者十分繁杂的时候，工程量将会呈几何倍数增加。此时会更希望将这个日志方法抽象为一个类，当每个方法执行时，能够自动的在方法返回之前打印出日志。如下图，AOP其实就是由切面对象和目标对象组成的代理对象。</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326210324.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326210324.png"
+			
+			
+			
+			loading="lazy"
+			alt="AOP示意图">
+	</a>
+	
+	<figcaption>AOP示意图</figcaption>
+	
+</figure></p>
+<h2 id="自定义注解实现参数校验">自定义注解实现参数校验</h2>
+<p>假定有以下这个用户类（ <code>User</code>），它有两个字段 <code>name</code>和 <code>password</code>，希望实现对用户名的非空判断和对密码的长度判断。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Data</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@NoArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String password<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>直观的做法就是在控制器方法上，对获得的用户对象或者是相应的请求参数进行if的条件判断。诚然，这十分有效，但如果换个角度，需要进行参数校验的类不止有User，且控制器方法也不止一个。那么还要一个一个的去添加if条件吗？甚至当控制器方法无法修改时呢？于是，使用一个类或者是一个注解抽象出这个功能就显得一劳永逸了。这也就是AOP强大的解耦能力。</p>
+<h3 id="注解的定义">注解的定义</h3>
+<p>顺着上面的思路，需要拦截的就是控制器方法，首先需要的就是一个用于标识方法的注解，当方法有这个注解时进入拦截器中执行参数校验过程。这个注解可以这么定义。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Retention</span><span style="color:#f92672">(</span>RetentionPolicy<span style="color:#f92672">.</span><span style="color:#a6e22e">RUNTIME</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Target</span><span style="color:#f92672">({</span>ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">METHOD</span><span style="color:#f92672">,</span> ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">TYPE</span><span style="color:#f92672">})</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@interface</span> GlobalInterceptor<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">checkParam</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 校验参数，默认为false
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>再思考这样的问题，对于控制器方法的每个参数，校验的规则一样吗？每个参数都需要校验吗？显然不是，因此需要再定义一个参数注解来实现更加自适应的功能。这个注解可以根据实际需要来实现。在这里实现了长短判断和是否必须的功能。如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Retention</span><span style="color:#f92672">(</span>RetentionPolicy<span style="color:#f92672">.</span><span style="color:#a6e22e">RUNTIME</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Target</span><span style="color:#f92672">({</span>ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">FIELD</span><span style="color:#f92672">,</span> ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">PARAMETER</span><span style="color:#f92672">})</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@interface</span> VerifyParam <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">min</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 最大长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">max</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 最小长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">required</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 是否必须
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="切面类的实现">切面类的实现</h3>
+<p>在写完了注解之后，接下来就该实现切面类来使用这个注解了。我们希望能对拥有这个注解的方法实现拦截，自然可以想到切点就是这个注解。而参数校验应该要在方法执行之前实现，因此可以定义如下一个切面类：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GlobalOperationAspect</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@PointCut</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;@annotation(com.example.annotation.GlobalInterceptor)&#34;</span><span style="color:#f92672">)</span> <span style="color:#75715e">// 注解的全类名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">requestInterceptor</span><span style="color:#f92672">()</span> <span style="color:#f92672">{}</span>
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Before</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;requestInterceptor()&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interceptorDo</span><span style="color:#f92672">(</span>JoinPoint point<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// TODO
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>之后需要自然是要获取方法的参数类型，参数值，并考虑参数是否具有之前定义的 <code>VerifyParam</code>注解来考虑对应的判断规则。但是从切面类中，我们只有一个连接点，此时要获取这些信息只能通过反射。</p>
+<p>我们利用 <code>point</code>反射获取控制器对象的实例类，被拦截方法的参数值，方法名等。之后再考虑对被拦截的方法的参数依次校验。于是我们可以完善<code>interceptorDo</code>方法。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Before</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;requestInterceptor()&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interceptorDo</span><span style="color:#f92672">(</span>JoinPoint point<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        Object target <span style="color:#f92672">=</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getTarget</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 获取被代理的目标对象
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Object<span style="color:#f92672">[]</span> args <span style="color:#f92672">=</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getArgs</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 获取被拦截方法的参数值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        String methodName <span style="color:#f92672">=</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getSignature</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 获取方法名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Class<span style="color:#f92672">&lt;?&gt;[]</span> parameterTypes <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>MethodSignature<span style="color:#f92672">)</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getSignature</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">getMethod</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getParameterTypes</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        Method method <span style="color:#f92672">=</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getMethod</span><span style="color:#f92672">(</span>methodName<span style="color:#f92672">,</span> parameterTypes<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        GlobalInterceptor interceptor <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getAnnotation</span><span style="color:#f92672">(</span>GlobalInterceptor<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptor <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 此判断也可不做
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptor<span style="color:#f92672">.</span><span style="color:#a6e22e">checkParam</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            validateParam<span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> e<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>接下来讲讲 <code>validateParam</code>方法。这个方法是实现被拦截方法参数校验的，自然而然我们需要得到参数值以及更为重要的参数注解 <strong>（从注解中才能获得校验规则）</strong>。依旧是通过反射来实现。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">validateParam</span><span style="color:#f92672">(</span>Method method<span style="color:#f92672">,</span> Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    Parameter<span style="color:#f92672">[]</span> parameters <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getParameters</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 参数列表信息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> parameters<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        Parameter parameter <span style="color:#f92672">=</span> parameters<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        Object value <span style="color:#f92672">=</span> args<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>  <span style="color:#75715e">// 参数值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        VerifyParam verifyParam <span style="color:#f92672">=</span> parameter<span style="color:#f92672">.</span><span style="color:#a6e22e">getAnnotation</span><span style="color:#f92672">(</span>VerifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">null</span> <span style="color:#f92672">==</span> verifyParam<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        checkValue<span style="color:#f92672">(</span>value<span style="color:#f92672">,</span> verifyParam<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">checkValue</span><span style="color:#f92672">(</span>Object value<span style="color:#f92672">,</span> VerifyParam verifyParam<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> isEmpty <span style="color:#f92672">=</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 校验是否为空
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty <span style="color:#f92672">&amp;&amp;</span> verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">required</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 校验长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isEmpty <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> length <span style="color:#f92672">&lt;</span> verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>            verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> length <span style="color:#f92672">&gt;</span> verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>至此，切面类的实现也就完成了。</p>
+<h3 id="效果">效果</h3>
+<p>最后当然是要试试效果了，附上简单的控制器方法。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#a6e22e">@RequestMapping</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/test&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@GlobalInterceptor</span><span style="color:#f92672">(</span>checkParam <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> ResponseVO<span style="color:#f92672">&lt;</span>User<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">access</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@VerifyParam</span><span style="color:#f92672">(</span>required <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> String name<span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>                                   <span style="color:#a6e22e">@VerifyParam</span><span style="color:#f92672">(</span>required <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> min <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> <span style="color:#ae81ff">18</span><span style="color:#f92672">)</span> String password<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        ResponseVO<span style="color:#f92672">&lt;</span>User<span style="color:#f92672">&gt;</span> responseVO <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ResponseVO<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>        User user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setPassword</span><span style="color:#f92672">(</span>password<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        responseVO<span style="color:#f92672">.</span><span style="color:#a6e22e">setStatus</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;success&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        responseVO<span style="color:#f92672">.</span><span style="color:#a6e22e">setInfo</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;校验通过&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        responseVO<span style="color:#f92672">.</span><span style="color:#a6e22e">setData</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> responseVO<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>当我们的控制器方法不加自定义的注解时，发送请求不符合规则请求的结果如下，</p>
+<!-- raw HTML omitted -->
+<p>可以看见，请求参数被正常接收了，当我们加上参数时</p>
+<!-- raw HTML omitted -->
+<p>响应发生了变化，不再接收不符合规则的参数了。（由于只抛出了异常，因此响应比较简单）。</p>
+<h2 id="写在最后">写在最后</h2>
+<p>本文只是简单介绍了使用自定义注解和AOP功能来实现参数校验和拦截的功能，整体的思路如图：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326205645.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326205645.png"
+			
+			
+			
+			loading="lazy"
+			alt="自定义注解拦截大致过程">
+	</a>
+	
+	<figcaption>自定义注解拦截大致过程</figcaption>
+	
+</figure></p>
+<p>在这个思路的基础上，可以实现更为复杂的校验，以及更为完善的响应。</p>
+<p>写下这篇博文旨在能够加强一些印象，也是这种方法带来的惊艳所驱使。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">机器学习算法 | K近邻</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">岛屿问题 | DFS框架</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE-http/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">应用层协议——HTTP</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2024 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#aop">AOP</a></li>
+    <li><a href="#自定义注解实现参数校验">自定义注解实现参数校验</a>
+      <ul>
+        <li><a href="#注解的定义">注解的定义</a></li>
+        <li><a href="#切面类的实现">切面类的实现</a></li>
+        <li><a href="#效果">效果</a></li>
+      </ul>
+    </li>
+    <li><a href="#写在最后">写在最后</a></li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>
