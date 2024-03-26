@@ -25,10 +25,12 @@
 &lt;li&gt;
 &lt;p&gt;从GitHub中创建一个token，打开路径为 &lt;code&gt;setting-&amp;gt;Developer settings-&amp;gt;Personal access tokens&lt;/code&gt;，这里我们选用 &lt;code&gt;Tokens(classic)&lt;/code&gt;就行。（其实是我不知道另外一个是干啥用的）。&lt;/p&gt;
 &lt;p&gt;在生成token界面中，Note用来表示你对这个token使用的描述。主要的还是红框部分，由于这个token会长期使用，而且是私有的这里设置为无限期也问题不大。然后再勾选repo，最后就可以点击generate了。 &lt;strong&gt;要注意的是token生成之后只会显示一次，因此要及时复制，否则你就只能再来一次了&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325212723.png&#34; &gt;
-		&lt;img src=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325212723.png&#34;
+	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325212723.png&#34; &gt;
+		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325212723.png&#34;
 			
 			
 			
@@ -39,13 +41,13 @@
 	&lt;figcaption&gt;生成token界面&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;配置PicGo，依次打开  图床设置 -&amp;gt; GitHub，如下图。&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;配置PicGo，依次打开  图床设置 -&amp;gt; GitHub，如下图。&lt;/li&gt;
+&lt;/ol&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213310.png&#34; &gt;
-		&lt;img src=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213310.png&#34;
+	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213310.png&#34; &gt;
+		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213310.png&#34;
 			
 			
 			
@@ -54,13 +56,13 @@
 	&lt;/a&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 &lt;code&gt;GitHub用户名/作为图床的仓库名&lt;/code&gt;，分支名使用 &lt;code&gt;main&lt;/code&gt;即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。&lt;/p&gt;
+&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 &lt;code&gt;GitHub用户名/作为图床的仓库名&lt;/code&gt;，分支名使用 &lt;code&gt;main&lt;/code&gt;即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。&lt;/li&gt;
+&lt;/ol&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213740.png&#34; &gt;
-		&lt;img src=&#34;https://gitee.com/MUNLELEE/image-hosting/raw/main/blog/20240325213740.png&#34;
+	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213740.png&#34; &gt;
+		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213740.png&#34;
 			
 			
 			
@@ -71,10 +73,8 @@
 	&lt;figcaption&gt;配置项&lt;/figcaption&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;之后你只要在软件首页选择相应的图床就能够上传图片了。&lt;/p&gt;
-&lt;/li&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;之后你只要在软件首页选择相应的图床就能够上传图片了。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;blockquote&gt;
 &lt;p&gt;注：&lt;/p&gt;
