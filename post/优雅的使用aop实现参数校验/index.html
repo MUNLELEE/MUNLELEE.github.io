@@ -292,9 +292,35 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> responseVO<span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
 </span></span></code></pre></div><p>当我们的控制器方法不加自定义的注解时，发送请求不符合规则请求的结果如下，</p>
-<!-- raw HTML omitted -->
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203901.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203901.png"
+			
+			
+			
+			loading="lazy"
+			alt="不拦截结果">
+	</a>
+	
+	<figcaption>不拦截结果</figcaption>
+	
+</figure></p>
 <p>可以看见，请求参数被正常接收了，当我们加上参数时</p>
-<!-- raw HTML omitted -->
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203631.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203631.png"
+			
+			
+			
+			loading="lazy"
+			alt="拦截结果">
+	</a>
+	
+	<figcaption>拦截结果</figcaption>
+	
+</figure></p>
 <p>响应发生了变化，不再接收不符合规则的参数了。（由于只抛出了异常，因此响应比较简单）。</p>
 <h2 id="写在最后">写在最后</h2>
 <p>本文只是简单介绍了使用自定义注解和AOP功能来实现参数校验和拦截的功能，整体的思路如图：</p>

@@ -149,9 +149,35 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; responseVO&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当我们的控制器方法不加自定义的注解时，发送请求不符合规则请求的结果如下，&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203901.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203901.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			alt=&#34;不拦截结果&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;不拦截结果&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;可以看见，请求参数被正常接收了，当我们加上参数时&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203631.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326203631.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			alt=&#34;拦截结果&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;拦截结果&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;p&gt;响应发生了变化，不再接收不符合规则的参数了。（由于只抛出了异常，因此响应比较简单）。&lt;/p&gt;
 &lt;h2 id=&#34;写在最后&#34;&gt;写在最后&lt;/h2&gt;
 &lt;p&gt;本文只是简单介绍了使用自定义注解和AOP功能来实现参数校验和拦截的功能，整体的思路如图：&lt;/p&gt;
