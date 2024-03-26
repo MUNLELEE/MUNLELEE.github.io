@@ -18,10 +18,10 @@
 仓库创建好之后就是我们之后上传图片的地方了，也就是图床。之后要考虑的是如何上传图片，这里用到了一个PicGo这个软件，可以通过这个篝火到达它的官网，之后根据需要下载相应的版本即可。之后按照以下步骤即可
 从GitHub中创建一个token，打开路径为 setting-&amp;gt;Developer settings-&amp;gt;Personal access tokens，这里我们选用 Tokens(classic)就行。（其实是我不知道另外一个是干啥用的）。
 在生成token界面中，Note用来表示你对这个token使用的描述。主要的还是红框部分，由于这个token会长期使用，而且是私有的这里设置为无限期也问题不大。然后再勾选repo，最后就可以点击generate了。 要注意的是token生成之后只会显示一次，因此要及时复制，否则你就只能再来一次了
-生成token界面 配置PicGo，依次打开 图床设置 -&amp;gt; GitHub，如下图。 进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 GitHub用户名/作为图床的仓库名，分支名使用 main即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。 配置项 之后你只要在软件首页选择相应的图床就能够上传图片了。 注：
-由于GitHub在很多时候需要魔法，已将图床转移至gitee。解决了使用npm安装PicGo插件失败的问题，详情可以参考
-解决执行npm(或pnpm)时报：证书过期 certificate has expired问题_reason: certificate has expired-CSDN博客
+生成token界面 配置PicGo，依次打开 图床设置 -&amp;gt; GitHub，如下图。 进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 GitHub用户名/作为图床的仓库名，分支名使用 main即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。 配置项 之后你只要在软件首页选择相应的图床就能够上传图片了。 最后 由于GitHub访问具有一定限制，这里选择使用jsdelivr对图床的访问进行加速。方法很简单，只需要对博客的图片访问路径替换为 https://&amp;lt;jsDelivr加速域名&amp;gt;/gh/&amp;lt;用户&amp;gt;/&amp;lt;项目&amp;gt;@&amp;lt;版本&amp;gt;/&amp;lt;资源路径&amp;gt;，例如我的一个图片路径就可以写为 https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213310.png。
+同时可以在PicGo上面写上自定义域名 https://cdn.jsdelivr.net/gh/GitHub用户名/仓库名，这样，上传图片后PicGo就会在剪贴板上写上jsdelivr加速的路径了。如图
 参考 如何利用 Github 搭建自己的免费图床？ - 知乎 (zhihu.com)
+通过jsDelivr实现Github图床CDN加速 | XieJava&amp;rsquo;s blog (ishareread.com)
 折腾完这些之后发现，好像用git命令上传图片也不是不行。
 算了，聊胜于无吧。</description>
     </item>

@@ -29,8 +29,8 @@
 &lt;/ol&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325212723.png&#34; &gt;
-		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325212723.png&#34;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325212723.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325212723.png&#34;
 			
 			
 			
@@ -46,8 +46,8 @@
 &lt;/ol&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213310.png&#34; &gt;
-		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213310.png&#34;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213310.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213310.png&#34;
 			
 			
 			
@@ -61,8 +61,8 @@
 &lt;/ol&gt;
 &lt;p&gt;&lt;figure 
 	&gt;
-	&lt;a href=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213740.png&#34; &gt;
-		&lt;img src=&#34;https://raw.githubusercontent.com/MUNLELEE/image-hosting/main/blog/20240325213740.png&#34;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213740.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213740.png&#34;
 			
 			
 			
@@ -76,15 +76,38 @@
 &lt;ol start=&#34;6&#34;&gt;
 &lt;li&gt;之后你只要在软件首页选择相应的图床就能够上传图片了。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;blockquote&gt;
-&lt;p&gt;注：&lt;/p&gt;
-&lt;p&gt;由于GitHub在很多时候需要魔法，已将图床转移至gitee。解决了使用npm安装PicGo插件失败的问题，详情可以参考&lt;/p&gt;
-&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/qq_31594665/article/details/135750276&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;解决执行npm(或pnpm)时报：证书过期 certificate has expired问题_reason: certificate has expired-CSDN博客&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326101528.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326101528.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&#34;最后&#34;&gt;最后&lt;/h2&gt;
+&lt;p&gt;由于GitHub访问具有一定限制，这里选择使用jsdelivr对图床的访问进行加速。方法很简单，只需要对博客的图片访问路径替换为 &lt;code&gt;https://&amp;lt;jsDelivr加速域名&amp;gt;/gh/&amp;lt;用户&amp;gt;/&amp;lt;项目&amp;gt;@&amp;lt;版本&amp;gt;/&amp;lt;资源路径&amp;gt;&lt;/code&gt;，例如我的一个图片路径就可以写为 &lt;code&gt;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213310.png&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;同时可以在PicGo上面写上自定义域名 &lt;code&gt;https://cdn.jsdelivr.net/gh/GitHub用户名/仓库名&lt;/code&gt;，这样，上传图片后PicGo就会在剪贴板上写上jsdelivr加速的路径了。如图&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326101234.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240326101234.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 &lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
 &lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://zhuanlan.zhihu.com/p/347342082&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;如何利用 Github 搭建自己的免费图床？ - 知乎 (zhihu.com)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;http://xiejava.ishareread.com/posts/a0bac159/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;通过jsDelivr实现Github图床CDN加速 | XieJava&amp;rsquo;s blog (ishareread.com)&lt;/a&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;hr&gt;
 &lt;p&gt;折腾完这些之后发现，好像用git命令上传图片也不是不行。&lt;/p&gt;
