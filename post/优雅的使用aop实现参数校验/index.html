@@ -10,7 +10,7 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
 
 <link rel='canonical' href='https://MUNLELEE.github.io/post/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8aop%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/'>
 
-<link rel="stylesheet" href="/scss/style.min.36d617335b89745195c2d170d40e8c72216d9b8d13e2f80ba988a10f8c83b6ea.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="/scss/style.min.2d5c7b7fe00d3723b47df5ddeea35027ba1a58ec45a6d797c9c0e626dd65ac00.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
     
@@ -241,8 +241,8 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptor <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 此判断也可不做
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptor<span style="color:#f92672">.</span><span style="color:#a6e22e">checkParam</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            validateParam<span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptor<span style="color:#f92672">.</span><span style="color:#a6e22e">checkParam</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 如果需要校验，才进行校验，否则可能添加了注解但是不校验
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            validateParam<span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> e<span style="color:#f92672">;</span>
