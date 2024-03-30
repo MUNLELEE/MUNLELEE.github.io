@@ -443,7 +443,7 @@ redis优点 通常情况下，redis作为MySQL等数据库的缓存层使用。�
 	<figcaption>使用默认序列化器插入对象</figcaption>
 	
 </figure></p>
-<p>可以看到，在redis的key不仅有我们指定的key，<code>user</code>。还有前导的一些类似16进制的数字，并且存入的 <code>value</code>内容也不够简介，附带了一些不需要的属性。我们可以再来试试原始的字符串类型。结果如图。可以观察到，如果不知道你原始的值是什么，看着这些乱码根本无法识别。</p>
+<p>可以看到，在redis的key不仅有我们指定的key，<code>user</code>。还有前导的一些类似16进制的数字，并且存入的 <code>value</code>内容也不够简洁，附带了一些不需要的属性。我们可以再来试试原始的字符串类型。结果如图。可以观察到，如果不知道你原始的值是什么，看着这些乱码根本无法识别。</p>
 <p><figure 
 	>
 	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330152444.png" >
@@ -508,6 +508,9 @@ redis优点 通常情况下，redis作为MySQL等数据库的缓存层使用。�
 	
 </figure></p>
 <p>至此，为什么要进行redis的自定义序列化就很明白了，自定义序列化的数据不仅存储的冗余减少了，也不再有乱码出现。在存储的key中也没有了乱码。既节省了空间，也让数据的表示更清楚了，方便排错。</p>
+<h2 id="写在最后">写在最后</h2>
+<p>这篇文章简单介绍了一下redis，并对redis中会出现的三种缓存问题作了详细说明（也是因为易混淆，便于日后翻起来看看），至于实际操作和应用，有待日后精进了再实现一番。最后再简要介绍了redis自定义序列化器的问题，说明了为什么要使用自定义序列化。</p>
+<p>算是给redis开了个头，之后嘛，应该是想参悟什么再写什么了。</p>
 <h2 id="参考">参考</h2>
 <p><a class="link" href="https://zhuanlan.zhihu.com/p/660575286"  target="_blank" rel="noopener"
     >看完这篇大总结，彻底掌握Redis的使用！ - 知乎 (zhihu.com)</a></p>
@@ -749,6 +752,7 @@ redis优点 通常情况下，redis作为MySQL等数据库的缓存层使用。�
       </ul>
     </li>
     <li><a href="#redis序列化问题">redis序列化问题</a></li>
+    <li><a href="#写在最后">写在最后</a></li>
     <li><a href="#参考">参考</a></li>
   </ul>
 </nav>
