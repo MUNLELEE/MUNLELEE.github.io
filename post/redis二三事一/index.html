@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='想来既然决定了走Java这条路，那么一定是绕不开redis了，redis的使用以及其原理也算是一门艺术了，希望通过博文把一些常见的redis问题和操作记录下来。
+前言 在当前的数据库体系中有两大类型的数据库，一类是关系型数据库，另一类为非关系型数据库。关系型数据库典型的数据结构是表，是由二维表及其之间的联系所组成的数据组。非关系型数据库严格上来说不是一种数据库，而是一种 数据结构化存储方法的集合，可以是文档或者键值对等。 两者的优缺点如下
+关系型数据库 优点 缺点 使用方便，SQL语言较为通用，可以用于复杂查询 高并发读写性能较差，在海量数据的读写场景中性能较差，硬盘的IO是一个无法避免的瓶颈 易于维护，都是使用表结构，格式一致 灵活度较低，表结构固定，DDL修改对业务影响较大 复杂操作，可用于一个表以及多个表之间的复杂查询 支持事务控制 非关系型数据库 优点 缺点 读写速度快，可以存储在内存中，不依赖于硬盘 不支持join等复杂连接操作 数据格式灵活，可以是键值对，文档、图片等，扩展性强 事务处理能力弱 缺乏数据完整性约束 不提供SQL支持 redis简介 Redis（Remote Dictionary Server），即远程字典服务，是一个用C语言编写可基于内存亦可以持久化的日志型，Key-Value数据库。是非关系型数据库的一种解决方案，也是目前业界主流的缓存解决方案组件。
+why redis redis性能优秀，能够支持每秒大量的读写操作，还支持集群，分布式、主从同步等配置。同时支持一定的事务能力，保证了高并发场景下的数据的安全和一致性。还有一点，redis的社区十分活跃。其优点如下：
+redis优点 通常情况下，redis作为MySQL等数据库的缓存层使用。为什么要有缓存？如果在这样一个场景，当大量的数据请求访问MySQL，过多的请求可能会导致MySQL服务器压力过大，甚至会因为过量的请求将数据库击穿，数据服务也会因此中断。此时如果有缓存，那么数据访问请求将会先通过缓存再到达数据库，一旦请求在缓存中得到响应，将不会再查询数据库，这会很大的减少数据库的压力。简单描述如下图：
+什么数据可以放在redis 这个问题其实一直萦绕在脑海里很久，在网上翻阅了一段时间也没有找到描述得较为详细的，更多的是应用的具体场景，但在我看来都不够抽象。看来这个问题也只有不断的在实践中去寻找答案了。这里就稍微简单描述一下
+不需要实时更新但是又极其消耗数据库的数据。例如网上的商品销售排行榜，这种数据只需要每隔一段时间统计即可，其实时性关注度并不高。 更新频率不高，但是访问比较频繁的数据。这类数据如果放置于缓存能够一定程度上减少数据库的访问压力。如用户个人资料，设置完成后并不会频繁更新，但是为了个性化服务可能会频繁访问。 需要实时更新，但是更新频率不高的数据。比如一个用户的订单列表，用户的订单显然是需要实时呈现的，但是频繁下单的情况又比较少。 在某个时刻访问量极大而且更新也很频繁的数据。种数据有一个很典型的例子就是秒杀，在秒杀那一刻，可能有N倍于平时的流量进来，系统压力会很大。但是这种数据使用的缓存不能和普通缓存一样，这种缓存必须保证不丢失，否则会出现一致性等问题。 redis缓存问题 缓存雪崩 定义 大量或全部缓存数据突然失效或消失，导致所有请求都直接打到数据库上，数据库在巨大的压力下响应缓慢或宕机，应用性能急剧下降，就像雪崩一样。
+触发原因 同步过期。如果你将大量缓存设置为在同一时间过期。突然间，所有数据都需要重新加载到缓存中，这时候所有的请求都会转到数据库上，导致瞬间流量激增。 系统重启。有时系统维护或意外的服务重启会导致所有缓存失效。当服务再次上线，所有的请求都会涌向空无一物的缓存，然后转向数据库。 Redis服务宕机。硬件故障、网络问题或配置错误都可能导致Redis服务不可用。此时所有的请求都会打向数据库。 热点key消失。在某些情况下，特定的热点key（被大量频繁访问的key）如果失效或被删除，也会导致相应的大量请求直接落到数据库上，造成局部的雪崩效应。 解决方案 过期策略改进 随机过期时间。给缓存项设置随机的过期时间可以防止它们同时失效。例如，希望缓存大约在1小时后过期，可以设置过期时间为60±10分钟。 细粒度过期。对于一些热点数据，可以使用更细粒度的过期时间。如使用不同的过期时间策略针对不同类型或频率访问。 预防措施 合理设置缓存失效时间。根据应用的具体情况合理设置缓存的失效时间，避免大量缓存同时过期。对于不同的数据和业务场景，失效时间应该有所不同。 持久化策略。利用Redis的RDB或AOF持久化机制，确保在系统重启后缓存可以被恢复，减少对数据库的压力。 备份机制。确保有备份和灾难恢复计划，当缓存服务器出现问题时，可以快速恢复或切换到备份系统。 热点数据处理 识别热点数据。监控和识别访问频率特别高的数据。这些数据是潜在的热点，需要特别关注。 分布式锁。对于热点key的更新操作，可以使用分布式锁来确保同一时间只有一个请求去构建新的缓存，避免大量请求同时击中数据库。 使用队列。对于高频更新的热点数据，可以使用消息队列来缓冲和序列化处理请求。 降级和限流 服务降级。在缓存雪崩或其他系统异常时，可以暂时关闭一些非核心功能，保证核心功能的正常运作。 请求限流。通过算法（如令牌桶、漏桶等）限制访问频率，确保系统在承受范围内。 缓存穿透 定义 当请求查询的数据在缓存中不存在时（也不存在于数据库中），请求便会“穿透”缓存层直接查询数据库。在正常情况下，缓存系统会减轻对数据库的访问压力，但在缓存穿透的情况下，大量的无效请求会直接落在数据库上，导致数据库负载激增，甚至可能导致服务瘫痪。
+触发原因 恶意攻击
+攻击者可能会故意请求缓存中不存在的数据。这种攻击通常旨在使应用程序变慢或崩溃，从而达到拒绝服务的效果。
+系统缺陷
+设计缺陷。如果系统没有妥善处理不存在的数据请求，例如未设置合理的默认行为或缓存策略，那么即使是正常的用户行为也可能导致缓存穿透。 数据不一致。在有些情况下，缓存和数据库之间的数据不同步也可能导致缓存穿透。 错误的用户输入'><title>Redis二三事（一）</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/redis%E4%BA%8C%E4%B8%89%E4%BA%8B%E4%B8%80/'>
+
+<link rel="stylesheet" href="/scss/style.min.2d5c7b7fe00d3723b47df5ddeea35027ba1a58ec45a6d797c9c0e626dd65ac00.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+
+
+
+
+<meta property='og:title' content='Redis二三事（一）'>
+<meta property='og:description' content='想来既然决定了走Java这条路，那么一定是绕不开redis了，redis的使用以及其原理也算是一门艺术了，希望通过博文把一些常见的redis问题和操作记录下来。
+前言 在当前的数据库体系中有两大类型的数据库，一类是关系型数据库，另一类为非关系型数据库。关系型数据库典型的数据结构是表，是由二维表及其之间的联系所组成的数据组。非关系型数据库严格上来说不是一种数据库，而是一种 数据结构化存储方法的集合，可以是文档或者键值对等。 两者的优缺点如下
+关系型数据库 优点 缺点 使用方便，SQL语言较为通用，可以用于复杂查询 高并发读写性能较差，在海量数据的读写场景中性能较差，硬盘的IO是一个无法避免的瓶颈 易于维护，都是使用表结构，格式一致 灵活度较低，表结构固定，DDL修改对业务影响较大 复杂操作，可用于一个表以及多个表之间的复杂查询 支持事务控制 非关系型数据库 优点 缺点 读写速度快，可以存储在内存中，不依赖于硬盘 不支持join等复杂连接操作 数据格式灵活，可以是键值对，文档、图片等，扩展性强 事务处理能力弱 缺乏数据完整性约束 不提供SQL支持 redis简介 Redis（Remote Dictionary Server），即远程字典服务，是一个用C语言编写可基于内存亦可以持久化的日志型，Key-Value数据库。是非关系型数据库的一种解决方案，也是目前业界主流的缓存解决方案组件。
+why redis redis性能优秀，能够支持每秒大量的读写操作，还支持集群，分布式、主从同步等配置。同时支持一定的事务能力，保证了高并发场景下的数据的安全和一致性。还有一点，redis的社区十分活跃。其优点如下：
+redis优点 通常情况下，redis作为MySQL等数据库的缓存层使用。为什么要有缓存？如果在这样一个场景，当大量的数据请求访问MySQL，过多的请求可能会导致MySQL服务器压力过大，甚至会因为过量的请求将数据库击穿，数据服务也会因此中断。此时如果有缓存，那么数据访问请求将会先通过缓存再到达数据库，一旦请求在缓存中得到响应，将不会再查询数据库，这会很大的减少数据库的压力。简单描述如下图：
+什么数据可以放在redis 这个问题其实一直萦绕在脑海里很久，在网上翻阅了一段时间也没有找到描述得较为详细的，更多的是应用的具体场景，但在我看来都不够抽象。看来这个问题也只有不断的在实践中去寻找答案了。这里就稍微简单描述一下
+不需要实时更新但是又极其消耗数据库的数据。例如网上的商品销售排行榜，这种数据只需要每隔一段时间统计即可，其实时性关注度并不高。 更新频率不高，但是访问比较频繁的数据。这类数据如果放置于缓存能够一定程度上减少数据库的访问压力。如用户个人资料，设置完成后并不会频繁更新，但是为了个性化服务可能会频繁访问。 需要实时更新，但是更新频率不高的数据。比如一个用户的订单列表，用户的订单显然是需要实时呈现的，但是频繁下单的情况又比较少。 在某个时刻访问量极大而且更新也很频繁的数据。种数据有一个很典型的例子就是秒杀，在秒杀那一刻，可能有N倍于平时的流量进来，系统压力会很大。但是这种数据使用的缓存不能和普通缓存一样，这种缓存必须保证不丢失，否则会出现一致性等问题。 redis缓存问题 缓存雪崩 定义 大量或全部缓存数据突然失效或消失，导致所有请求都直接打到数据库上，数据库在巨大的压力下响应缓慢或宕机，应用性能急剧下降，就像雪崩一样。
+触发原因 同步过期。如果你将大量缓存设置为在同一时间过期。突然间，所有数据都需要重新加载到缓存中，这时候所有的请求都会转到数据库上，导致瞬间流量激增。 系统重启。有时系统维护或意外的服务重启会导致所有缓存失效。当服务再次上线，所有的请求都会涌向空无一物的缓存，然后转向数据库。 Redis服务宕机。硬件故障、网络问题或配置错误都可能导致Redis服务不可用。此时所有的请求都会打向数据库。 热点key消失。在某些情况下，特定的热点key（被大量频繁访问的key）如果失效或被删除，也会导致相应的大量请求直接落到数据库上，造成局部的雪崩效应。 解决方案 过期策略改进 随机过期时间。给缓存项设置随机的过期时间可以防止它们同时失效。例如，希望缓存大约在1小时后过期，可以设置过期时间为60±10分钟。 细粒度过期。对于一些热点数据，可以使用更细粒度的过期时间。如使用不同的过期时间策略针对不同类型或频率访问。 预防措施 合理设置缓存失效时间。根据应用的具体情况合理设置缓存的失效时间，避免大量缓存同时过期。对于不同的数据和业务场景，失效时间应该有所不同。 持久化策略。利用Redis的RDB或AOF持久化机制，确保在系统重启后缓存可以被恢复，减少对数据库的压力。 备份机制。确保有备份和灾难恢复计划，当缓存服务器出现问题时，可以快速恢复或切换到备份系统。 热点数据处理 识别热点数据。监控和识别访问频率特别高的数据。这些数据是潜在的热点，需要特别关注。 分布式锁。对于热点key的更新操作，可以使用分布式锁来确保同一时间只有一个请求去构建新的缓存，避免大量请求同时击中数据库。 使用队列。对于高频更新的热点数据，可以使用消息队列来缓冲和序列化处理请求。 降级和限流 服务降级。在缓存雪崩或其他系统异常时，可以暂时关闭一些非核心功能，保证核心功能的正常运作。 请求限流。通过算法（如令牌桶、漏桶等）限制访问频率，确保系统在承受范围内。 缓存穿透 定义 当请求查询的数据在缓存中不存在时（也不存在于数据库中），请求便会“穿透”缓存层直接查询数据库。在正常情况下，缓存系统会减轻对数据库的访问压力，但在缓存穿透的情况下，大量的无效请求会直接落在数据库上，导致数据库负载激增，甚至可能导致服务瘫痪。
+触发原因 恶意攻击
+攻击者可能会故意请求缓存中不存在的数据。这种攻击通常旨在使应用程序变慢或崩溃，从而达到拒绝服务的效果。
+系统缺陷
+设计缺陷。如果系统没有妥善处理不存在的数据请求，例如未设置合理的默认行为或缓存策略，那么即使是正常的用户行为也可能导致缓存穿透。 数据不一致。在有些情况下，缓存和数据库之间的数据不同步也可能导致缓存穿透。 错误的用户输入'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/redis%E4%BA%8C%E4%B8%89%E4%BA%8B%E4%B8%80/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='技术' /><meta property='article:tag' content='redis' /><meta property='article:published_time' content='2024-03-30T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-03-30T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Redis二三事（一）">
+<meta name="twitter:description" content="想来既然决定了走Java这条路，那么一定是绕不开redis了，redis的使用以及其原理也算是一门艺术了，希望通过博文把一些常见的redis问题和操作记录下来。
+前言 在当前的数据库体系中有两大类型的数据库，一类是关系型数据库，另一类为非关系型数据库。关系型数据库典型的数据结构是表，是由二维表及其之间的联系所组成的数据组。非关系型数据库严格上来说不是一种数据库，而是一种 数据结构化存储方法的集合，可以是文档或者键值对等。 两者的优缺点如下
+关系型数据库 优点 缺点 使用方便，SQL语言较为通用，可以用于复杂查询 高并发读写性能较差，在海量数据的读写场景中性能较差，硬盘的IO是一个无法避免的瓶颈 易于维护，都是使用表结构，格式一致 灵活度较低，表结构固定，DDL修改对业务影响较大 复杂操作，可用于一个表以及多个表之间的复杂查询 支持事务控制 非关系型数据库 优点 缺点 读写速度快，可以存储在内存中，不依赖于硬盘 不支持join等复杂连接操作 数据格式灵活，可以是键值对，文档、图片等，扩展性强 事务处理能力弱 缺乏数据完整性约束 不提供SQL支持 redis简介 Redis（Remote Dictionary Server），即远程字典服务，是一个用C语言编写可基于内存亦可以持久化的日志型，Key-Value数据库。是非关系型数据库的一种解决方案，也是目前业界主流的缓存解决方案组件。
+why redis redis性能优秀，能够支持每秒大量的读写操作，还支持集群，分布式、主从同步等配置。同时支持一定的事务能力，保证了高并发场景下的数据的安全和一致性。还有一点，redis的社区十分活跃。其优点如下：
+redis优点 通常情况下，redis作为MySQL等数据库的缓存层使用。为什么要有缓存？如果在这样一个场景，当大量的数据请求访问MySQL，过多的请求可能会导致MySQL服务器压力过大，甚至会因为过量的请求将数据库击穿，数据服务也会因此中断。此时如果有缓存，那么数据访问请求将会先通过缓存再到达数据库，一旦请求在缓存中得到响应，将不会再查询数据库，这会很大的减少数据库的压力。简单描述如下图：
+什么数据可以放在redis 这个问题其实一直萦绕在脑海里很久，在网上翻阅了一段时间也没有找到描述得较为详细的，更多的是应用的具体场景，但在我看来都不够抽象。看来这个问题也只有不断的在实践中去寻找答案了。这里就稍微简单描述一下
+不需要实时更新但是又极其消耗数据库的数据。例如网上的商品销售排行榜，这种数据只需要每隔一段时间统计即可，其实时性关注度并不高。 更新频率不高，但是访问比较频繁的数据。这类数据如果放置于缓存能够一定程度上减少数据库的访问压力。如用户个人资料，设置完成后并不会频繁更新，但是为了个性化服务可能会频繁访问。 需要实时更新，但是更新频率不高的数据。比如一个用户的订单列表，用户的订单显然是需要实时呈现的，但是频繁下单的情况又比较少。 在某个时刻访问量极大而且更新也很频繁的数据。种数据有一个很典型的例子就是秒杀，在秒杀那一刻，可能有N倍于平时的流量进来，系统压力会很大。但是这种数据使用的缓存不能和普通缓存一样，这种缓存必须保证不丢失，否则会出现一致性等问题。 redis缓存问题 缓存雪崩 定义 大量或全部缓存数据突然失效或消失，导致所有请求都直接打到数据库上，数据库在巨大的压力下响应缓慢或宕机，应用性能急剧下降，就像雪崩一样。
+触发原因 同步过期。如果你将大量缓存设置为在同一时间过期。突然间，所有数据都需要重新加载到缓存中，这时候所有的请求都会转到数据库上，导致瞬间流量激增。 系统重启。有时系统维护或意外的服务重启会导致所有缓存失效。当服务再次上线，所有的请求都会涌向空无一物的缓存，然后转向数据库。 Redis服务宕机。硬件故障、网络问题或配置错误都可能导致Redis服务不可用。此时所有的请求都会打向数据库。 热点key消失。在某些情况下，特定的热点key（被大量频繁访问的key）如果失效或被删除，也会导致相应的大量请求直接落到数据库上，造成局部的雪崩效应。 解决方案 过期策略改进 随机过期时间。给缓存项设置随机的过期时间可以防止它们同时失效。例如，希望缓存大约在1小时后过期，可以设置过期时间为60±10分钟。 细粒度过期。对于一些热点数据，可以使用更细粒度的过期时间。如使用不同的过期时间策略针对不同类型或频率访问。 预防措施 合理设置缓存失效时间。根据应用的具体情况合理设置缓存的失效时间，避免大量缓存同时过期。对于不同的数据和业务场景，失效时间应该有所不同。 持久化策略。利用Redis的RDB或AOF持久化机制，确保在系统重启后缓存可以被恢复，减少对数据库的压力。 备份机制。确保有备份和灾难恢复计划，当缓存服务器出现问题时，可以快速恢复或切换到备份系统。 热点数据处理 识别热点数据。监控和识别访问频率特别高的数据。这些数据是潜在的热点，需要特别关注。 分布式锁。对于热点key的更新操作，可以使用分布式锁来确保同一时间只有一个请求去构建新的缓存，避免大量请求同时击中数据库。 使用队列。对于高频更新的热点数据，可以使用消息队列来缓冲和序列化处理请求。 降级和限流 服务降级。在缓存雪崩或其他系统异常时，可以暂时关闭一些非核心功能，保证核心功能的正常运作。 请求限流。通过算法（如令牌桶、漏桶等）限制访问频率，确保系统在承受范围内。 缓存穿透 定义 当请求查询的数据在缓存中不存在时（也不存在于数据库中），请求便会“穿透”缓存层直接查询数据库。在正常情况下，缓存系统会减轻对数据库的访问压力，但在缓存穿透的情况下，大量的无效请求会直接落在数据库上，导致数据库负载激增，甚至可能导致服务瘫痪。
+触发原因 恶意攻击
+攻击者可能会故意请求缓存中不存在的数据。这种攻击通常旨在使应用程序变慢或崩溃，从而达到拒绝服务的效果。
+系统缺陷
+设计缺陷。如果系统没有妥善处理不存在的数据请求，例如未设置合理的默认行为或缓存策略，那么即使是正常的用户行为也可能导致缓存穿透。 数据不一致。在有些情况下，缓存和数据库之间的数据不同步也可能导致缓存穿透。 错误的用户输入"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/redis%E4%BA%8C%E4%B8%89%E4%BA%8B%E4%B8%80/">Redis二三事（一）</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 30, 2024</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>想来既然决定了走Java这条路，那么一定是绕不开redis了，redis的使用以及其原理也算是一门艺术了，希望通过博文把一些常见的redis问题和操作记录下来。</p>
+<h2 id="前言">前言</h2>
+<p>在当前的数据库体系中有两大类型的数据库，一类是关系型数据库，另一类为非关系型数据库。关系型数据库典型的数据结构是表，<strong>是由二维表及其之间的联系所组成的数据组</strong>。非关系型数据库严格上来说不是一种数据库，而是一种 <strong>数据结构化存储方法的集合，可以是文档或者键值对等</strong>。 两者的优缺点如下</p>
+<h3 id="关系型数据库">关系型数据库</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">优点</th>
+<th style="text-align:center">缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">使用方便，SQL语言较为通用，可以用于复杂查询</td>
+<td style="text-align:center">高并发读写性能较差，在海量数据的读写场景中性能较差，硬盘的IO是一个无法避免的瓶颈</td>
+</tr>
+<tr>
+<td style="text-align:center">易于维护，都是使用表结构，格式一致</td>
+<td style="text-align:center">灵活度较低，表结构固定，DDL修改对业务影响较大</td>
+</tr>
+<tr>
+<td style="text-align:center">复杂操作，可用于一个表以及多个表之间的复杂查询</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">支持事务控制</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="非关系型数据库">非关系型数据库</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">优点</th>
+<th style="text-align:center">缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">读写速度快，可以存储在内存中，不依赖于硬盘</td>
+<td style="text-align:center">不支持join等复杂连接操作</td>
+</tr>
+<tr>
+<td style="text-align:center">数据格式灵活，可以是键值对，文档、图片等，扩展性强</td>
+<td style="text-align:center">事务处理能力弱</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">缺乏数据完整性约束</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">不提供SQL支持</td>
+</tr>
+</tbody>
+</table>
+<h2 id="redis简介">redis简介</h2>
+<p>Redis（Remote Dictionary Server），即远程字典服务，是一个用C语言编写可基于内存亦可以持久化的日志型，Key-Value数据库。是非关系型数据库的一种解决方案，也是目前业界主流的缓存解决方案组件。</p>
+<h3 id="why-redis">why redis</h3>
+<p>redis性能优秀，能够支持每秒大量的读写操作，还支持集群，分布式、主从同步等配置。同时支持一定的事务能力，保证了高并发场景下的数据的安全和一致性。还有一点，redis的社区十分活跃。其优点如下：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240329221406.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240329221406.png"
+			
+			
+			
+			loading="lazy"
+			alt="redis优点">
+	</a>
+	
+	<figcaption>redis优点</figcaption>
+	
+</figure></p>
+<p>通常情况下，redis作为MySQL等数据库的缓存层使用。为什么要有缓存？如果在这样一个场景，当大量的数据请求访问MySQL，过多的请求可能会导致MySQL服务器压力过大，甚至会因为过量的请求将数据库击穿，数据服务也会因此中断。此时如果有缓存，那么数据访问请求将会先通过缓存再到达数据库，一旦请求在缓存中得到响应，将不会再查询数据库，这会很大的减少数据库的压力。简单描述如下图：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240329225308.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240329225308.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h2 id="什么数据可以放在redis">什么数据可以放在redis</h2>
+<p>这个问题其实一直萦绕在脑海里很久，在网上翻阅了一段时间也没有找到描述得较为详细的，更多的是应用的具体场景，但在我看来都不够抽象。看来这个问题也只有不断的在实践中去寻找答案了。这里就稍微简单描述一下</p>
+<ul>
+<li>不需要实时更新但是又极其消耗数据库的数据。例如网上的商品销售排行榜，这种数据只需要每隔一段时间统计即可，其实时性关注度并不高。</li>
+<li>更新频率不高，但是访问比较频繁的数据。这类数据如果放置于缓存能够一定程度上减少数据库的访问压力。如用户个人资料，设置完成后并不会频繁更新，但是为了个性化服务可能会频繁访问。</li>
+<li>需要实时更新，但是更新频率不高的数据。比如一个用户的订单列表，用户的订单显然是需要实时呈现的，但是频繁下单的情况又比较少。</li>
+<li>在某个时刻访问量极大而且更新也很频繁的数据。种数据有一个很典型的例子就是秒杀，在秒杀那一刻，可能有N倍于平时的流量进来，系统压力会很大。但是这种数据使用的缓存不能和普通缓存一样，这种缓存必须保证不丢失，否则会出现一致性等问题。</li>
+</ul>
+<h2 id="redis缓存问题">redis缓存问题</h2>
+<h3 id="缓存雪崩">缓存雪崩</h3>
+<h4 id="定义">定义</h4>
+<p>大量或全部缓存数据突然失效或消失，导致所有请求都直接打到数据库上，数据库在巨大的压力下响应缓慢或宕机，应用性能急剧下降，就像雪崩一样。</p>
+<h4 id="触发原因">触发原因</h4>
+<ol>
+<li><strong>同步过期</strong>。如果你将大量缓存设置为在同一时间过期。突然间，所有数据都需要重新加载到缓存中，这时候所有的请求都会转到数据库上，导致瞬间流量激增。</li>
+<li><strong>系统重启</strong>。有时系统维护或意外的服务重启会导致所有缓存失效。当服务再次上线，所有的请求都会涌向空无一物的缓存，然后转向数据库。</li>
+<li><strong>Redis服务宕机</strong>。硬件故障、网络问题或配置错误都可能导致Redis服务不可用。此时所有的请求都会打向数据库。</li>
+<li><strong>热点key消失</strong>。在某些情况下，特定的热点key（被大量频繁访问的key）如果失效或被删除，也会导致相应的大量请求直接落到数据库上，造成局部的雪崩效应。</li>
+</ol>
+<h4 id="解决方案">解决方案</h4>
+<ol>
+<li><strong>过期策略改进</strong>
+<ul>
+<li><strong>随机过期时间</strong>。给缓存项设置随机的过期时间可以防止它们同时失效。例如，希望缓存大约在1小时后过期，可以设置过期时间为60±10分钟。</li>
+<li><strong>细粒度过期</strong>。对于一些热点数据，可以使用更细粒度的过期时间。如使用不同的过期时间策略针对不同类型或频率访问。</li>
+</ul>
+</li>
+<li><strong>预防措施</strong>
+<ul>
+<li><strong>合理设置缓存失效时间</strong>。根据应用的具体情况合理设置缓存的失效时间，避免大量缓存同时过期。对于不同的数据和业务场景，失效时间应该有所不同。</li>
+<li><strong>持久化策略</strong>。利用Redis的RDB或AOF持久化机制，确保在系统重启后缓存可以被恢复，减少对数据库的压力。</li>
+<li><strong>备份机制</strong>。确保有备份和灾难恢复计划，当缓存服务器出现问题时，可以快速恢复或切换到备份系统。</li>
+</ul>
+</li>
+<li><strong>热点数据处理</strong>
+<ul>
+<li><strong>识别热点数据</strong>。监控和识别访问频率特别高的数据。这些数据是潜在的热点，需要特别关注。</li>
+<li><strong>分布式锁</strong>。对于热点key的更新操作，可以使用分布式锁来确保同一时间只有一个请求去构建新的缓存，避免大量请求同时击中数据库。</li>
+<li><strong>使用队列</strong>。对于高频更新的热点数据，可以使用消息队列来缓冲和序列化处理请求。</li>
+</ul>
+</li>
+<li><strong>降级和限流</strong>
+<ul>
+<li><strong>服务降级</strong>。在缓存雪崩或其他系统异常时，可以暂时关闭一些非核心功能，保证核心功能的正常运作。</li>
+<li><strong>请求限流</strong>。通过算法（如令牌桶、漏桶等）限制访问频率，确保系统在承受范围内。</li>
+</ul>
+</li>
+</ol>
+<h3 id="缓存穿透">缓存穿透</h3>
+<h4 id="定义-1">定义</h4>
+<p>当请求查询的数据在缓存中不存在时（也不存在于数据库中），请求便会“穿透”缓存层直接查询数据库。在正常情况下，缓存系统会减轻对数据库的访问压力，但在缓存穿透的情况下，大量的无效请求会直接落在数据库上，导致数据库负载激增，甚至可能导致服务瘫痪。</p>
+<h4 id="触发原因-1">触发原因</h4>
+<ol>
+<li>
+<p><strong>恶意攻击</strong></p>
+<p>攻击者可能会故意请求缓存中不存在的数据。这种攻击通常旨在使应用程序变慢或崩溃，从而达到拒绝服务的效果。</p>
+</li>
+<li>
+<p><strong>系统缺陷</strong></p>
+<ul>
+<li><strong>设计缺陷</strong>。如果系统没有妥善处理不存在的数据请求，例如未设置合理的默认行为或缓存策略，那么即使是正常的用户行为也可能导致缓存穿透。</li>
+<li><strong>数据不一致</strong>。在有些情况下，缓存和数据库之间的数据不同步也可能导致缓存穿透。</li>
+</ul>
+</li>
+<li>
+<p><strong>错误的用户输入</strong></p>
+<ul>
+<li><strong>无效请求</strong>。用户错误的输入，如错误的ID或查询参数，如果没有妥善处理，也可能导致请求直接查询数据库。</li>
+<li><strong>缺乏验证</strong>。系统未能验证输入的有效性，也可能导致大量无效查询穿透缓存层。</li>
+</ul>
+</li>
+</ol>
+<h4 id="解决方案-1">解决方案</h4>
+<ol>
+<li>
+<p><strong>布隆过滤器</strong></p>
+<p><strong>原理</strong></p>
+<ul>
+<li>**如何工作：**布隆过滤器是一种空间效率很高的数据结构，它可以告诉你某个元素是否在一个集合中。它使用多个哈希函数将元素映射到位数组中的几个点。如果检查时所有点都是1，那么元素可能存在；如果任何一个点是0，则元素一定不存在。</li>
+<li>**适用场景：**对于缓存穿透问题，布隆过滤器可以作为请求的第一道防线，用来检查请求的数据是否有可能存在于数据库中。</li>
+</ul>
+<p><strong>应用</strong></p>
+<ul>
+<li>**设置过程：**将所有可能的有效数据的标识（例如ID）添加到布隆过滤器中。然后，每次缓存查询前先查询布隆过滤器。</li>
+<li>**效果：**如果布隆过滤器说数据一定不存在，就可以直接拒绝请求，避免查询数据库。</li>
+</ul>
+</li>
+<li>
+<p><strong>空值缓存</strong></p>
+<p><strong>策略</strong></p>
+<ul>
+<li>**核心思想：**即使一个查询的结果是空（即数据在数据库中不存在），也将这个“空”结果缓存起来。这样，下次相同的查询来时，直接从缓存中返回空结果，而不需要再次查询数据库。</li>
+<li>**注意：**空结果设置一个较短的过期时间，避免长时间内有效数据被错误地判定为不存在。</li>
+</ul>
+<p><strong>优势与考量</strong></p>
+<ul>
+<li><strong>减轻数据库压力</strong>。这种方法可以显著减少对数据库的无效查询。</li>
+<li><strong>考量</strong>。过多的空结果缓存可能会占用大量缓存空间，应根据实际情况和业务需求适度使用。</li>
+</ul>
+</li>
+</ol>
+<h3 id="缓存击穿">缓存击穿</h3>
+<h4 id="定义-2">定义</h4>
+<p>指一个热门的缓存键在缓存中过期或不存在的情况下，大量请求同时访问该键所对应的数据，导致这些请求直接绕过缓存，直接访问数据库。</p>
+<h4 id="触发原因-2">触发原因</h4>
+<ol>
+<li>
+<p><strong>缓存失效</strong></p>
+<p>当一个热门的缓存键对应的数据在缓存中过期或者不存在时，如果此时有大量请求访问这个缓存键，就会导致缓存击穿。缓存失效可能是由于缓存策略设置的过期时间到期，或者手动删除缓存数据引起的。</p>
+</li>
+<li>
+<p><strong>大量并发请求</strong></p>
+<p>缓存击穿通常不是由单一请求引起的，而是由大量并发请求集中在某个特定的热门数据上。这可能是由于系统设计的瓶颈、缓存数据的热度高、某个功能或数据点引起了极大的用户兴趣等原因。当大量请求同时访问一个缓存失效或者不存在的热门数据时，它们都会绕过缓存，直接访问数据库。</p>
+</li>
+</ol>
+<h4 id="解决方案-2">解决方案</h4>
+<ol>
+<li><strong>热点数据预加载</strong>。在数据即将过期之前，提前异步加载新的数据到缓存中。通过定期或异步地预加载热门数据，可以避免缓存失效时大量请求同时访问。</li>
+<li><strong>互斥锁机制</strong>。在获取缓存数据之前，先尝试获取锁，只有一个线程能够从底层存储系统中加载数据，其他线程需要等待锁释放。这样可以避免多个线程同时访问存储系统，减轻了缓存击穿的可能性。</li>
+<li><strong>设置合理的缓存失效时间</strong>。缓存的过期时间应该设置得既不会导致数据过于陈旧，也不会过于频繁地触发缓存失效。合理的过期时间有助于平衡缓存的新鲜度和系统性能。</li>
+<li><strong>使用缓存穿透保护机制</strong>。在缓存中存储空对象或者特殊标记，当缓存中的值是空时，不再继续访问底层存储系统，而是直接返回空结果，从而防止大量请求穿透到存储系统。</li>
+<li><strong>分布式锁</strong>。在分布式系统中，使用分布式锁可以确保在集群环境中只有一个节点能够执行缓存失效时的数据加载操作，防止多个节点同时加载相同数据。</li>
+</ol>
+<h2 id="redis序列化问题">redis序列化问题</h2>
+<p>在使用Spring提供的Spring Data Redis操作redis必然需要使用Spring提供的模板类RedisTemplate。我们进入RedisTemplate类的源码中，如下图。红框框起来的部分即为RedisTemplate序列化器相关属性，都是为空的。这四个序列化属性主要是对key，value，hashkey，hashvalue进行序列化。我们经常需要将POJO对象存储到redis中，通常会使用JSON的方式序列化为字符串存储到redis中。</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330141404.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330141404.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>如果不设置这四个序列化器，那么RedisTemplate将会采用默认的JDK序列化。我们可以来看看JDK序列化的效果。我们有如下这样一个测试类和用户类，目的是为了向redis中写入对象user。得到的结果如图：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/*----User类----*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Data</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@NoArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@AllArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@JsonIgnoreProperties</span><span style="color:#f92672">(</span>ignoreUnknown <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span> <span style="color:#66d9ef">implements</span> Serializable <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String password<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/*----测试类----*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@SpringBootTest</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@RunWith</span><span style="color:#f92672">(</span>SpringRunner<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpringTestClass</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> RedisTemplate redisTemplate<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Test</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testDefaultSerializer</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        User user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Tom&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;123456&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        redisTemplate<span style="color:#f92672">.</span><span style="color:#a6e22e">opsForValue</span><span style="color:#f92672">().</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">,</span> user<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        redisTemplate<span style="color:#f92672">.</span><span style="color:#a6e22e">opsForValue</span><span style="color:#f92672">().</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;string&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;abcd&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330151304.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330151304.png"
+			
+			
+			
+			loading="lazy"
+			alt="使用默认序列化器插入对象">
+	</a>
+	
+	<figcaption>使用默认序列化器插入对象</figcaption>
+	
+</figure></p>
+<p>可以看到，在redis的key不仅有我们指定的key，<code>user</code>。还有前导的一些类似16进制的数字，并且存入的 <code>value</code>内容也不够简介，附带了一些不需要的属性。我们可以再来试试原始的字符串类型。结果如图。可以观察到，如果不知道你原始的值是什么，看着这些乱码根本无法识别。</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330152444.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330152444.png"
+			
+			
+			
+			loading="lazy"
+			alt="使用默认序列化器插入字符串">
+	</a>
+	
+	<figcaption>使用默认序列化器插入字符串</figcaption>
+	
+</figure></p>
+<p>为了解决这些问题，我们需要实现自己的序列化器，来达到简便且辨识度高的特点。自定义序列化器可以这样定义</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;redisConfig&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RedisConfig</span><span style="color:#f92672">&lt;</span>V<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Bean</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> RedisTemplate<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> V<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">redisTemplate</span><span style="color:#f92672">(</span>RedisConnectionFactory factory<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        RedisTemplate<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> V<span style="color:#f92672">&gt;</span> template <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> RedisTemplate<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>        template<span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectionFactory</span><span style="color:#f92672">(</span>factory<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 设置key的序列化方式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        template<span style="color:#f92672">.</span><span style="color:#a6e22e">setKeySerializer</span><span style="color:#f92672">(</span>RedisSerializer<span style="color:#f92672">.</span><span style="color:#a6e22e">string</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 设置value的序列化方式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        template<span style="color:#f92672">.</span><span style="color:#a6e22e">setValueSerializer</span><span style="color:#f92672">(</span>RedisSerializer<span style="color:#f92672">.</span><span style="color:#a6e22e">json</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 设置hash的key的序列化方式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        template<span style="color:#f92672">.</span><span style="color:#a6e22e">setHashKeySerializer</span><span style="color:#f92672">(</span>RedisSerializer<span style="color:#f92672">.</span><span style="color:#a6e22e">string</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 设置hash的value的序列化方式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        template<span style="color:#f92672">.</span><span style="color:#a6e22e">setHashValueSerializer</span><span style="color:#f92672">(</span>RedisSerializer<span style="color:#f92672">.</span><span style="color:#a6e22e">json</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        template<span style="color:#f92672">.</span><span style="color:#a6e22e">afterPropertiesSet</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> template<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>我们将原来默认的对象序列化方式改为了JSON的序列化方式，我们可以再来看看效果。如下图</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330155530.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330155530.png"
+			
+			
+			
+			loading="lazy"
+			alt="自定义序列化器的字符串结果">
+	</a>
+	
+	<figcaption>自定义序列化器的字符串结果</figcaption>
+	
+</figure></p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330155614.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240330155614.png"
+			
+			
+			
+			loading="lazy"
+			alt="自定义序列化器的类对象结果">
+	</a>
+	
+	<figcaption>自定义序列化器的类对象结果</figcaption>
+	
+</figure></p>
+<p>至此，为什么要进行redis的自定义序列化就很明白了，自定义序列化的数据不仅存储的冗余减少了，也不再有乱码出现。在存储的key中也没有了乱码。既节省了空间，也让数据的表示更清楚了，方便排错。</p>
+<h2 id="参考">参考</h2>
+<p><a class="link" href="https://zhuanlan.zhihu.com/p/660575286"  target="_blank" rel="noopener"
+    >看完这篇大总结，彻底掌握Redis的使用！ - 知乎 (zhihu.com)</a></p>
+<p><a class="link" href="https://blog.csdn.net/qq_37493556/article/details/107677555"  target="_blank" rel="noopener"
+    >什么时候使用Redis缓存_什么时候本地缓存什么时候用redis-CSDN博客</a></p>
+<p><a class="link" href="https://blog.csdn.net/Mrxiao_bo/article/details/135289087"  target="_blank" rel="noopener"
+    >防弹防线：彻底击败Redis缓存穿透问题【redis问题 一】-CSDN博客</a></p>
+<p><a class="link" href="https://blog.csdn.net/Mrxiao_bo/article/details/135338638"  target="_blank" rel="noopener"
+    >Redis缓存雪崩：预防、应对和解决方案【redis问题 二】-CSDN博客</a></p>
+<p><a class="link" href="https://blog.csdn.net/Mrxiao_bo/article/details/135338686"  target="_blank" rel="noopener"
+    >Redis缓存保卫战：拒绝缓存击穿的进攻【redis问题 三】-CSDN博客</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+            <a href="/tags/redis/">redis</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8aop%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">优雅的使用AOP实现参数校验</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/k%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">机器学习算法 | K近邻</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">岛屿问题 | DFS框架</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2024 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#关系型数据库">关系型数据库</a></li>
+        <li><a href="#非关系型数据库">非关系型数据库</a></li>
+      </ul>
+    </li>
+    <li><a href="#redis简介">redis简介</a>
+      <ul>
+        <li><a href="#why-redis">why redis</a></li>
+      </ul>
+    </li>
+    <li><a href="#什么数据可以放在redis">什么数据可以放在redis</a></li>
+    <li><a href="#redis缓存问题">redis缓存问题</a>
+      <ul>
+        <li><a href="#缓存雪崩">缓存雪崩</a></li>
+        <li><a href="#缓存穿透">缓存穿透</a></li>
+        <li><a href="#缓存击穿">缓存击穿</a></li>
+      </ul>
+    </li>
+    <li><a href="#redis序列化问题">redis序列化问题</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+                
+            </section>
+        </aside>
+        
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>
