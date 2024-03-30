@@ -28,6 +28,10 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
     return false;
     });
 </script>
+
+
+
+
 <meta property='og:title' content='优雅的使用AOP实现参数校验'>
 <meta property='og:description' content='如题所述，本篇博文就是使用AOP方法实现参数校验，同时利用了自定义注解。第一次见到这个做法的时候觉得甚是巧妙，故此记录。
 AOP 首先解释一下什么是AOP，AOP（Aspect Orient Programming）是spring框架中的一个重要部分。直译过来就是面向切面编程，这是一种编程思想，作为面向对象的一种补充。其本质就是在不改变源代码的情况下给程序或一组程序动态统一的添加额外功能。
@@ -412,6 +416,25 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
      
     
         
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
     
 
     <footer class="site-footer">
@@ -546,8 +569,10 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
                 <a class="go-top" id="go-top" href="#top">
                     <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
+                
             </section>
         </aside>
+        
     
 
         </div>

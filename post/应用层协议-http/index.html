@@ -40,6 +40,10 @@ HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状�
     return false;
     });
 </script>
+
+
+
+
 <meta property='og:title' content='应用层协议——HTTP'>
 <meta property='og:description' content='HTTP协议概述 概况 Web的应用层协议是超文本传输协议（HTTP）。HTTP协议由两个程序实现：一个客户程序和一个服务器程序，通过交换HTTP报文进行会话。
 HTTP定义了Web页面的方式，以及服务器向客户传送Web页面的方式。并 使用TCP作为它的支撑运输协议 。HTTP客户首先发起一个与服务器的TCP链接。连接建立，彼此之间就可以通过 套接字接口 访问TCP。从而利用套接字接口接受和发送HTTP报文。通信过程如下图所示
@@ -414,6 +418,25 @@ HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状�
      
     
         
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
     
 
     <footer class="site-footer">
@@ -564,8 +587,10 @@ HTTP状态码 由上述HTTP响应报文可以得出，在状态行中包含状�
                 <a class="go-top" id="go-top" href="#top">
                     <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
+                
             </section>
         </aside>
+        
     
 
         </div>

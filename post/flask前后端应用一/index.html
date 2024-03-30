@@ -33,6 +33,10 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
     return false;
     });
 </script>
+
+
+
+
 <meta property='og:title' content='Flask实现Web应用（一）'>
 <meta property='og:description' content='为了让之后的项目能够专注于算法，于是打算先在近几日解决一定的应用层面的内容。因此也就诞生了这篇文章。
 背景 这个Web应用说来其实应该是很简单的，但是由于没有前后端开发经验，对我来说也算是一个挑战。这个应用旨在实现能够通过前端上传录音文件，通过后端的处理将文本返回给前端页面以及能够调用本地的麦克风进行录音最后通过这段录音能够返回文本内容。项目不大，也应该不会太过华丽，所以选用了Flask框架处理。
@@ -358,6 +362,25 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
      
     
         
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
     
 
     <footer class="site-footer">
@@ -495,8 +518,10 @@ app.config[&amp;#39;UPLOAD_PATH&amp;#39;] = &amp;#39;uploads&amp;#39; 这样当�
                 <a class="go-top" id="go-top" href="#top">
                     <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
+                
             </section>
         </aside>
+        
     
 
         </div>

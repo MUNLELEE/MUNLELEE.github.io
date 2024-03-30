@@ -40,6 +40,10 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
     return false;
     });
 </script>
+
+
+
+
 <meta property='og:title' content='社区发现 | CPM算法及其实现'>
 <meta property='og:description' content='前言 近日有了解社区发现相关内容以及实现这个比较古老的算法的需要，索性就了解一下社区发现，并尝试着复现这个算法。
 社区发现概述 什么是社区 在现代人们的日常生活中，每个人都会进行社交，这在无形中就形成了一个社交网络。在这个网络中，每个人可以视为一个点，而用户之间的点赞、关注以及其他行为形成了边。在这样的一个网络中，有的用户之间联系较为紧密，有的用户之间联系较为稀疏。联系较为紧密的几个用户可以形成一个社区，在社区内，每个节点的链接都较为紧密，而两个社区之间的联系就较为稀疏。整体的结构可以被称为社团结构。如下图，圈起来的部分即为社区。
@@ -424,6 +428,25 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
      
     
         
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
     
 
     <footer class="site-footer">
@@ -564,8 +587,10 @@ $$Q=\frac{1}{2m}\sum_c{[\sum{in}-\frac{{(\sum{tot})}^2}{2m}]}$$
                 <a class="go-top" id="go-top" href="#top">
                     <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
+                
             </section>
         </aside>
+        
     
 
         </div>

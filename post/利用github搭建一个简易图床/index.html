@@ -33,6 +33,10 @@
     return false;
     });
 </script>
+
+
+
+
 <meta property='og:title' content='利用GitHub搭建一个简易图床'>
 <meta property='og:description' content='虽然总是隔了很久才会更新一篇博客，但是一旦更新便会有图片到底放哪的烦恼，用过一段时间的在线图床，但终究不是个长久之计。也便有了这篇博文的诞生。
 搭建过程 首先在GitHub上创建一个新的仓库，至于怎么创建这里就不赘述了。大家自行bing即可
@@ -343,6 +347,25 @@
      
     
         
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
     
 
     <footer class="site-footer">
@@ -471,8 +494,10 @@
                 <a class="go-top" id="go-top" href="#top">
                     <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
+                
             </section>
         </aside>
+        
     
 
         </div>

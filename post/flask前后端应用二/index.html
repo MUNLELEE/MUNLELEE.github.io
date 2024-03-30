@@ -31,6 +31,10 @@ window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function ()
     return false;
     });
 </script>
+
+
+
+
 <meta property='og:title' content='Flask实现Web应用（二）'>
 <meta property='og:description' content='书接上回，这篇博文主要是要讲一讲前端页面以及相应的css的变化，虽然是一个简单的web应用，但是在一定程度上还是需要符合人的审美。
 基础页面 由于我需要实现两个功能，调用本地麦克风录制和上传录音文件，最开始我是想把这两个功能放在同一个页面，但是最后觉得为了美观和页面逻辑，我就决定设计一个主页面，包含了这两个功能的可选项，之后再通过选择重定向至另一个页面。
@@ -388,6 +392,25 @@ window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function ()
      
     
         
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
     
 
     <footer class="site-footer">
@@ -524,8 +547,10 @@ window.onload = function () { $(&amp;#34;.choose_btn&amp;#34;).click(function ()
                 <a class="go-top" id="go-top" href="#top">
                     <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
                 </a>
+                
             </section>
         </aside>
+        
     
 
         </div>
