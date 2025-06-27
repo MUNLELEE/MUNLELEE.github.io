@@ -6,7 +6,75 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Sat, 30 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 27 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>MySQL学习（一）| 基础架构</title>
+        <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%80/</link>
+        <pubDate>Fri, 27 Jun 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%80/</guid>
+        <description>&lt;p&gt;已经许久没有更新过博客了，曾经的热情似乎早已不再。在经历过一些人和事之后，觉得还是有必要重启这个博客，回归打算就从MySQL开始吧，经好友推荐了解到了&lt;a class=&#34;link&#34; href=&#34;https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/MySQL%e5%ae%9e%e6%88%9845%e8%ae%b2&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;《MySQL45讲》&lt;/a&gt;，之前的数据库基础实在是有点薄弱，打算趁此机会正式学习一下这个数据库。&lt;/p&gt;
+&lt;h2 id=&#34;mysql基础架构&#34;&gt;MySQL基础架构&lt;/h2&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/MySQL%E9%80%BB%E8%BE%91%E6%9E%B6%E6%9E%84.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/MySQL%E9%80%BB%E8%BE%91%E6%9E%B6%E6%9E%84.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			alt=&#34;MySQL逻辑架构&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;MySQL逻辑架构&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;如图所示，是MySQL的基础架构，大体可以分为server层和存储引擎层两部分。Server 层包括连接器、查询缓存、分析器、优化器、执行器等，涵盖 MySQL 的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现。存储引擎层负责数据的存储和提取。其架构模式是插件式的，最常用的存储引擎是InnoDB，也是MySQL的默认存储引擎。当然，我们也可以在建表时使用 &lt;code&gt;engine=MyISAM&lt;/code&gt; 来更改存储引擎。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;值得一提是，MySQL8.0取消了查询缓存这个模块，原因自然是查询缓存存在弊端和局限性。同时由于现代缓存redis发展的成熟，将缓存置于客户端也有更多的好处。这些内容有机会再另开一篇博客稍作解释吧。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;连接器&#34;&gt;连接器&lt;/h3&gt;
+&lt;p&gt;第一步，在连接到数据库之后，首先通过的就是连接器。连接器负责跟客户端建立连接、获取权限、维持和管理连接。连接命令如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql -h$ip -P$port -u$user -p$password
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在经过 &lt;strong&gt;TCP握手&lt;/strong&gt; 之后，连接器就会开始认证你的身份。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果用户名或密码不对，你就会收到一个”Access denied for user”的错误，然后客户端程序结束执行。&lt;/li&gt;
+&lt;li&gt;如果用户名密码认证通过，连接器会到权限表里面查出你拥有的权限。之后，这个连接里面的权限判断逻辑，都将依赖于此时读到的权限。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一个用户成功建立连接后，即使你用管理员账号对这个用户的权限做了修改，也不会影响已经存在连接的权限。修改完成后，只有再新建的连接才会使用新的权限设置。&lt;/p&gt;
+&lt;p&gt;如果连接断开之后（如果客户端长期处于空闲，MySQL也会将连接中断，由参数 &lt;code&gt;wait_timeout&lt;/code&gt; 控制），客户端再次发送请求，就会发生错误，此时需要进行重连。这里区分了 &lt;strong&gt;长连接&lt;/strong&gt; 和 &lt;strong&gt;短连接&lt;/strong&gt; 长连接是指连接成功后，如果客户端持续有请求，则一直使用同一个连接。短连接则是指每次执行完很少的几次查询就断开连接，下次查询再重新建立一个。&lt;/p&gt;
+&lt;p&gt;建立连接的过程较为复杂，实际使用中要减少建立连接的动作，因此尽量使用长连接。&lt;/p&gt;
+&lt;p&gt;但是全部使用长连接后，MySQL占用内存涨得特别快，这是因为MySQL在执行过程中临时使用的内存是管理在连接对象里面的。这些资源会在连接断开的时候才释放。所以如果长连接累积下来，可能导致内存占用太大，被系统强行杀掉（OOM），从现象看就是MySQL异常重启了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如何解决这种问题？&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;定期断开长连接。使用一段时间，或者程序里面判断执行过一个占用内存的大查询后，断开连接，之后要查询再重连。&lt;/li&gt;
+&lt;li&gt;如果你用的是 MySQL 5.7 或更新版本，可以在每次执行一个比较大的操作后，通过执行 &lt;code&gt;mysql_reset_connection&lt;/code&gt; 来重新初始化连接资源。这个过程不需要重连和重新做权限验证，但是会将连接恢复到刚刚创建完时的状态。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;查询缓存&#34;&gt;查询缓存&lt;/h3&gt;
+&lt;p&gt;因为新版的MySQL已经舍弃了这一部分，所以不作过多介绍。只需要知道MySQL拿到一个查询请求后，会先到查询缓存看看，之前是不是执行过这条语句。之前执行过的语句及其结果可能会以键值对的形式，被直接缓存在内存中。key是查询的语句，value是查询的结果。如果你的查询能够直接在这个缓存中找到key，那么这个value就会被直接返回给客户端。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;但是查询缓存的失效十分频繁，只要有针对表的更新，那么关于这个表的查询缓存就会被清空。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;分析器&#34;&gt;分析器&lt;/h3&gt;
+&lt;p&gt;分析器首先会进行“词法分析”，识别出里面的字符串分别是什么，代表什么。之后进行“语法分析”，根据词法分析的结果，语法分析器会根据语法规则，判断你输入的这个SQL语句是否满足MySQL语法。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果查询的字段在表中不存在，那么在分析器阶段就会报错&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;优化器&#34;&gt;优化器&lt;/h3&gt;
+&lt;p&gt;经过分析器，MySQL就知道要做什么了，在执行之前还需要经过优化器处理。优化器是在表里面有多个索引的时候，决定使用哪个索引；或者在一个语句有多表关联（join）的时候，决定各个表的连接顺序。比如你执行下面这样的语句，这个语句是执行两个表的join：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; t1 &lt;span style=&#34;color:#66d9ef&#34;&gt;join&lt;/span&gt; t2 &lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt;(ID)  &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; t1.c&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;and&lt;/span&gt; t2.d&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;此时优化器要决定先取出t1表的数据还是t2表的数据再进行关联。虽然是一样的逻辑，但可能有不一样的执行效率。&lt;/p&gt;
+&lt;h3 id=&#34;执行器&#34;&gt;执行器&lt;/h3&gt;
+&lt;p&gt;到了执行器之后就开始正式执行语句。开始执行的时候，要先判断一下你对这个表 T 有没有执行查询的权限，如果没有，就会返回没有权限的错误。对于如下的这个语句，若ID字段没有索引，那么执行流程如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; T &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; ID &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol&gt;
+&lt;li&gt;调用 InnoDB 引擎接口取这个表的第一行，判断 ID 值是不是 10，如果不是则跳过，如果是则将这行存在结果集中；&lt;/li&gt;
+&lt;li&gt;调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。&lt;/li&gt;
+&lt;li&gt;执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;参考&#34;&gt;参考&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;MySQL45讲——01 基础架构：一条SQL查询语句是如何执行的？&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>Redis二三事（一）</title>
         <link>https://MUNLELEE.github.io/post/redis%E4%BA%8C%E4%B8%89%E4%BA%8B%E4%B8%80/</link>
         <pubDate>Sat, 30 Mar 2024 00:00:00 +0000</pubDate>
@@ -2031,33 +2099,6 @@
 &lt;p&gt;（4）、网站接受浏览器发来的数据之后要做以下的操作：&lt;/p&gt;
 &lt;p&gt;（a）、使用自己的私钥将信息解密取出密码，使用密码解密浏览器发来的握手消息，并验证HASH是否与浏览器发来的一致。&lt;/p&gt;
 &lt;p&gt;（b）、使用密码加密一段握手消息，发送给浏览器。&lt;/p&gt;
-</description>
-        </item>
-        <item>
-        <title>“喜帖街”</title>
-        <link>https://MUNLELEE.github.io/post/%E5%96%9C%E5%B8%96%E8%A1%97/</link>
-        <pubDate>Sat, 05 Feb 2022 00:00:00 +0000</pubDate>
-        
-        <guid>https://MUNLELEE.github.io/post/%E5%96%9C%E5%B8%96%E8%A1%97/</guid>
-        <description>&lt;p&gt;这篇文章要说应该是心血来潮，并没有想到要用什么标题会比较合适，于是就起了 &lt;em&gt;“喜帖街”&lt;/em&gt; ，因为说到底一切的情感也是由它而来。&lt;/p&gt;
-&lt;h2 id=&#34;喜帖街&#34;&gt;喜帖街&lt;/h2&gt;
-&lt;p&gt;  喜帖街是躺在我的列表里很久的为数不多的粤语歌，虽然很久就加入了列表，但第一次听时却没有觉得有多惊艳，就一直放在了列表。但今天忽然想起来听一听，在仔细地看过它的歌词，聆听着谢安琪那有一种婉约感觉的歌声。心中却突然有一种说不上来的感慨。&lt;/p&gt;
-&lt;p&gt;  去网上搜了一下喜帖街，这是一条属于香港60年代的老街，之所以称为喜帖街是因为它是当时香港著名的印刷品制作及门市集中地。尤其是以印刷喜帖著名。当有喜事时，香港人便会想起喜帖街而去那里购买喜帖。虽短而窄小，但是也有属于香港百德新街爱侣其乐融融的一面。&lt;/p&gt;
-&lt;p&gt;  随着20世纪初市区重建的需要，市区重建局清拆了喜帖街两侧的店铺，改为大型商场。喜帖街承载的香港那份独特的回忆，也就这样慢慢消失了。这条街也便再也没有属于爱侣的那一部分。&lt;/p&gt;
-&lt;p&gt;  虽然歌曲作词人黄伟文提醒大家喜帖街不是一首情歌，是一首励志的歌曲，鼓励大家在逆境时代要积极面对人生。但是在我看来更多的喜帖街那份香港集体回忆不得不只停留在回忆的惋惜。时代在改变，那些我们认为不应该作出改动的事物可能会在某一天让你发觉沧海桑田也只是一瞬。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;em&gt;人应该接受   都有日倒下&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;其实没有一种安稳快乐   永远也不差&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;就似这一区   曾经称得上美满甲天下&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;但霎眼   全街的单位   快要住满乌鸦&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;       ——&lt;a class=&#34;link&#34; href=&#34;https://music.163.com/#/song?id=308299&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;谢安琪《喜帖街》&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;从这几句歌词中便能很明显地体会枯荣带来的那种感伤。&lt;/p&gt;
-&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
-&lt;p&gt;  对于喜帖街的这种变迁，其实我是深有同感的。在我小学到中学的阶段我一直都住在我们镇上的一条老街。那种一出门就能见到邻里乡亲，想要找玩伴就直接去串门，甚至熟悉每一家每一户的构造。在我们那一带存在着不少的木工，于是由我们爷爷那一代建造的老房子在很多地方还存在着木制结构。虽然只是木制，但是踩上去却依旧能够带给人一种厚实的感觉，现在一想就算不是我们那里的人所造，那也应该是结识了优秀的木工吧。也因为有木制结构，在木墙上钉了一些钉子，那时的我并不知道为什么要这么做，但却给了我们一个类似“闯关”的机会，儿时的玩伴偶尔也会沿着各家各户的墙沿，用手抓着钉子，踩在门槛上就这样从一端到另一端。虽然这种乐趣到了中学便已经消失了，随着学习成绩之间的差异，大家也都各奔东西。&lt;/p&gt;
-&lt;p&gt;  有些人有些事，不管过了多久当想起时总会觉得记忆犹新，在那里从不敢放“蜘蛛炮”，只会拿着一根烟点，到最后到处找大人拿打火机就急着要放鞭炮去；趴在人家的门槛上玩着陀螺（到现在我依旧记得我那个叠了整整五层铁片的陀螺），弹着磁铁片，在学校的门口买磁铁卡包，总是希望能够开出自己想要的样式；买了那种带有饮料的水枪，却只是为了看喷在墙上后谁的水珠会下落的更快。这些都是属于一亩四方地的乐趣，是属于上个上个世纪留下来的邻里乡亲之间的那种情感。这一切也像“喜帖街”一样，随着城区的改造而消失殆尽，每家每户都住到了不同的地方，不同的楼层。再没有出门就能叫到的小炒，出门就能直接去买东西的小卖部。我想那个地方现在剩下的应该就只有一棵见证了世事变迁的榕树了。包括那由五块石板组成的桥（也因此那里被称为“五板桥头”）应该也不复存在了。&lt;/p&gt;
-&lt;p&gt;  虽然喜帖街让我想起了曾经居住的地方，但我从喜帖街这首歌中还看到了兴衰，于是让我思考起了是否所有的事物都会像所有生物一样都会步入暮年，最后都会消亡。说实话，这些东西应该不属于我这个年纪应该考虑的。但在目睹了一个企业的兴衰之后，我想这个问题是每个管理人员不得不去思考甚至应该放在第一位的问题。从父母口中听到了曾经的红火，那种所有人从早忙到晚的状态。&lt;/p&gt;
 </description>
         </item>
         <item>
