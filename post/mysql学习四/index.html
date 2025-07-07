@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 索引是数据库中重要的概念，简单来说，索引就像是书的目录一样，其目的就是为了提高数据查询效率。
+索引的常见模型 索引的出现是为了提高查找效率，但是实现索引的方式有很多种，这里介绍三种常见的索引结构。
+哈希表 哈希表是一种以键 - 值（key-value）存储数据的结构，我们只要输入待查找的值即 key，就可以找到其对应的值即 value。哈希的思路很简单，把值放在数组里，用一个哈希函数把 key 换算成一个确定的位置，然后把 value 放在数组的这个位置。不可避免地，多个 key 值经过哈希函数的换算，会出现同一个值的情况。处理这种情况的一种方法是，拉出一个链表。
+和Java类似，当链表过长时会影响查询效率，Java中的HashMap首先是会进行数组的扩容，在一定阈值后将拉链表转换为红黑树。
+假设现在维护一个身份证信息和姓名的表，使用哈希索引的示意图如下：
+假设，这时候你要查 ID_card_n2 对应的名字是什么，处理步骤就是：首先，将 ID_card_n2 通过哈希函数算出 N；然后，按顺序遍历，找到 User2。 需要注意的是，图中四个 ID_card_n 的值并不是递增的，这样做的好处是增加新的 User 时速度会很快，只需要往后追加。但缺点是，因为不是有序的，所以哈希索引做区间查询的速度是很慢的。
+所以，哈希表这种结构适用于只有等值查询的场景，而有序数组在等值查询和范围查询的性能都较好。
+有序数组 依旧使用上面的例子，如果使用有序数组作为索引结构，示意图如下：
+这时候如果你要查 ID_card_n2 对应的名字，用二分法就可以快速得到，这个时间复杂度是 O(log(N))。这种索引结构同样支持范围查询，如果要查身份证号在 [ID_card_X, ID_card_Y] 区间的 User，可以先用二分法找到 ID_card_X（如果不存在 ID_card_X，就找到大于 ID_card_X 的第一个 User），然后向右遍历，直到查到第一个大于 ID_card_Y 的身份证号，退出循环。
+如果单纯看查询效率，有序数组是一个不错的存储结构，但当更新数据时，需要移动插入位置后的所有元素，成本较大。因此，有序数据索引结构只适合静态存储引擎
+二叉搜搜索树 二叉搜索树的特点是：每个节点的左儿子小于父节点，父节点又小于右儿子。这样如果你要查 ID_card_n2 的话，按照图中的搜索顺序就是按照 UserA -&amp;gt; UserC -&amp;gt; UserF -&amp;gt; User2 这个路径得到。这个时间复杂度是 O(log(N))。
+为了维持O(log(N))的查询复杂度，需要保持搜索树为平衡二叉树，因此更新元素的时间复杂度也为O(log(N))。
+更多情况下并不使用二叉搜索树作为索引。数据库索引不仅存在内存中，还要存储到磁盘里，不可避免的会涉及到读盘操作。二叉搜索树随着节点的增多，树高将不断增长，进行一次查询需要读取的数据块较多，就会导致查询效率降低。
+InnoDB的索引模型 在 InnoDB 中，表都是根据主键顺序以索引的形式存放的，这种存储方式的表称为索引组织表。InnoDB 使用了 B&#43; 树索引模型，所以数据都是存储在 B&#43; 树中的。每一个索引在InnoDB里面对应一棵B&#43;树。'><title>MySQL学习（四）| 索引</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/'>
+
+<link rel="stylesheet" href="/scss/style.min.2d5c7b7fe00d3723b47df5ddeea35027ba1a58ec45a6d797c9c0e626dd65ac00.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+
+
+
+
+<meta property='og:title' content='MySQL学习（四）| 索引'>
+<meta property='og:description' content='前言 索引是数据库中重要的概念，简单来说，索引就像是书的目录一样，其目的就是为了提高数据查询效率。
+索引的常见模型 索引的出现是为了提高查找效率，但是实现索引的方式有很多种，这里介绍三种常见的索引结构。
+哈希表 哈希表是一种以键 - 值（key-value）存储数据的结构，我们只要输入待查找的值即 key，就可以找到其对应的值即 value。哈希的思路很简单，把值放在数组里，用一个哈希函数把 key 换算成一个确定的位置，然后把 value 放在数组的这个位置。不可避免地，多个 key 值经过哈希函数的换算，会出现同一个值的情况。处理这种情况的一种方法是，拉出一个链表。
+和Java类似，当链表过长时会影响查询效率，Java中的HashMap首先是会进行数组的扩容，在一定阈值后将拉链表转换为红黑树。
+假设现在维护一个身份证信息和姓名的表，使用哈希索引的示意图如下：
+假设，这时候你要查 ID_card_n2 对应的名字是什么，处理步骤就是：首先，将 ID_card_n2 通过哈希函数算出 N；然后，按顺序遍历，找到 User2。 需要注意的是，图中四个 ID_card_n 的值并不是递增的，这样做的好处是增加新的 User 时速度会很快，只需要往后追加。但缺点是，因为不是有序的，所以哈希索引做区间查询的速度是很慢的。
+所以，哈希表这种结构适用于只有等值查询的场景，而有序数组在等值查询和范围查询的性能都较好。
+有序数组 依旧使用上面的例子，如果使用有序数组作为索引结构，示意图如下：
+这时候如果你要查 ID_card_n2 对应的名字，用二分法就可以快速得到，这个时间复杂度是 O(log(N))。这种索引结构同样支持范围查询，如果要查身份证号在 [ID_card_X, ID_card_Y] 区间的 User，可以先用二分法找到 ID_card_X（如果不存在 ID_card_X，就找到大于 ID_card_X 的第一个 User），然后向右遍历，直到查到第一个大于 ID_card_Y 的身份证号，退出循环。
+如果单纯看查询效率，有序数组是一个不错的存储结构，但当更新数据时，需要移动插入位置后的所有元素，成本较大。因此，有序数据索引结构只适合静态存储引擎
+二叉搜搜索树 二叉搜索树的特点是：每个节点的左儿子小于父节点，父节点又小于右儿子。这样如果你要查 ID_card_n2 的话，按照图中的搜索顺序就是按照 UserA -&amp;gt; UserC -&amp;gt; UserF -&amp;gt; User2 这个路径得到。这个时间复杂度是 O(log(N))。
+为了维持O(log(N))的查询复杂度，需要保持搜索树为平衡二叉树，因此更新元素的时间复杂度也为O(log(N))。
+更多情况下并不使用二叉搜索树作为索引。数据库索引不仅存在内存中，还要存储到磁盘里，不可避免的会涉及到读盘操作。二叉搜索树随着节点的增多，树高将不断增长，进行一次查询需要读取的数据块较多，就会导致查询效率降低。
+InnoDB的索引模型 在 InnoDB 中，表都是根据主键顺序以索引的形式存放的，这种存储方式的表称为索引组织表。InnoDB 使用了 B&#43; 树索引模型，所以数据都是存储在 B&#43; 树中的。每一个索引在InnoDB里面对应一棵B&#43;树。'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='MySQL' /><meta property='article:tag' content='技术' /><meta property='article:published_time' content='2025-07-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-07-01T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="MySQL学习（四）| 索引">
+<meta name="twitter:description" content="前言 索引是数据库中重要的概念，简单来说，索引就像是书的目录一样，其目的就是为了提高数据查询效率。
+索引的常见模型 索引的出现是为了提高查找效率，但是实现索引的方式有很多种，这里介绍三种常见的索引结构。
+哈希表 哈希表是一种以键 - 值（key-value）存储数据的结构，我们只要输入待查找的值即 key，就可以找到其对应的值即 value。哈希的思路很简单，把值放在数组里，用一个哈希函数把 key 换算成一个确定的位置，然后把 value 放在数组的这个位置。不可避免地，多个 key 值经过哈希函数的换算，会出现同一个值的情况。处理这种情况的一种方法是，拉出一个链表。
+和Java类似，当链表过长时会影响查询效率，Java中的HashMap首先是会进行数组的扩容，在一定阈值后将拉链表转换为红黑树。
+假设现在维护一个身份证信息和姓名的表，使用哈希索引的示意图如下：
+假设，这时候你要查 ID_card_n2 对应的名字是什么，处理步骤就是：首先，将 ID_card_n2 通过哈希函数算出 N；然后，按顺序遍历，找到 User2。 需要注意的是，图中四个 ID_card_n 的值并不是递增的，这样做的好处是增加新的 User 时速度会很快，只需要往后追加。但缺点是，因为不是有序的，所以哈希索引做区间查询的速度是很慢的。
+所以，哈希表这种结构适用于只有等值查询的场景，而有序数组在等值查询和范围查询的性能都较好。
+有序数组 依旧使用上面的例子，如果使用有序数组作为索引结构，示意图如下：
+这时候如果你要查 ID_card_n2 对应的名字，用二分法就可以快速得到，这个时间复杂度是 O(log(N))。这种索引结构同样支持范围查询，如果要查身份证号在 [ID_card_X, ID_card_Y] 区间的 User，可以先用二分法找到 ID_card_X（如果不存在 ID_card_X，就找到大于 ID_card_X 的第一个 User），然后向右遍历，直到查到第一个大于 ID_card_Y 的身份证号，退出循环。
+如果单纯看查询效率，有序数组是一个不错的存储结构，但当更新数据时，需要移动插入位置后的所有元素，成本较大。因此，有序数据索引结构只适合静态存储引擎
+二叉搜搜索树 二叉搜索树的特点是：每个节点的左儿子小于父节点，父节点又小于右儿子。这样如果你要查 ID_card_n2 的话，按照图中的搜索顺序就是按照 UserA -&amp;gt; UserC -&amp;gt; UserF -&amp;gt; User2 这个路径得到。这个时间复杂度是 O(log(N))。
+为了维持O(log(N))的查询复杂度，需要保持搜索树为平衡二叉树，因此更新元素的时间复杂度也为O(log(N))。
+更多情况下并不使用二叉搜索树作为索引。数据库索引不仅存在内存中，还要存储到磁盘里，不可避免的会涉及到读盘操作。二叉搜索树随着节点的增多，树高将不断增长，进行一次查询需要读取的数据块较多，就会导致查询效率降低。
+InnoDB的索引模型 在 InnoDB 中，表都是根据主键顺序以索引的形式存放的，这种存储方式的表称为索引组织表。InnoDB 使用了 B&#43; 树索引模型，所以数据都是存储在 B&#43; 树中的。每一个索引在InnoDB里面对应一棵B&#43;树。"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/">MySQL学习（四）| 索引</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jul 01, 2025</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="前言">前言</h2>
+<p>索引是数据库中重要的概念，简单来说，索引就像是书的目录一样，其目的就是为了提高数据查询效率。</p>
+<h2 id="索引的常见模型">索引的常见模型</h2>
+<p>索引的出现是为了提高查找效率，但是实现索引的方式有很多种，这里介绍三种常见的索引结构。</p>
+<h3 id="哈希表">哈希表</h3>
+<p>哈希表是一种以键 - 值（key-value）存储数据的结构，我们只要输入待查找的值即 key，就可以找到其对应的值即 value。哈希的思路很简单，把值放在数组里，用一个哈希函数把 key 换算成一个确定的位置，然后把 value 放在数组的这个位置。不可避免地，多个 key 值经过哈希函数的换算，会出现同一个值的情况。处理这种情况的一种方法是，拉出一个链表。</p>
+<blockquote>
+<p>和Java类似，当链表过长时会影响查询效率，Java中的HashMap首先是会进行数组的扩容，在一定阈值后将拉链表转换为红黑树。</p>
+</blockquote>
+<p>假设现在维护一个身份证信息和姓名的表，使用哈希索引的示意图如下：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701103237.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701103237.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>假设，这时候你要查 ID_card_n2 对应的名字是什么，处理步骤就是：首先，将 ID_card_n2 通过哈希函数算出 N；然后，按顺序遍历，找到 User2。 <strong>需要注意的是，图中四个 ID_card_n 的值并不是递增的，这样做的好处是增加新的 User 时速度会很快，只需要往后追加。但缺点是，因为不是有序的，所以哈希索引做区间查询的速度是很慢的。</strong></p>
+<p><strong>所以，哈希表这种结构适用于只有等值查询的场景，而有序数组在等值查询和范围查询的性能都较好。</strong></p>
+<h3 id="有序数组">有序数组</h3>
+<p>依旧使用上面的例子，如果使用有序数组作为索引结构，示意图如下：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701103757.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701103757.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>这时候如果你要查 ID_card_n2 对应的名字，用二分法就可以快速得到，这个时间复杂度是 O(log(N))。这种索引结构同样支持范围查询，如果要查身份证号在 [ID_card_X, ID_card_Y] 区间的 User，可以先用二分法找到 ID_card_X（如果不存在 ID_card_X，就找到大于 ID_card_X 的第一个 User），然后向右遍历，直到查到第一个大于 ID_card_Y 的身份证号，退出循环。</p>
+<p><strong>如果单纯看查询效率，有序数组是一个不错的存储结构，但当更新数据时，需要移动插入位置后的所有元素，成本较大。因此，有序数据索引结构只适合静态存储引擎</strong></p>
+<h3 id="二叉搜搜索树">二叉搜搜索树</h3>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701112438.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701112438.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>二叉搜索树的特点是：每个节点的左儿子小于父节点，父节点又小于右儿子。这样如果你要查 ID_card_n2 的话，按照图中的搜索顺序就是按照 UserA -&gt; UserC -&gt; UserF -&gt; User2 这个路径得到。这个时间复杂度是 O(log(N))。</p>
+<p><strong>为了维持O(log(N))的查询复杂度，需要保持搜索树为平衡二叉树，因此更新元素的时间复杂度也为O(log(N))。</strong></p>
+<p><strong>更多情况下并不使用二叉搜索树作为索引。数据库索引不仅存在内存中，还要存储到磁盘里，不可避免的会涉及到读盘操作。二叉搜索树随着节点的增多，树高将不断增长，进行一次查询需要读取的数据块较多，就会导致查询效率降低。</strong></p>
+<h2 id="innodb的索引模型">InnoDB的索引模型</h2>
+<p><strong>在 InnoDB 中，表都是根据主键顺序以索引的形式存放的，这种存储方式的表称为索引组织表。InnoDB 使用了 B+ 树索引模型，所以数据都是存储在 B+ 树中的。每一个索引在InnoDB里面对应一棵B+树。</strong></p>
+<p>假设有这么一个表，主键列为ID，表中有字段k，并且在k上有索引。建表语句如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> <span style="color:#a6e22e">T</span> (
+</span></span><span style="display:flex;"><span>	id <span style="color:#66d9ef">int</span> <span style="color:#66d9ef">primary</span> <span style="color:#66d9ef">key</span>,
+</span></span><span style="display:flex;"><span>	k <span style="color:#66d9ef">int</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>	name <span style="color:#66d9ef">varchar</span>(<span style="color:#ae81ff">16</span>),
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">index</span>(k)), <span style="color:#66d9ef">engine</span> <span style="color:#f92672">=</span> InnoBD;
+</span></span></code></pre></div><p>表中 R1~R5 的 (ID,k) 值分别为 (100,1)、(200,2)、(300,3)、(500,5) 和 (600,6)，两棵树的示例示意图如下：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701115906.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701115906.png"
+			
+			
+			
+			loading="lazy"
+			alt="InnoDB索引组织结构">
+	</a>
+	
+	<figcaption>InnoDB索引组织结构</figcaption>
+	
+</figure></p>
+<p>根据叶子节点的内容不同，索引类型分为 <strong>主键索引</strong> 和 <strong>非主键索引</strong> 。</p>
+<ul>
+<li>主键索引的叶子节点存储的是整行数据，在InnoDB里，主键索引也称为 <strong>聚簇索引</strong> 。</li>
+<li>非主键索引的叶子节点存储的内容是主键的值，在InnoDB里，非主键索引也称为 <strong>二级索引</strong> 。</li>
+</ul>
+<p>也因为这种存储结构，基于主键索引的查询和普通索引存在区别：</p>
+<ul>
+<li><strong>如果查询语句是 <code>select * from T where ID = 500</code>，也就是主键查询的方式，那么只需要搜索ID这棵B+树。</strong></li>
+<li><strong>如果查询语句是 <code>select * from T where k = 5</code>，也就是普通索引的方式，那么需要先搜索字段k这棵索引树，得到对应的主键ID值为500，再利用ID搜索ID索引树，这个过程也成为回表。</strong></li>
+</ul>
+<p>也就是说， <strong>基于非主键索引的查询需要多扫描一棵索引树</strong>，所以如果可以的话尽量使用主键索引。</p>
+<h2 id="索引维护">索引维护</h2>
+<h3 id="数据页">数据页</h3>
+<p>在讲述索引维护之前，先简单了解一下MySQL数据页的概念。 <strong>页（Pages）是 InnoDB 中管理数据的最小单元</strong>。Buffer Pool中存的就是一页一页的数据。再比如，当我们要查询的数据不在 Buffer Pool 中时，InnoDB 会将记录所在的页整个加载到 Buffer Pool 中去；同样的，将 Buffer Pool 中的脏页刷入磁盘时，也是按照页为单位刷入磁盘的。</p>
+<p>存储MySQL中的数据最后都是存储在页中的，在InnoDB的设计中，页与页之间是通过一个 <strong>双向链表</strong>连接起来的。如下图所示：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701153124.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701153124.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>而存储在页中的一行一行记录则是通过单链表连接起来的。如下图所示：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701153700.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701153700.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="维护">维护</h3>
+<p>B+ 树为了维护索引有序性，在插入新值的时候需要做必要的维护。使用上面的例子，如果插入新的行 ID 值为 700，则只需要在 R5 的记录后面插入一个新记录。如果新插入的 ID 值为 400需要逻辑上挪动后面的数据，空出位置。 <strong>更糟的情况是，如果 R5 所在的数据页已经满了，根据 B+ 树的算法，这时候需要申请一个新的数据页，然后挪动部分数据过去。这个过程称为页分裂。除了性能外，页分裂操作还影响数据页的利用率。原本放在一个页的数据，现在分到两个页中，整体空间利用率会下降。有分裂就有合并。当相邻两个页由于删除了数据，利用率很低之后，会将数据页做合并。</strong></p>
+<h3 id="自增主键or其他字段">自增主键or其他字段</h3>
+<p>在很多建表规范中，要求建表语句中定义自增主键。也就是 <code>NOT NULL PRIMARY KEY AUTO_INCREMENT</code>。这时候插入新数据时，可以不指定ID的值，系统会获取当前ID最大值加1作为下一条记录的ID值。为什么使用自增主键可以从性能和存储两个方面考虑。</p>
+<ul>
+<li><strong>使用自增主键，每次插入一条新记录，都是追加操作，不涉及挪动其他记录，也不会触发叶子节点的分裂。使用业务字段做主键，往往不容易保证有序插入，写入数据的成本较高。</strong></li>
+<li><strong>从存储角度考虑，假如在表中有唯一字段身份证号（字符串类型），那么还需要使用自增主键吗？——因为每个非主键索引的叶子节点上存放的都是主键的值，因此如果使用身份证号作为主键，占用的空间显然是比自增主键要来的大的。</strong></li>
+</ul>
+<p>有没有什么场景适合用业务字段直接做主键的呢？还是有的。比如，有些业务的场景需求是这样的：</p>
+<ol>
+<li>只有一个索引；</li>
+<li>该索引必须是唯一索引。</li>
+</ol>
+<p>也就是典型的 KV 场景，由于没有其他索引，所以也就不用考虑其他索引的叶子节点大小的问题，直接将这个索引设置为主键，可以避免每次查询需要搜索两棵树。</p>
+<h2 id="一个索引搜索的例子">一个索引搜索的例子</h2>
+<p>有如下的一张表，若执行 <code>select * from T where k between 3 and 5</code>，需要经过几次树的搜索操作，会扫描多少行？表初始化语句如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> <span style="color:#a6e22e">T</span> (
+</span></span><span style="display:flex;"><span>	ID <span style="color:#66d9ef">int</span> <span style="color:#66d9ef">primary</span> <span style="color:#66d9ef">key</span>,
+</span></span><span style="display:flex;"><span>	k <span style="color:#66d9ef">int</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#ae81ff">0</span>, 
+</span></span><span style="display:flex;"><span>	s <span style="color:#66d9ef">varchar</span>(<span style="color:#ae81ff">16</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">index</span> <span style="color:#a6e22e">k</span>(k))
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">engine</span><span style="color:#f92672">=</span>InnoDB;
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> T <span style="color:#66d9ef">values</span>(<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;aa&#39;</span>),(<span style="color:#ae81ff">200</span>,<span style="color:#ae81ff">2</span>,<span style="color:#e6db74">&#39;bb&#39;</span>),(<span style="color:#ae81ff">300</span>,<span style="color:#ae81ff">3</span>,<span style="color:#e6db74">&#39;cc&#39;</span>),(<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">5</span>,<span style="color:#e6db74">&#39;ee&#39;</span>),(<span style="color:#ae81ff">600</span>,<span style="color:#ae81ff">6</span>,<span style="color:#e6db74">&#39;ff&#39;</span>);
+</span></span></code></pre></div><p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701115906.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701115906.png"
+			
+			
+			
+			loading="lazy"
+			alt="当前表的InnoDB索引组织结构">
+	</a>
+	
+	<figcaption>当前表的InnoDB索引组织结构</figcaption>
+	
+</figure></p>
+<p>此时SQL语句执行的查询流程如下：</p>
+<ol>
+<li>在 k 索引树上找到 k=3 的记录，取得 ID = 300；</li>
+<li>再到 ID 索引树查到 ID=300 对应的 R3；</li>
+<li>在 k 索引树取下一个值 k=5，取得 ID=500；</li>
+<li>再回到 ID 索引树查到 ID=500 对应的 R4；</li>
+<li>在 k 索引树取下一个值 k=6，不满足条件，循环结束。</li>
+</ol>
+<p>在这个过程中， <strong>回到主键索引树搜索的过程，称为回表</strong>。这个查询过程读了 k 索引树的 3 条记录（步骤 1、3 和 5），回表了两次（步骤 2 和 4）。由于查询结果所需要的数据只在主键索引上有，所以不得不回表，这时候就可以考虑优化索引来避免回表。</p>
+<h2 id="覆盖索引">覆盖索引</h2>
+<p>如果执行的语句是 <code>select ID from T where k between 3 and 5</code>，因为ID的值已经在k索引树上，所以不需要回表。在这个查询里面，索引k已经“覆盖了”查询需求，因此称为覆盖索引。 <strong>覆盖索引可以减少树的搜索次数，提升查询性能，所以一个常用的优化手段就是使用覆盖索引。</strong></p>
+<p>因此，如果有高频请求查询非主键字段，可以考虑建立联合索引来避免回表。</p>
+<blockquote>
+<p><strong>令表中字段为a、b、c、d，其中a为主键。对于一个二级索引b，若查询条件为b，且查询内容不是主键，那么需要回表查询；若存在联合索引（b，c），当查询内容不是主键，但为c时，为覆盖索引，不需要回表。</strong></p>
+</blockquote>
+<h2 id="最左前缀原则">最左前缀原则</h2>
+<p>B+树这种索引结构，可以利用索引的“最左前缀”来定位记录。</p>
+<p>假设存在(name，age)的联合索引，其示意图如下：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701180552.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701180552.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>当你的逻辑需求是查到所有名字是“张三”的人时，可以快速定位到 ID4，然后向后遍历得到所有需要的结果。如果要查的是所有名字第一个字是“张”的人，你的 SQL 语句的条件是 <code>where name like ‘张 %’</code>。这时，也能够用上这个索引，查找到第一个符合条件的记录是 ID3，然后向后遍历，直到不满足条件为止。</p>
+<p><strong>可以看到，只要满足最左前缀，就可以利用索引来加速检索。这个最左前缀可以是联合索引的最左 N 个字段，也可以是字符串索引的最左 M 个字符。</strong></p>
+<p>在建立联合索引时，需要考虑的是 <strong>索引的复用能力</strong>以及 <strong>占用的空间</strong>：</p>
+<ul>
+<li>索引的复用能力，如果通过调整顺序可以少维护一个索引，那么这个顺序往往就是优先考虑采用的。</li>
+<li>对于联合索引（a，b），当查询条件里面只有b时，是无法使用上联合索引的。此时可能需要再维护一个b的索引，因此这时候可以考虑a、b两个字段占用的空间大小来抉择。</li>
+</ul>
+<h2 id="索引下推">索引下推</h2>
+<p>以一个联合索引（name，age）为例，如果有一个需求，检索出表中“名字第一个字是张，而且年龄是 10 岁的所有男孩”。SQL语句如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> t <span style="color:#66d9ef">where</span> name <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;张 %&#39;</span> <span style="color:#66d9ef">and</span> age<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> <span style="color:#66d9ef">and</span> ismale<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><p>由于存在前缀索引规则，这个语句会先使用“张”来搜索索引树，找到第一个满足条件的记录。在旧版本的MySQL中，由于没有索引下推的优化， <strong>在匹配到第一条满足条件的记录后便会一条一条的回表查询，引入索引下推后，可以在索引遍历过程中，对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数。</strong> 两者的执行流程图如下：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701234649.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701234649.png"
+			
+			
+			
+			loading="lazy"
+			alt="无索引下推">
+	</a>
+	
+	<figcaption>无索引下推</figcaption>
+	
+</figure></p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701234722.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701234722.png"
+			
+			
+			
+			loading="lazy"
+			alt="使用索引下推">
+	</a>
+	
+	<figcaption>使用索引下推</figcaption>
+	
+</figure></p>
+<p>两个流程的区别是，InnoDB 在 (name,age) 索引内部就判断了 age 是否等于 10，对于不等于 10 的记录，直接判断并跳过。在这个例子中，只需要对 ID4、ID5 这两条记录回表取数据判断，就只需要回表 2 次。如果没有索引下推， InnoDB 并不会去看 age 的值，只是按顺序把“name 第一个字是’张’”的记录一条条取出来回表。因此，需要回表 4 次。</p>
+<h2 id="延伸问题">延伸问题</h2>
+<ol>
+<li>
+<p>如果自增主键用完了怎么办？</p>
+<p>先简单回答一下，对于自增主键用完可以使用MySQL提供的线上修改方式或者第三方工具，修改字段类型，增加自增主键的数据范围，如改为BigInt。 <strong>但细想，其实这个问题既成立又不成立，对于一个int类型作为自增主键，其数据范围是0～2147483648，单表21亿条数据，就算考虑ID断序的问题，那么也有十几亿条数据，显然查询的效率不会太高。这时候就需要考虑到分库分表，一旦分库分表，就不能依赖每个表的自增主键来全局唯一标识数据了，这时候就需要类似雪花算法、UUID等来提供全局唯一ID的生成。</strong></p>
+</li>
+</ol>
+<h2 id="参考">参考</h2>
+<ol>
+<li>MySQL45讲——04 深入浅出索引（上）</li>
+<li><a class="link" href="https://zhuanlan.zhihu.com/p/382375842"  target="_blank" rel="noopener"
+    >MySQL 页完全指南——浅入深出页的原理 - 知乎</a></li>
+<li><a class="link" href="https://blog.csdn.net/qq_35393693/article/details/100059966"  target="_blank" rel="noopener"
+    >MySQL中的自增主键用完了怎么办？</a></li>
+</ol>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/mysql/">MySQL</a>
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL学习（五）| 锁</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL学习（三）| 事务</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%8C/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL学习（二）| 日志系统</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#索引的常见模型">索引的常见模型</a>
+      <ul>
+        <li><a href="#哈希表">哈希表</a></li>
+        <li><a href="#有序数组">有序数组</a></li>
+        <li><a href="#二叉搜搜索树">二叉搜搜索树</a></li>
+      </ul>
+    </li>
+    <li><a href="#innodb的索引模型">InnoDB的索引模型</a></li>
+    <li><a href="#索引维护">索引维护</a>
+      <ul>
+        <li><a href="#数据页">数据页</a></li>
+        <li><a href="#维护">维护</a></li>
+        <li><a href="#自增主键or其他字段">自增主键or其他字段</a></li>
+      </ul>
+    </li>
+    <li><a href="#一个索引搜索的例子">一个索引搜索的例子</a></li>
+    <li><a href="#覆盖索引">覆盖索引</a></li>
+    <li><a href="#最左前缀原则">最左前缀原则</a></li>
+    <li><a href="#索引下推">索引下推</a></li>
+    <li><a href="#延伸问题">延伸问题</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+                
+            </section>
+        </aside>
+        
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>

@@ -266,12 +266,16 @@ write pos 和 checkpoint 之间的是还可以使用的内存大小，可以用�
 <p>这里我的理解是，redo log和binlog分别处理两种不同的恢复，一种是崩溃恢复，一种是临时库恢复。因此“两阶段提交”的目的是为了这两种恢复的一致性。</p>
 </blockquote>
 <p><strong>这里还有一个关键点是，binlog日志并不仅仅是为了临时库恢复，当需要扩容（多搭建一些备库来增强MySQL的读能力的时候），常见的做法也是使用全量备份+binlog日志来实现的，此时不一致就会导致线上出现主从数据库不一致的情况；同时binlog日志在大数据场景中可能也会应用到MySQL增量数据读取上。</strong></p>
-<h2 id="延申问题">延申问题</h2>
+<h2 id="延伸问题">延伸问题</h2>
 <ol>
 <li>
 <p>MySQL为了提高性能，对redo log的操作一开始都是在内存中的，那么如果MySQL进程崩溃了，在内存中那部分redo log要怎么处理？</p>
 <p>查阅了相关资料后，稍微回答一下。在MySQL崩溃的时候，如果没有相关机制，确实会导致在内存中的redo log日志丢失，这里就要提到MySQL的 <strong>刷盘</strong> 机制，<strong>MySQL必须保证事务提交时产生的redo log最终被安全的写入磁盘中。负责写入磁盘的操作就是刷盘，而MySQL提供了不同的刷盘机制来决定数据何时落盘，也就是这样来解决这个问题的。（感觉这部分依旧是有很多内容，挖坑！）</strong></p>
 </li>
+</ol>
+<h2 id="参考">参考</h2>
+<ol>
+<li>MySQL45讲——日志系统：一条SQL更新语句是如何执行的？</li>
 </ol>
 
 </section>
@@ -328,36 +332,36 @@ write pos 和 checkpoint 之间的是还可以使用的内存大小，可以用�
                 
                     
 <article class="">
-    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%80/">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">MySQL学习（一）| 基础架构</h2>
+            <h2 class="article-title">MySQL学习（五）| 锁</h2>
         </div>
     </a>
 </article>
                 
                     
 <article class="">
-    <a href="/post/redis%E4%BA%8C%E4%B8%89%E4%BA%8B%E4%B8%80/">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">Redis二三事（一）</h2>
+            <h2 class="article-title">MySQL学习（三）| 事务</h2>
         </div>
     </a>
 </article>
                 
                     
 <article class="">
-    <a href="/post/%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8aop%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/">
         
         
 
         <div class="article-details">
-            <h2 class="article-title">优雅的使用AOP实现参数校验</h2>
+            <h2 class="article-title">MySQL学习（四）| 索引</h2>
         </div>
     </a>
 </article>
@@ -514,7 +518,8 @@ write pos 和 checkpoint 之间的是还可以使用的内存大小，可以用�
         <li><a href="#为什么要两阶段提交">为什么要“两阶段提交”？</a></li>
       </ul>
     </li>
-    <li><a href="#延申问题">延申问题</a></li>
+    <li><a href="#延伸问题">延伸问题</a></li>
+    <li><a href="#参考">参考</a></li>
   </ul>
 </nav>
                 </div>
