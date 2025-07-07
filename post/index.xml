@@ -6,11 +6,11 @@
     <description>Recent content in Posts on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 02 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 04 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MySQL学习（五）| 锁</title>
       <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94/</link>
-      <pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate>
       
       <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94/</guid>
       <description>前言 数据库锁的设计初衷是处理并发问题。根据加锁的范围，MySQL里的锁大致可以分为 全局锁、 表级锁 和 行级锁 三类。
@@ -26,24 +26,9 @@
     </item>
     
     <item>
-      <title>MySQL学习（三）| 事务</title>
-      <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</link>
-      <pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</guid>
-      <description>前言 在和数据库打交道，事务总是绕不开的。简单说，事务就是要保证一组数据库操作要么全部成功，要么全部失败。 在 MySQL 中，事务支持是在引擎层实现的。MySQL 是一个支持多引擎的系统，但并不是所有的引擎都支持事务。比如 MySQL 原生的 MyISAM 引擎就不支持事务，这也是 MyISAM 被 InnoDB 取代的重要原因之一。
-隔离性与隔离级别 事务具有四大特性，也就是常说的ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性），这里打算说说隔离性。
-当数据库上有多个事务同时执行的时候，就可能出现脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）的问题，为了解决这些问题，就有了“隔离级别”的概念。
-隔离级别越高，效率就会越低。 SQL的事务隔离级别包括：读未提交（read uncommitted）、读提交（read committed）、可重复读（repeatable read）和串行化（serializable ）。
-读未提交，一个事务还没提交时，它做出的变更就能被其他事务看到 读提交，一个事务提交之后，它做出的变更才能被其他事务看到 可重复读，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。在这个级别下，未提交的变更对其他事务也是不可见的。 串行化，对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。 下面对这几种隔离级别进行简单解释。假设数据表T中只有一列，其中一行的值为1，下面是按照时间顺序执行的两个事务的行为。
-在不同的隔离级别下，图中V1、V2、V3会得到不同的值
-若隔离级别是“读未提交”， 则 V1 的值就是 2。这时候事务 B 虽然还没有提交，但是结果已经被 A 看到了。因此，V2、V3 也都是 2。 若隔离级别是“读提交”，则 V1 是 1，V2 的值是 2。事务 B 的更新在提交后才能被 A 看到。所以， V3 的值也是 2。 若隔离级别是“可重复读”，则 V1、V2 是 1，V3 是 2。之所以 V2 还是 1，遵循的就是这个要求：事务在执行期间看到的数据前后必须是一致的。 若隔离级别是“串行化”，则在事务 B 执行“将 1 改成 2”的时候，会被锁住。直到事务 A 提交后，事务 B 才可以继续执行。所以从 A 的角度看， V1、V2 值是 1，V3 的值是 2。 在实际实现上，数据库会创建一个视图，访问得到的就是视图的逻辑结果。在“可重复读”这个隔离级别下，视图是在事务启动时创建的，整个事务存在期间都是用这个视图；在“读提交”，视图是在每个SQL语句开始执行之后创建的；在“读未提交”这个隔离级别下，没有视图的概念，直接返回记录的最新值；在“串行化”隔离级别下，则是直接使用加锁的方式来避免并行访问</description>
-    </item>
-    
-    <item>
       <title>MySQL学习（四）| 索引</title>
       <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/</link>
-      <pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate>
       
       <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/</guid>
       <description>前言 索引是数据库中重要的概念，简单来说，索引就像是书的目录一样，其目的就是为了提高数据查询效率。
@@ -60,6 +45,21 @@
 为了维持O(log(N))的查询复杂度，需要保持搜索树为平衡二叉树，因此更新元素的时间复杂度也为O(log(N))。
 更多情况下并不使用二叉搜索树作为索引。数据库索引不仅存在内存中，还要存储到磁盘里，不可避免的会涉及到读盘操作。二叉搜索树随着节点的增多，树高将不断增长，进行一次查询需要读取的数据块较多，就会导致查询效率降低。
 InnoDB的索引模型 在 InnoDB 中，表都是根据主键顺序以索引的形式存放的，这种存储方式的表称为索引组织表。InnoDB 使用了 B+ 树索引模型，所以数据都是存储在 B+ 树中的。每一个索引在InnoDB里面对应一棵B+树。</description>
+    </item>
+    
+    <item>
+      <title>MySQL学习（三）| 事务</title>
+      <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</link>
+      <pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</guid>
+      <description>前言 在和数据库打交道，事务总是绕不开的。简单说，事务就是要保证一组数据库操作要么全部成功，要么全部失败。 在 MySQL 中，事务支持是在引擎层实现的。MySQL 是一个支持多引擎的系统，但并不是所有的引擎都支持事务。比如 MySQL 原生的 MyISAM 引擎就不支持事务，这也是 MyISAM 被 InnoDB 取代的重要原因之一。
+隔离性与隔离级别 事务具有四大特性，也就是常说的ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性），这里打算说说隔离性。
+当数据库上有多个事务同时执行的时候，就可能出现脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）的问题，为了解决这些问题，就有了“隔离级别”的概念。
+隔离级别越高，效率就会越低。 SQL的事务隔离级别包括：读未提交（read uncommitted）、读提交（read committed）、可重复读（repeatable read）和串行化（serializable ）。
+读未提交，一个事务还没提交时，它做出的变更就能被其他事务看到 读提交，一个事务提交之后，它做出的变更才能被其他事务看到 可重复读，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。在这个级别下，未提交的变更对其他事务也是不可见的。 串行化，对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。 下面对这几种隔离级别进行简单解释。假设数据表T中只有一列，其中一行的值为1，下面是按照时间顺序执行的两个事务的行为。
+在不同的隔离级别下，图中V1、V2、V3会得到不同的值
+若隔离级别是“读未提交”， 则 V1 的值就是 2。这时候事务 B 虽然还没有提交，但是结果已经被 A 看到了。因此，V2、V3 也都是 2。 若隔离级别是“读提交”，则 V1 是 1，V2 的值是 2。事务 B 的更新在提交后才能被 A 看到。所以， V3 的值也是 2。 若隔离级别是“可重复读”，则 V1、V2 是 1，V3 是 2。之所以 V2 还是 1，遵循的就是这个要求：事务在执行期间看到的数据前后必须是一致的。 若隔离级别是“串行化”，则在事务 B 执行“将 1 改成 2”的时候，会被锁住。直到事务 A 提交后，事务 B 才可以继续执行。所以从 A 的角度看， V1、V2 值是 1，V3 的值是 2。 在实际实现上，数据库会创建一个视图，访问得到的就是视图的逻辑结果。在“可重复读”这个隔离级别下，视图是在事务启动时创建的，整个事务存在期间都是用这个视图；在“读提交”，视图是在每个SQL语句开始执行之后创建的；在“读未提交”这个隔离级别下，没有视图的概念，直接返回记录的最新值；在“串行化”隔离级别下，则是直接使用加锁的方式来避免并行访问</description>
     </item>
     
     <item>

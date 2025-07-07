@@ -6,10 +6,10 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 02 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 04 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>MySQL学习（五）| 锁</title>
         <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94/</link>
-        <pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate>
+        <pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate>
         
         <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94/</guid>
         <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
@@ -143,75 +143,9 @@
 </description>
         </item>
         <item>
-        <title>MySQL学习（三）| 事务</title>
-        <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</link>
-        <pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
-        
-        <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</guid>
-        <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
-&lt;p&gt;在和数据库打交道，事务总是绕不开的。简单说，事务就是要保证一组数据库操作要么全部成功，要么全部失败。  &lt;strong&gt;在 MySQL 中，事务支持是在引擎层实现的。MySQL 是一个支持多引擎的系统，但并不是所有的引擎都支持事务。比如 MySQL 原生的 MyISAM 引擎就不支持事务，这也是 MyISAM 被 InnoDB 取代的重要原因之一。&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id=&#34;隔离性与隔离级别&#34;&gt;隔离性与隔离级别&lt;/h2&gt;
-&lt;p&gt;事务具有四大特性，也就是常说的ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性），这里打算说说隔离性。&lt;/p&gt;
-&lt;p&gt;当数据库上有多个事务同时执行的时候，就可能出现脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）的问题，为了解决这些问题，就有了“隔离级别”的概念。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;隔离级别越高，效率就会越低。&lt;/strong&gt; SQL的事务隔离级别包括：读未提交（read uncommitted）、读提交（read committed）、可重复读（repeatable read）和串行化（serializable ）。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;读未提交，一个事务还没提交时，它做出的变更就能被其他事务看到&lt;/li&gt;
-&lt;li&gt;读提交，一个事务提交之后，它做出的变更才能被其他事务看到&lt;/li&gt;
-&lt;li&gt;可重复读，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。在这个级别下，未提交的变更对其他事务也是不可见的。&lt;/li&gt;
-&lt;li&gt;串行化，对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;下面对这几种隔离级别进行简单解释。假设数据表T中只有一列，其中一行的值为1，下面是按照时间顺序执行的两个事务的行为。&lt;/p&gt;
-&lt;p&gt;&lt;figure 
-	&gt;
-	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250630172003.png&#34; &gt;
-		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250630172003.png&#34;
-			
-			
-			
-			loading=&#34;lazy&#34;
-			&gt;
-	&lt;/a&gt;
-	
-&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;在不同的隔离级别下，图中V1、V2、V3会得到不同的值&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;若隔离级别是“读未提交”， 则 V1 的值就是 2。这时候事务 B 虽然还没有提交，但是结果已经被 A 看到了。因此，V2、V3 也都是 2。&lt;/li&gt;
-&lt;li&gt;若隔离级别是“读提交”，则 V1 是 1，V2 的值是 2。事务 B 的更新在提交后才能被 A 看到。所以， V3 的值也是 2。&lt;/li&gt;
-&lt;li&gt;若隔离级别是“可重复读”，则 V1、V2 是 1，V3 是 2。之所以 V2 还是 1，遵循的就是这个要求：事务在执行期间看到的数据前后必须是一致的。&lt;/li&gt;
-&lt;li&gt;若隔离级别是“串行化”，则在事务 B 执行“将 1 改成 2”的时候，会被锁住。直到事务 A 提交后，事务 B 才可以继续执行。所以从 A 的角度看， V1、V2 值是 1，V3 的值是 2。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;在实际实现上，数据库会创建一个视图，访问得到的就是视图的逻辑结果。在“可重复读”这个隔离级别下，视图是在事务启动时创建的，整个事务存在期间都是用这个视图；在“读提交”，视图是在每个SQL语句开始执行之后创建的；在“读未提交”这个隔离级别下，没有视图的概念，直接返回记录的最新值；在“串行化”隔离级别下，则是直接使用加锁的方式来避免并行访问&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id=&#34;事务隔离的实现&#34;&gt;事务隔离的实现&lt;/h2&gt;
-&lt;p&gt;在 MySQL 中，实际上每条记录在更新的时候都会同时记录一条回滚操作。记录上的最新值，通过回滚操作，都可以得到前一个状态的值。假设一个值从 1 被按顺序改成了 2、3、4，在回滚日志里面就会有类似下面的记录。&lt;/p&gt;
-&lt;p&gt;&lt;figure 
-	&gt;
-	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701001722.png&#34; &gt;
-		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701001722.png&#34;
-			
-			
-			
-			loading=&#34;lazy&#34;
-			&gt;
-	&lt;/a&gt;
-	
-&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;当前值为4，但是不同时刻启动的事务会有不同的read-view。在视图 A、B、C 里面，这一个记录的值分别是 1、2、4，同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。即使现在有另外一个事务正在将 4 改成 5，这个事务跟 read-view A、B、C 对应的事务是不会冲突的。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;但是回滚日志不可能一直保留，系统会进行判断，在不需要的时候将回滚日志删除，当系统中没有比这个回滚日志更早的read view时，意味着这个回滚日志可以被删除了。（也就是没有事务使用比当前回滚日志更早的回滚日志了）&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;因此，就衍生出一个问题，尽量不要使用长事务。 &lt;strong&gt;长事务意味着系统里会存在很多老的事务视图，由于这些事务随时可能访问数据库里面的任何数据，所以这个事务提交之前，数据库里面它可能用到的回滚记录都必须保留，这就会导致大量占用存储空间。&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id=&#34;事务的启动方式&#34;&gt;事务的启动方式&lt;/h2&gt;
-&lt;p&gt;MySQL的事务启动方式有如下几种：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;显式启动事务语句， begin 或 start transaction。配套的提交语句是 commit，回滚语句是 rollback。&lt;/li&gt;
-&lt;li&gt;set autocommit=0，这个命令会将这个线程的自动提交关掉。意味着如果你只执行一个 select 语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行 commit 或 rollback 语句，或者断开连接。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;有些客户端连接框架会默认连接成功后先执行一个 set autocommit=0 的命令。这就导致接下来的查询都在事务中，如果是长连接，就导致了意外的长事务。所以建议使用set autocommit=1，并用显式语句来启动事务。&lt;/p&gt;
-&lt;p&gt;也可以使用commit work and chain的语法，在 autocommit 为 1 的情况下，用 begin 显式启动的事务，如果执行 commit 则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务。&lt;/p&gt;
-</description>
-        </item>
-        <item>
         <title>MySQL学习（四）| 索引</title>
         <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/</link>
-        <pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+        <pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate>
         
         <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B/</guid>
         <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
@@ -456,6 +390,72 @@
 &lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/qq_35393693/article/details/100059966&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;MySQL中的自增主键用完了怎么办？&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
+</description>
+        </item>
+        <item>
+        <title>MySQL学习（三）| 事务</title>
+        <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</link>
+        <pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%89/</guid>
+        <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;在和数据库打交道，事务总是绕不开的。简单说，事务就是要保证一组数据库操作要么全部成功，要么全部失败。  &lt;strong&gt;在 MySQL 中，事务支持是在引擎层实现的。MySQL 是一个支持多引擎的系统，但并不是所有的引擎都支持事务。比如 MySQL 原生的 MyISAM 引擎就不支持事务，这也是 MyISAM 被 InnoDB 取代的重要原因之一。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;隔离性与隔离级别&#34;&gt;隔离性与隔离级别&lt;/h2&gt;
+&lt;p&gt;事务具有四大特性，也就是常说的ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性），这里打算说说隔离性。&lt;/p&gt;
+&lt;p&gt;当数据库上有多个事务同时执行的时候，就可能出现脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）的问题，为了解决这些问题，就有了“隔离级别”的概念。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;隔离级别越高，效率就会越低。&lt;/strong&gt; SQL的事务隔离级别包括：读未提交（read uncommitted）、读提交（read committed）、可重复读（repeatable read）和串行化（serializable ）。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;读未提交，一个事务还没提交时，它做出的变更就能被其他事务看到&lt;/li&gt;
+&lt;li&gt;读提交，一个事务提交之后，它做出的变更才能被其他事务看到&lt;/li&gt;
+&lt;li&gt;可重复读，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。在这个级别下，未提交的变更对其他事务也是不可见的。&lt;/li&gt;
+&lt;li&gt;串行化，对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面对这几种隔离级别进行简单解释。假设数据表T中只有一列，其中一行的值为1，下面是按照时间顺序执行的两个事务的行为。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250630172003.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250630172003.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在不同的隔离级别下，图中V1、V2、V3会得到不同的值&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;若隔离级别是“读未提交”， 则 V1 的值就是 2。这时候事务 B 虽然还没有提交，但是结果已经被 A 看到了。因此，V2、V3 也都是 2。&lt;/li&gt;
+&lt;li&gt;若隔离级别是“读提交”，则 V1 是 1，V2 的值是 2。事务 B 的更新在提交后才能被 A 看到。所以， V3 的值也是 2。&lt;/li&gt;
+&lt;li&gt;若隔离级别是“可重复读”，则 V1、V2 是 1，V3 是 2。之所以 V2 还是 1，遵循的就是这个要求：事务在执行期间看到的数据前后必须是一致的。&lt;/li&gt;
+&lt;li&gt;若隔离级别是“串行化”，则在事务 B 执行“将 1 改成 2”的时候，会被锁住。直到事务 A 提交后，事务 B 才可以继续执行。所以从 A 的角度看， V1、V2 值是 1，V3 的值是 2。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;在实际实现上，数据库会创建一个视图，访问得到的就是视图的逻辑结果。在“可重复读”这个隔离级别下，视图是在事务启动时创建的，整个事务存在期间都是用这个视图；在“读提交”，视图是在每个SQL语句开始执行之后创建的；在“读未提交”这个隔离级别下，没有视图的概念，直接返回记录的最新值；在“串行化”隔离级别下，则是直接使用加锁的方式来避免并行访问&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;事务隔离的实现&#34;&gt;事务隔离的实现&lt;/h2&gt;
+&lt;p&gt;在 MySQL 中，实际上每条记录在更新的时候都会同时记录一条回滚操作。记录上的最新值，通过回滚操作，都可以得到前一个状态的值。假设一个值从 1 被按顺序改成了 2、3、4，在回滚日志里面就会有类似下面的记录。&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701001722.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250701001722.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;当前值为4，但是不同时刻启动的事务会有不同的read-view。在视图 A、B、C 里面，这一个记录的值分别是 1、2、4，同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。即使现在有另外一个事务正在将 4 改成 5，这个事务跟 read-view A、B、C 对应的事务是不会冲突的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;但是回滚日志不可能一直保留，系统会进行判断，在不需要的时候将回滚日志删除，当系统中没有比这个回滚日志更早的read view时，意味着这个回滚日志可以被删除了。（也就是没有事务使用比当前回滚日志更早的回滚日志了）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因此，就衍生出一个问题，尽量不要使用长事务。 &lt;strong&gt;长事务意味着系统里会存在很多老的事务视图，由于这些事务随时可能访问数据库里面的任何数据，所以这个事务提交之前，数据库里面它可能用到的回滚记录都必须保留，这就会导致大量占用存储空间。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;事务的启动方式&#34;&gt;事务的启动方式&lt;/h2&gt;
+&lt;p&gt;MySQL的事务启动方式有如下几种：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;显式启动事务语句， begin 或 start transaction。配套的提交语句是 commit，回滚语句是 rollback。&lt;/li&gt;
+&lt;li&gt;set autocommit=0，这个命令会将这个线程的自动提交关掉。意味着如果你只执行一个 select 语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行 commit 或 rollback 语句，或者断开连接。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;有些客户端连接框架会默认连接成功后先执行一个 set autocommit=0 的命令。这就导致接下来的查询都在事务中，如果是长连接，就导致了意外的长事务。所以建议使用set autocommit=1，并用显式语句来启动事务。&lt;/p&gt;
+&lt;p&gt;也可以使用commit work and chain的语法，在 autocommit 为 1 的情况下，用 begin 显式启动的事务，如果执行 commit 则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务。&lt;/p&gt;
 </description>
         </item>
         <item>
