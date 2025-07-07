@@ -6,50 +6,21 @@
     <description>Recent content in 博客搭建 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 05 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://MUNLELEE.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>利用GitHub搭建一个简易图床</title>
       <link>https://MUNLELEE.github.io/post/%E5%88%A9%E7%94%A8github%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E5%9B%BE%E5%BA%8A/</link>
       <pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/post/%E5%88%A9%E7%94%A8github%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%AE%80%E6%98%93%E5%9B%BE%E5%BA%8A/</guid>
-      <description>虽然总是隔了很久才会更新一篇博客，但是一旦更新便会有图片到底放哪的烦恼，用过一段时间的在线图床，但终究不是个长久之计。也便有了这篇博文的诞生。
-搭建过程 首先在GitHub上创建一个新的仓库，至于怎么创建这里就不赘述了。大家自行bing即可
-仓库创建好之后就是我们之后上传图片的地方了，也就是图床。之后要考虑的是如何上传图片，这里用到了一个PicGo这个软件，可以通过这个篝火到达它的官网，之后根据需要下载相应的版本即可。之后按照以下步骤即可
-从GitHub中创建一个token，打开路径为 setting-&amp;gt;Developer settings-&amp;gt;Personal access tokens，这里我们选用 Tokens(classic)就行。（其实是我不知道另外一个是干啥用的）。
-在生成token界面中，Note用来表示你对这个token使用的描述。主要的还是红框部分，由于这个token会长期使用，而且是私有的这里设置为无限期也问题不大。然后再勾选repo，最后就可以点击generate了。 要注意的是token生成之后只会显示一次，因此要及时复制，否则你就只能再来一次了
-生成token界面 配置PicGo，依次打开 图床设置 -&amp;gt; GitHub，如下图。 进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 GitHub用户名/作为图床的仓库名，分支名使用 main即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。 配置项 之后你只要在软件首页选择相应的图床就能够上传图片了。 最后 由于GitHub访问具有一定限制，这里选择使用jsdelivr对图床的访问进行加速。方法很简单，只需要对博客的图片访问路径替换为 https://&amp;lt;jsDelivr加速域名&amp;gt;/gh/&amp;lt;用户&amp;gt;/&amp;lt;项目&amp;gt;@&amp;lt;版本&amp;gt;/&amp;lt;资源路径&amp;gt;，例如我的一个图片路径就可以写为 https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213310.png。
-同时可以在PicGo上面写上自定义域名 https://cdn.jsdelivr.net/gh/GitHub用户名/仓库名，这样，上传图片后PicGo就会在剪贴板上写上jsdelivr加速的路径了。如图
-参考 如何利用 Github 搭建自己的免费图床？ - 知乎 (zhihu.com)
-通过jsDelivr实现Github图床CDN加速 | XieJava&amp;rsquo;s blog (ishareread.com)
-折腾完这些之后发现，好像用git命令上传图片也不是不行。
-算了，聊胜于无吧。</description>
+      <description>虽然总是隔了很久才会更新一篇博客，但是一旦更新便会有图片到底放哪的烦恼，用过一段时间的在线图床，但终究不是个长久之计。也便有了这篇博文的诞生。&#xA;搭建过程 首先在GitHub上创建一个新的仓库，至于怎么创建这里就不赘述了。大家自行bing即可&#xA;仓库创建好之后就是我们之后上传图片的地方了，也就是图床。之后要考虑的是如何上传图片，这里用到了一个PicGo这个软件，可以通过这个篝火到达它的官网，之后根据需要下载相应的版本即可。之后按照以下步骤即可&#xA;从GitHub中创建一个token，打开路径为 setting-&amp;gt;Developer settings-&amp;gt;Personal access tokens，这里我们选用 Tokens(classic)就行。（其实是我不知道另外一个是干啥用的）。&#xA;在生成token界面中，Note用来表示你对这个token使用的描述。主要的还是红框部分，由于这个token会长期使用，而且是私有的这里设置为无限期也问题不大。然后再勾选repo，最后就可以点击generate了。 要注意的是token生成之后只会显示一次，因此要及时复制，否则你就只能再来一次了&#xA;生成token界面 配置PicGo，依次打开 图床设置 -&amp;gt; GitHub，如下图。 进行仓库相应配置。在图床配置名上写个名字，仓库名的设置为 GitHub用户名/作为图床的仓库名，分支名使用 main即可，token就是上文刚刚得到的那一串字符。剩下的就不是必选项了。 配置项 之后你只要在软件首页选择相应的图床就能够上传图片了。 最后 由于GitHub访问具有一定限制，这里选择使用jsdelivr对图床的访问进行加速。方法很简单，只需要对博客的图片访问路径替换为 https://&amp;lt;jsDelivr加速域名&amp;gt;/gh/&amp;lt;用户&amp;gt;/&amp;lt;项目&amp;gt;@&amp;lt;版本&amp;gt;/&amp;lt;资源路径&amp;gt;，例如我的一个图片路径就可以写为 https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20240325213310.png。&#xA;同时可以在PicGo上面写上自定义域名 https://cdn.jsdelivr.net/gh/GitHub用户名/仓库名，这样，上传图片后PicGo就会在剪贴板上写上jsdelivr加速的路径了。如图&#xA;参考 如何利用 Github 搭建自己的免费图床？ - 知乎 (zhihu.com)&#xA;通过jsDelivr实现Github图床CDN加速 | XieJava&amp;rsquo;s blog (ishareread.com)&#xA;折腾完这些之后发现，好像用git命令上传图片也不是不行。&#xA;算了，聊胜于无吧。</description>
     </item>
-    
     <item>
       <title>Hugo博客 | stack主题修改第一站</title>
       <link>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</link>
       <pubDate>Sat, 15 Jan 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/post/hugo%E5%8D%9A%E5%AE%A2-stack%E4%B8%BB%E9%A2%98%E4%BF%AE%E6%94%B9%E7%AC%AC%E4%B8%80%E7%AB%99/</guid>
-      <description>本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！
-自定义的项目 TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）
-· 修改站点图标
-· 修改站点名称并使其居中，同时具有一定的间隔。
-· 修改选中的样式
-· 站点头像居中（虽然本来应该就是居中了。。）
-· 添加主页按钮点击不会高亮的问题
-· 主页样式的修改
-· 修改左边栏头像大小
-· 返回顶部功能的添加
-· 修改Toc的样式
-· 修改分类的标签样式
-· 修改滚动条样式
-· 使文章支持数学公式编辑
-具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：
-&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：
---zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.</description>
+      <description>本来是不想用这篇博文作为新博客的第一篇的，但无奈修改这个主题以便让我能够看得舒服确实花费了我很多精力，因此想写下这一篇博文来记录这一历程，当然这次的修改也只是建博客时对于我来说最难以忍受的痛点，如果在使用的时候觉得还有值得修改的地方，那说不定就有第二站。不废话，直接开冲！&#xA;自定义的项目 TO-DO · 修改文章的字体为思源宋体（其实我喜欢行楷，但苦于还没有找到解决方法。。）&#xA;· 修改站点图标&#xA;· 修改站点名称并使其居中，同时具有一定的间隔。&#xA;· 修改选中的样式&#xA;· 站点头像居中（虽然本来应该就是居中了。。）&#xA;· 添加主页按钮点击不会高亮的问题&#xA;· 主页样式的修改&#xA;· 修改左边栏头像大小&#xA;· 返回顶部功能的添加&#xA;· 修改Toc的样式&#xA;· 修改分类的标签样式&#xA;· 修改滚动条样式&#xA;· 使文章支持数学公式编辑&#xA;具体修改 修改全站的字体 其实修改字体的方案主题的原作者已经给出，有需要的可以参考修改字体，作为一个中国人，好康的中文永远比好康的英文重要。 具体做法是在站点根目录中的layouts/partials/head/custom.html中添加如下代码：&#xA;&amp;lt;style&amp;gt; :root { --article-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--base-font-family); } &amp;lt;/style&amp;gt; &amp;lt;script&amp;gt; // 正文自重300，标题字重700 (function () { const customFont = document.createElement(&amp;#39;link&amp;#39;); customFont.href = &amp;#34;https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;amp;display=swap&amp;#34;; customFont.type = &amp;#34;text/css&amp;#34;; customFont.rel = &amp;#34;stylesheet&amp;#34;; document.head.appendChild(customFont); }()); &amp;lt;/script&amp;gt; 以上是作者给出的，我只是在字重上做了修改。除此之外我还修改了hugo-theme-stack/assets/scss/variable.scss文件，具体就是调整了--zh-font-family和--base-font-family的顺序，代码如下：&#xA;--zh-font-family: &amp;#34;Noto Serif SC&amp;#34;, &amp;#34;Hiragino Sans GB&amp;#34;, &amp;#34;Droid Sans Fallback&amp;#34;, &amp;#34;Microsoft YaHei&amp;#34;; --base-font-family: &amp;#34;Noto Serif SC&amp;#34;, var(--sys-font-family), var(--zh-font-family), sans-serif; 修改站点的图标 这个问题起先困扰了我很久（虽然期间可能已经修改好了，但因为网站cookie的原因导致修改没有及时显示），具体做法如下，先将你需要的图片转换为.</description>
     </item>
-    
   </channel>
 </rss>

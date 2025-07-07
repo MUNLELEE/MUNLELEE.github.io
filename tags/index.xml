@@ -6,87 +6,70 @@
     <description>Recent content in Tags on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 04 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 04 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://MUNLELEE.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MySQL</title>
       <link>https://MUNLELEE.github.io/tags/mysql/</link>
       <pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/mysql/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>技术</title>
       <link>https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/</link>
       <pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>redis</title>
       <link>https://MUNLELEE.github.io/tags/redis/</link>
       <pubDate>Sat, 30 Mar 2024 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/redis/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>博客搭建</title>
       <link>https://MUNLELEE.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</link>
       <pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>算法</title>
       <link>https://MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/</link>
       <pubDate>Wed, 01 Feb 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/%E7%AE%97%E6%B3%95/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>计算机网络</title>
       <link>https://MUNLELEE.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</link>
       <pubDate>Mon, 28 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>LeetCode</title>
       <link>https://MUNLELEE.github.io/tags/leetcode/</link>
       <pubDate>Mon, 31 Jan 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/leetcode/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>难题集</title>
       <link>https://MUNLELEE.github.io/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/</link>
       <pubDate>Sat, 29 Jan 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/%E9%9A%BE%E9%A2%98%E9%9B%86/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>影视</title>
       <link>https://MUNLELEE.github.io/tags/%E5%BD%B1%E8%A7%86/</link>
       <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://MUNLELEE.github.io/tags/%E5%BD%B1%E8%A7%86/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

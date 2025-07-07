@@ -165,22 +165,22 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
 <p>用一个具体的例子来讲，假如我们有如下这么个类，用来实现简单的四则运算。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@NoArgsConstructor</span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">@AllArgsConstructor</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Operation</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num1<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num2<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>  	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">+</span> num2<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sub</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">-</span> num2<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mul</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">*</span> num2<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">div</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">/</span> num2<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Operation</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num1;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> num2;
+</span></span><span style="display:flex;"><span>  	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">add</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">+</span> num2;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sub</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">-</span> num2;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mul</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">*</span> num2;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">div</span>() {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> num1 <span style="color:#f92672">/</span> num2;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>如果我们希望在每个方法运行前打印出一行日志信息，很容易想到的就是在操作类中的每个方法返回之前加上 <code>logger.info()</code>，虽然很简单，但是当源代码无法修改或者十分繁杂的时候，工程量将会呈几何倍数增加。此时会更希望将这个日志方法抽象为一个类，当每个方法执行时，能够自动的在方法返回之前打印出日志。如下图，AOP其实就是由切面对象和目标对象组成的代理对象。</p>
 <p><figure 
 	>
@@ -200,101 +200,101 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
 <p>假定有以下这个用户类（ <code>User</code>），它有两个字段 <code>name</code>和 <code>password</code>，希望实现对用户名的非空判断和对密码的长度判断。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Data</span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">@NoArgsConstructor</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String password<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String password;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>直观的做法就是在控制器方法上，对获得的用户对象或者是相应的请求参数进行if的条件判断。诚然，这十分有效，但如果换个角度，需要进行参数校验的类不止有User，且控制器方法也不止一个。那么还要一个一个的去添加if条件吗？甚至当控制器方法无法修改时呢？于是，使用一个类或者是一个注解抽象出这个功能就显得一劳永逸了。这也就是AOP强大的解耦能力。</p>
 <h3 id="注解的定义">注解的定义</h3>
 <p>顺着上面的思路，需要拦截的就是控制器方法，首先需要的就是一个用于标识方法的注解，当方法有这个注解时进入拦截器中执行参数校验过程。这个注解可以这么定义。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Retention</span><span style="color:#f92672">(</span>RetentionPolicy<span style="color:#f92672">.</span><span style="color:#a6e22e">RUNTIME</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Target</span><span style="color:#f92672">({</span>ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">METHOD</span><span style="color:#f92672">,</span> ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">TYPE</span><span style="color:#f92672">})</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@interface</span> GlobalInterceptor<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">checkParam</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 校验参数，默认为false
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Retention</span>(RetentionPolicy.<span style="color:#a6e22e">RUNTIME</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Target</span>({ElementType.<span style="color:#a6e22e">METHOD</span>, ElementType.<span style="color:#a6e22e">TYPE</span>})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@interface</span> GlobalInterceptor() {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">checkParam</span>() <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">false</span>;  <span style="color:#75715e">// 校验参数，默认为false</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>再思考这样的问题，对于控制器方法的每个参数，校验的规则一样吗？每个参数都需要校验吗？显然不是，因此需要再定义一个参数注解来实现更加自适应的功能。这个注解可以根据实际需要来实现。在这里实现了长短判断和是否必须的功能。如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Retention</span><span style="color:#f92672">(</span>RetentionPolicy<span style="color:#f92672">.</span><span style="color:#a6e22e">RUNTIME</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Target</span><span style="color:#f92672">({</span>ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">FIELD</span><span style="color:#f92672">,</span> ElementType<span style="color:#f92672">.</span><span style="color:#a6e22e">PARAMETER</span><span style="color:#f92672">})</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@interface</span> VerifyParam <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">min</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 最大长度
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">max</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 最小长度
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">required</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 是否必须
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Retention</span>(RetentionPolicy.<span style="color:#a6e22e">RUNTIME</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Target</span>({ElementType.<span style="color:#a6e22e">FIELD</span>, ElementType.<span style="color:#a6e22e">PARAMETER</span>})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@interface</span> VerifyParam {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">min</span>() <span style="color:#66d9ef">default</span> <span style="color:#f92672">-</span>1;  <span style="color:#75715e">// 最大长度</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">max</span>() <span style="color:#66d9ef">default</span> <span style="color:#f92672">-</span>1;  <span style="color:#75715e">// 最小长度</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">required</span>() <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">false</span>;  <span style="color:#75715e">// 是否必须</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><h3 id="切面类的实现">切面类的实现</h3>
 <p>在写完了注解之后，接下来就该实现切面类来使用这个注解了。我们希望能对拥有这个注解的方法实现拦截，自然可以想到切点就是这个注解。而参数校验应该要在方法执行之前实现，因此可以定义如下一个切面类：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GlobalOperationAspect</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@PointCut</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;@annotation(com.example.annotation.GlobalInterceptor)&#34;</span><span style="color:#f92672">)</span> <span style="color:#75715e">// 注解的全类名
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">requestInterceptor</span><span style="color:#f92672">()</span> <span style="color:#f92672">{}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GlobalOperationAspect</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@PointCut</span>(<span style="color:#e6db74">&#34;@annotation(com.example.annotation.GlobalInterceptor)&#34;</span>) <span style="color:#75715e">// 注解的全类名</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">requestInterceptor</span>() {}
 </span></span><span style="display:flex;"><span>	
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Before</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;requestInterceptor()&#34;</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interceptorDo</span><span style="color:#f92672">(</span>JoinPoint point<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// TODO
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Before</span>(<span style="color:#e6db74">&#34;requestInterceptor()&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interceptorDo</span>(JoinPoint point) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// TODO</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>之后需要自然是要获取方法的参数类型，参数值，并考虑参数是否具有之前定义的 <code>VerifyParam</code>注解来考虑对应的判断规则。但是从切面类中，我们只有一个连接点，此时要获取这些信息只能通过反射。</p>
 <p>我们利用 <code>point</code>反射获取控制器对象的实例类，被拦截方法的参数值，方法名等。之后再考虑对被拦截的方法的参数依次校验。于是我们可以完善<code>interceptorDo</code>方法。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Before</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;requestInterceptor()&#34;</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interceptorDo</span><span style="color:#f92672">(</span>JoinPoint point<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        Object target <span style="color:#f92672">=</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getTarget</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 获取被代理的目标对象
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Object<span style="color:#f92672">[]</span> args <span style="color:#f92672">=</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getArgs</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 获取被拦截方法的参数值
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        String methodName <span style="color:#f92672">=</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getSignature</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 获取方法名
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Class<span style="color:#f92672">&lt;?&gt;[]</span> parameterTypes <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>MethodSignature<span style="color:#f92672">)</span> point<span style="color:#f92672">.</span><span style="color:#a6e22e">getSignature</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">getMethod</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getParameterTypes</span><span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span>        Method method <span style="color:#f92672">=</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getMethod</span><span style="color:#f92672">(</span>methodName<span style="color:#f92672">,</span> parameterTypes<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        GlobalInterceptor interceptor <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getAnnotation</span><span style="color:#f92672">(</span>GlobalInterceptor<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptor <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 此判断也可不做
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>interceptor<span style="color:#f92672">.</span><span style="color:#a6e22e">checkParam</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 如果需要校验，才进行校验，否则可能添加了注解但是不校验
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            validateParam<span style="color:#f92672">(</span>method<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> e<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Before</span>(<span style="color:#e6db74">&#34;requestInterceptor()&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interceptorDo</span>(JoinPoint point) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>        Object target <span style="color:#f92672">=</span> point.<span style="color:#a6e22e">getTarget</span>(); <span style="color:#75715e">// 获取被代理的目标对象</span>
+</span></span><span style="display:flex;"><span>        Object<span style="color:#f92672">[]</span> args <span style="color:#f92672">=</span> point.<span style="color:#a6e22e">getArgs</span>(); <span style="color:#75715e">// 获取被拦截方法的参数值</span>
+</span></span><span style="display:flex;"><span>        String methodName <span style="color:#f92672">=</span> point.<span style="color:#a6e22e">getSignature</span>().<span style="color:#a6e22e">getName</span>(); <span style="color:#75715e">// 获取方法名</span>
+</span></span><span style="display:flex;"><span>        Class<span style="color:#f92672">&lt;?&gt;[]</span> parameterTypes <span style="color:#f92672">=</span> ((MethodSignature) point.<span style="color:#a6e22e">getSignature</span>()).<span style="color:#a6e22e">getMethod</span>().<span style="color:#a6e22e">getParameterTypes</span>();
+</span></span><span style="display:flex;"><span>        Method method <span style="color:#f92672">=</span> target.<span style="color:#a6e22e">getClass</span>().<span style="color:#a6e22e">getMethod</span>(methodName, parameterTypes);
+</span></span><span style="display:flex;"><span>        GlobalInterceptor interceptor <span style="color:#f92672">=</span> method.<span style="color:#a6e22e">getAnnotation</span>(GlobalInterceptor.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (interceptor <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {  <span style="color:#75715e">// 此判断也可不做</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (interceptor.<span style="color:#a6e22e">checkParam</span>()) {  <span style="color:#75715e">// 如果需要校验，才进行校验，否则可能添加了注解但是不校验</span>
+</span></span><span style="display:flex;"><span>            validateParam(method, args);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">catch</span> (Exception e) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> e;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>接下来讲讲 <code>validateParam</code>方法。这个方法是实现被拦截方法参数校验的，自然而然我们需要得到参数值以及更为重要的参数注解 <strong>（从注解中才能获得校验规则）</strong>。依旧是通过反射来实现。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">validateParam</span><span style="color:#f92672">(</span>Method method<span style="color:#f92672">,</span> Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    Parameter<span style="color:#f92672">[]</span> parameters <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getParameters</span><span style="color:#f92672">();</span> <span style="color:#75715e">// 参数列表信息
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> parameters<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        Parameter parameter <span style="color:#f92672">=</span> parameters<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-</span></span><span style="display:flex;"><span>        Object value <span style="color:#f92672">=</span> args<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>  <span style="color:#75715e">// 参数值
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        VerifyParam verifyParam <span style="color:#f92672">=</span> parameter<span style="color:#f92672">.</span><span style="color:#a6e22e">getAnnotation</span><span style="color:#f92672">(</span>VerifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">null</span> <span style="color:#f92672">==</span> verifyParam<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        checkValue<span style="color:#f92672">(</span>value<span style="color:#f92672">,</span> verifyParam<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">checkValue</span><span style="color:#f92672">(</span>Object value<span style="color:#f92672">,</span> VerifyParam verifyParam<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> isEmpty <span style="color:#f92672">=</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 校验是否为空
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty <span style="color:#f92672">&amp;&amp;</span> verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">required</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 校验长度
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isEmpty <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> length <span style="color:#f92672">&lt;</span> verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span>
-</span></span><span style="display:flex;"><span>            verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> length <span style="color:#f92672">&gt;</span> verifyParam<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">validateParam</span>(Method method, Object<span style="color:#f92672">[]</span> args) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>    Parameter<span style="color:#f92672">[]</span> parameters <span style="color:#f92672">=</span> method.<span style="color:#a6e22e">getParameters</span>(); <span style="color:#75715e">// 参数列表信息</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> parameters.<span style="color:#a6e22e">length</span>; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>        Parameter parameter <span style="color:#f92672">=</span> parameters<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        Object value <span style="color:#f92672">=</span> args<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;  <span style="color:#75715e">// 参数值</span>
+</span></span><span style="display:flex;"><span>        VerifyParam verifyParam <span style="color:#f92672">=</span> parameter.<span style="color:#a6e22e">getAnnotation</span>(VerifyParam.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">null</span> <span style="color:#f92672">==</span> verifyParam) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        checkValue(value, verifyParam);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">checkValue</span>(Object value, VerifyParam verifyParam) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> isEmpty <span style="color:#f92672">=</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> value.<span style="color:#a6e22e">toString</span>().<span style="color:#a6e22e">length</span>() <span style="color:#f92672">==</span> 0;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> 0 : value.<span style="color:#a6e22e">toString</span>().<span style="color:#a6e22e">length</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 校验是否为空</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (isEmpty <span style="color:#f92672">&amp;&amp;</span> verifyParam.<span style="color:#a6e22e">required</span>()) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 校验长度</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>isEmpty <span style="color:#f92672">&amp;&amp;</span> (verifyParam.<span style="color:#a6e22e">min</span>() <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">&amp;&amp;</span> length <span style="color:#f92672">&lt;</span> verifyParam.<span style="color:#a6e22e">min</span>() <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>            verifyParam.<span style="color:#a6e22e">max</span>() <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">&amp;&amp;</span> length <span style="color:#f92672">&gt;</span> verifyParam.<span style="color:#a6e22e">max</span>())) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>至此，切面类的实现也就完成了。</p>
 <h3 id="效果">效果</h3>
 <p>最后当然是要试试效果了，附上简单的控制器方法。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#a6e22e">@RequestMapping</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/test&#34;</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@GlobalInterceptor</span><span style="color:#f92672">(</span>checkParam <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> ResponseVO<span style="color:#f92672">&lt;</span>User<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">access</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@VerifyParam</span><span style="color:#f92672">(</span>required <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> String name<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                                   <span style="color:#a6e22e">@VerifyParam</span><span style="color:#f92672">(</span>required <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> min <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> <span style="color:#ae81ff">18</span><span style="color:#f92672">)</span> String password<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        ResponseVO<span style="color:#f92672">&lt;</span>User<span style="color:#f92672">&gt;</span> responseVO <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ResponseVO<span style="color:#f92672">&lt;&gt;();</span>
-</span></span><span style="display:flex;"><span>        User user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User<span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span>        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        user<span style="color:#f92672">.</span><span style="color:#a6e22e">setPassword</span><span style="color:#f92672">(</span>password<span style="color:#f92672">);</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#a6e22e">@RequestMapping</span>(<span style="color:#e6db74">&#34;/test&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@GlobalInterceptor</span>(checkParam <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> ResponseVO<span style="color:#f92672">&lt;</span>User<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">access</span>(<span style="color:#a6e22e">@VerifyParam</span>(required <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>) String name,
+</span></span><span style="display:flex;"><span>                                   <span style="color:#a6e22e">@VerifyParam</span>(required <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>, min <span style="color:#f92672">=</span> 8, max <span style="color:#f92672">=</span> 18) String password) {
+</span></span><span style="display:flex;"><span>        ResponseVO<span style="color:#f92672">&lt;</span>User<span style="color:#f92672">&gt;</span> responseVO <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ResponseVO<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>        User user <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> User();
+</span></span><span style="display:flex;"><span>        user.<span style="color:#a6e22e">setName</span>(name);
+</span></span><span style="display:flex;"><span>        user.<span style="color:#a6e22e">setPassword</span>(password);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        responseVO<span style="color:#f92672">.</span><span style="color:#a6e22e">setStatus</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;success&#34;</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        responseVO<span style="color:#f92672">.</span><span style="color:#a6e22e">setInfo</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;校验通过&#34;</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        responseVO<span style="color:#f92672">.</span><span style="color:#a6e22e">setData</span><span style="color:#f92672">(</span>user<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> responseVO<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        responseVO.<span style="color:#a6e22e">setStatus</span>(<span style="color:#e6db74">&#34;success&#34;</span>);
+</span></span><span style="display:flex;"><span>        responseVO.<span style="color:#a6e22e">setInfo</span>(<span style="color:#e6db74">&#34;校验通过&#34;</span>);
+</span></span><span style="display:flex;"><span>        responseVO.<span style="color:#a6e22e">setData</span>(user);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> responseVO;
+</span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>当我们的控制器方法不加自定义的注解时，发送请求不符合规则请求的结果如下，</p>
 <p><figure 
 	>
@@ -447,8 +447,8 @@ AOP示意图 自定义注解实现参数校验 假定有以下这个用户类（
     <section class="powerby">
         
             你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.6.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+         <br />
+        
     </section>
 </footer>
 
