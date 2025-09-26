@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 最新在学习项目的时候发现了一个很巧妙的设计模式，虽然长期处于MVC架构的桎梏下，遇见这种设计模式难免令人眼前一亮，遂打算记录一下。
+背景 项目背景是在一个拼团活动的场景下。对于这么一个业务，当点击进入商品页面时，如果商品存在优惠信息我们总是能够看到优惠之后的价格，这也就是商品的试算。这时候不妨想想，如果有多种优惠活动，会产生不同的优惠金额，那么要怎么实现这种逻辑呢？在传统的MVC架构下，最常见的可能就是将不同的优惠活动使用不同的Service进行封装，在商品试算的时候使用if else来决定采用哪种优惠策略。但这显然是不够优雅的，如果是在DDD架构下，设计模式能够摆脱MVC的限制，从而更好的融合到项目中，这也就是这篇博客要阐述的内容，即”链式多分支规则树模型“
+碍于笔者的技术所限，MVC架构应当也有一些其他的方式能够避免上述if else的情况，这里权且就不再深究
+链式多分支规则树模型 先整体看一下模型的结构，如下图所示
+链式多分支规则树模型结构 首先，定义抽象的通用的规则树模型结构。涵盖；StrategyMapper - 策略映射器、StrategyHandler - 策略处理器、AbstractStrategyRouter&amp;lt;T, D, R&amp;gt; - 策略路由抽象类。通过泛型设计允许使用方可以自定义出入参和动态上下文，让抽象模板模型具有通用性。 之后，由使用方自定义出工厂、功能抽象类和一个个流程流转的节点。这些节点可以自由组装进行流转，相比于责任链它的实现方式更具有灵活性。 策略处理器 策略处理器的接口代码如下所示：
+public interface StrategyHandler&amp;lt;T, D, R&amp;gt; { /** 默认处理 */ /// 函数式接口，因此DEFAULT等效于一个始终返回null的apply方法的有效实现 StrategyHandler DEFAULT = (T, D) -&amp;gt; null; /** * 处理业务流程 * @param requestParam 入参 * @param dynamicContext 上下文 * @return 返回参数 * @throws Exception */ R apply(T requestParam, D dynamicContext) throws Exception; } 策略处理器用来处理执行的业务流程。在每个业务流程执行时，如果有某些数据是前面的节点到后面的节点都会使用到的，那么就可以将这些数据存放到上下文中。同时，实现一个默认的处理器，对所有的入参都返回空。可以用来停止流程。
+策略映射器 策略映射器的接口代码如下：
+public interface StrategyMapper&amp;lt;T, D, R&amp;gt; { /** * 获取对应的策略处理器 * @param requestParam 入参 * @param dynamicContext 上下文 * @return 返回参数 * @throws Exception */ StrategyHandler&amp;lt;T, D, R&amp;gt; get(T requestParam, D dynamicContext) throws Exception; } 策略映射器提供了 get方法来获取策略处理器，也就相当于获取业务流程的每个节点，这也就避免了将所有逻辑都写到一个类中。'><title>链式多分支规则树模型</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/%E9%93%BE%E5%BC%8F%E5%A4%9A%E5%88%86%E6%94%AF%E8%A7%84%E5%88%99%E6%A0%91%E6%A8%A1%E5%9E%8B/'>
+
+<link rel="stylesheet" href="/scss/style.min.2d5c7b7fe00d3723b47df5ddeea35027ba1a58ec45a6d797c9c0e626dd65ac00.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+
+
+
+
+<meta property='og:title' content='链式多分支规则树模型'>
+<meta property='og:description' content='前言 最新在学习项目的时候发现了一个很巧妙的设计模式，虽然长期处于MVC架构的桎梏下，遇见这种设计模式难免令人眼前一亮，遂打算记录一下。
+背景 项目背景是在一个拼团活动的场景下。对于这么一个业务，当点击进入商品页面时，如果商品存在优惠信息我们总是能够看到优惠之后的价格，这也就是商品的试算。这时候不妨想想，如果有多种优惠活动，会产生不同的优惠金额，那么要怎么实现这种逻辑呢？在传统的MVC架构下，最常见的可能就是将不同的优惠活动使用不同的Service进行封装，在商品试算的时候使用if else来决定采用哪种优惠策略。但这显然是不够优雅的，如果是在DDD架构下，设计模式能够摆脱MVC的限制，从而更好的融合到项目中，这也就是这篇博客要阐述的内容，即”链式多分支规则树模型“
+碍于笔者的技术所限，MVC架构应当也有一些其他的方式能够避免上述if else的情况，这里权且就不再深究
+链式多分支规则树模型 先整体看一下模型的结构，如下图所示
+链式多分支规则树模型结构 首先，定义抽象的通用的规则树模型结构。涵盖；StrategyMapper - 策略映射器、StrategyHandler - 策略处理器、AbstractStrategyRouter&amp;lt;T, D, R&amp;gt; - 策略路由抽象类。通过泛型设计允许使用方可以自定义出入参和动态上下文，让抽象模板模型具有通用性。 之后，由使用方自定义出工厂、功能抽象类和一个个流程流转的节点。这些节点可以自由组装进行流转，相比于责任链它的实现方式更具有灵活性。 策略处理器 策略处理器的接口代码如下所示：
+public interface StrategyHandler&amp;lt;T, D, R&amp;gt; { /** 默认处理 */ /// 函数式接口，因此DEFAULT等效于一个始终返回null的apply方法的有效实现 StrategyHandler DEFAULT = (T, D) -&amp;gt; null; /** * 处理业务流程 * @param requestParam 入参 * @param dynamicContext 上下文 * @return 返回参数 * @throws Exception */ R apply(T requestParam, D dynamicContext) throws Exception; } 策略处理器用来处理执行的业务流程。在每个业务流程执行时，如果有某些数据是前面的节点到后面的节点都会使用到的，那么就可以将这些数据存放到上下文中。同时，实现一个默认的处理器，对所有的入参都返回空。可以用来停止流程。
+策略映射器 策略映射器的接口代码如下：
+public interface StrategyMapper&amp;lt;T, D, R&amp;gt; { /** * 获取对应的策略处理器 * @param requestParam 入参 * @param dynamicContext 上下文 * @return 返回参数 * @throws Exception */ StrategyHandler&amp;lt;T, D, R&amp;gt; get(T requestParam, D dynamicContext) throws Exception; } 策略映射器提供了 get方法来获取策略处理器，也就相当于获取业务流程的每个节点，这也就避免了将所有逻辑都写到一个类中。'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/%E9%93%BE%E5%BC%8F%E5%A4%9A%E5%88%86%E6%94%AF%E8%A7%84%E5%88%99%E6%A0%91%E6%A8%A1%E5%9E%8B/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='技术' /><meta property='article:published_time' content='2025-09-26T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-09-26T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="链式多分支规则树模型">
+<meta name="twitter:description" content="前言 最新在学习项目的时候发现了一个很巧妙的设计模式，虽然长期处于MVC架构的桎梏下，遇见这种设计模式难免令人眼前一亮，遂打算记录一下。
+背景 项目背景是在一个拼团活动的场景下。对于这么一个业务，当点击进入商品页面时，如果商品存在优惠信息我们总是能够看到优惠之后的价格，这也就是商品的试算。这时候不妨想想，如果有多种优惠活动，会产生不同的优惠金额，那么要怎么实现这种逻辑呢？在传统的MVC架构下，最常见的可能就是将不同的优惠活动使用不同的Service进行封装，在商品试算的时候使用if else来决定采用哪种优惠策略。但这显然是不够优雅的，如果是在DDD架构下，设计模式能够摆脱MVC的限制，从而更好的融合到项目中，这也就是这篇博客要阐述的内容，即”链式多分支规则树模型“
+碍于笔者的技术所限，MVC架构应当也有一些其他的方式能够避免上述if else的情况，这里权且就不再深究
+链式多分支规则树模型 先整体看一下模型的结构，如下图所示
+链式多分支规则树模型结构 首先，定义抽象的通用的规则树模型结构。涵盖；StrategyMapper - 策略映射器、StrategyHandler - 策略处理器、AbstractStrategyRouter&amp;lt;T, D, R&amp;gt; - 策略路由抽象类。通过泛型设计允许使用方可以自定义出入参和动态上下文，让抽象模板模型具有通用性。 之后，由使用方自定义出工厂、功能抽象类和一个个流程流转的节点。这些节点可以自由组装进行流转，相比于责任链它的实现方式更具有灵活性。 策略处理器 策略处理器的接口代码如下所示：
+public interface StrategyHandler&amp;lt;T, D, R&amp;gt; { /** 默认处理 */ /// 函数式接口，因此DEFAULT等效于一个始终返回null的apply方法的有效实现 StrategyHandler DEFAULT = (T, D) -&amp;gt; null; /** * 处理业务流程 * @param requestParam 入参 * @param dynamicContext 上下文 * @return 返回参数 * @throws Exception */ R apply(T requestParam, D dynamicContext) throws Exception; } 策略处理器用来处理执行的业务流程。在每个业务流程执行时，如果有某些数据是前面的节点到后面的节点都会使用到的，那么就可以将这些数据存放到上下文中。同时，实现一个默认的处理器，对所有的入参都返回空。可以用来停止流程。
+策略映射器 策略映射器的接口代码如下：
+public interface StrategyMapper&amp;lt;T, D, R&amp;gt; { /** * 获取对应的策略处理器 * @param requestParam 入参 * @param dynamicContext 上下文 * @return 返回参数 * @throws Exception */ StrategyHandler&amp;lt;T, D, R&amp;gt; get(T requestParam, D dynamicContext) throws Exception; } 策略映射器提供了 get方法来获取策略处理器，也就相当于获取业务流程的每个节点，这也就避免了将所有逻辑都写到一个类中。"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/%E9%93%BE%E5%BC%8F%E5%A4%9A%E5%88%86%E6%94%AF%E8%A7%84%E5%88%99%E6%A0%91%E6%A8%A1%E5%9E%8B/">链式多分支规则树模型</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 26, 2025</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="前言">前言</h2>
+<p>最新在学习项目的时候发现了一个很巧妙的设计模式，虽然长期处于MVC架构的桎梏下，遇见这种设计模式难免令人眼前一亮，遂打算记录一下。</p>
+<h2 id="背景">背景</h2>
+<p>项目背景是在一个拼团活动的场景下。对于这么一个业务，当点击进入商品页面时，如果商品存在优惠信息我们总是能够看到优惠之后的价格，这也就是商品的试算。这时候不妨想想，如果有多种优惠活动，会产生不同的优惠金额，那么要怎么实现这种逻辑呢？在传统的MVC架构下，最常见的可能就是将不同的优惠活动使用不同的Service进行封装，在商品试算的时候使用if else来决定采用哪种优惠策略。但这显然是不够优雅的，如果是在DDD架构下，设计模式能够摆脱MVC的限制，从而更好的融合到项目中，这也就是这篇博客要阐述的内容，即”链式多分支规则树模型“</p>
+<blockquote>
+<p>碍于笔者的技术所限，MVC架构应当也有一些其他的方式能够避免上述if else的情况，这里权且就不再深究</p>
+</blockquote>
+<h2 id="链式多分支规则树模型">链式多分支规则树模型</h2>
+<p>先整体看一下模型的结构，如下图所示</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-09-21%20221559.jpg" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-09-21%20221559.jpg"
+			
+			
+			
+			loading="lazy"
+			alt="链式多分支规则树模型结构">
+	</a>
+	
+	<figcaption>链式多分支规则树模型结构</figcaption>
+	
+</figure></p>
+<ul>
+<li>首先，定义抽象的通用的规则树模型结构。涵盖；StrategyMapper - 策略映射器、StrategyHandler - 策略处理器、<code>AbstractStrategyRouter&lt;T, D, R&gt;</code> - 策略路由抽象类。通过泛型设计允许使用方可以自定义出入参和动态上下文，让抽象模板模型具有通用性。</li>
+<li>之后，由使用方自定义出工厂、功能抽象类和一个个流程流转的节点。这些节点可以自由组装进行流转，相比于责任链它的实现方式更具有灵活性。</li>
+</ul>
+<h3 id="策略处理器">策略处理器</h3>
+<p>策略处理器的接口代码如下所示：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">StrategyHandler</span><span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 默认处理 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/// 函数式接口，因此DEFAULT等效于一个始终返回null的apply方法的有效实现</span>
+</span></span><span style="display:flex;"><span>    StrategyHandler DEFAULT <span style="color:#f92672">=</span> (T, D) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 处理业务流程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param requestParam 入参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param dynamicContext 上下文
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return 返回参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @throws Exception
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    R <span style="color:#a6e22e">apply</span>(T requestParam, D dynamicContext) <span style="color:#66d9ef">throws</span> Exception;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>策略处理器用来处理执行的业务流程。在每个业务流程执行时，如果有某些数据是前面的节点到后面的节点都会使用到的，那么就可以将这些数据存放到上下文中。同时，实现一个默认的处理器，对所有的入参都返回空。<strong>可以用来停止流程。</strong></p>
+<h3 id="策略映射器">策略映射器</h3>
+<p>策略映射器的接口代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">StrategyMapper</span><span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 获取对应的策略处理器
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param requestParam 入参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param dynamicContext 上下文
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return 返回参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @throws Exception
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    StrategyHandler<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">get</span>(T requestParam, D dynamicContext) <span style="color:#66d9ef">throws</span> Exception;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>策略映射器提供了 <code>get</code>方法来获取策略处理器，也就相当于获取业务流程的每个节点，这也就避免了将所有逻辑都写到一个类中。</p>
+<h3 id="策略路由器">策略路由器</h3>
+<p>处理器和映射器分别用来处理业务流程和获取业务流程的每个节点，那么真正决定业务流程的走向便是路由器。其具体实现如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 路由器实现两个映射器和处理其两个接口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param &lt;T&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param &lt;D&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param &lt;R&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AbstractStrategyRouter</span><span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> StrategyHandler<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span>, StrategyMapper<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Getter</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Setter</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> StrategyHandler<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> defaultHandler <span style="color:#f92672">=</span> StrategyHandler.<span style="color:#a6e22e">DEFAULT</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> R <span style="color:#a6e22e">router</span>(T requestParam, D dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        StrategyHandler<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> handler <span style="color:#f92672">=</span> get(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">null</span> <span style="color:#f92672">!=</span> handler) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> handler.<span style="color:#a6e22e">apply</span>(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> defaultHandler.<span style="color:#a6e22e">apply</span>(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>AbstractStrategyRouter实现了映射器和处理器两个接口，这样就能够在本类中实现的 <code>router</code>方法内使用映射器和处理器中的 <code>get</code>方法和 <code>apply</code>方法。<strong>这里较为巧妙的是使用了抽象类来继承，这样既可以有自己的实现方法，也不需要在当前这个类中实现 <code>get</code>和 <code>apply</code>方法。</strong></p>
+<h2 id="场景">场景</h2>
+<p>现在将上述的处理器、映射器、路由器结合到拼团的实际场景中来。先创建销售商品信息以及试算结果实体，如下。</p>
+<p><em>当然，这里只是为了在整个流程的实现过程中不会报错，实际上可能用不上这几个类。</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 销售商品信息，也就是业务节点的入参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Data</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Builder</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@NoArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@AllArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MarketProductEntity</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 活动ID */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Long activityId;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 用户ID */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String userId;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 商品ID */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String goodsId;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 试算结果实体类，也就是业务节点的返参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Data</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Builder</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@NoArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@AllArgsConstructor</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrialBalanceEntity</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 商品ID */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String goodsId;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 商品名称 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String goodsName;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 原始价格 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> BigDecimal originalPrice;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 折扣价格 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> BigDecimal deductionPrice;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>接下来创建功能服务支撑类，以便之后的业务流程节点继承。这里继续使用抽象类即可，因为方法的最终实现还是要交给业务流程节点来实现，不必在服务支撑类中实现，同时，到了服务支撑类这一层，就可以将之前准备的入参和返回参数替代接口中的泛型了。到这里还存在一些问题，之前提到的上下文要怎么存放呢？最开始的节点要怎么进入并使用？这些可以通过创建另一个类来同时管理，这里命名为 <code>DefaultActivityStrategyFactory</code>，于是，服务支撑类的代码以及 <code>DefaultActivityStrategyFactory</code>代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 服务支撑类，继承原来的策略路由器
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param &lt;MarketProductEntity&gt; 入参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param &lt;DynamicContext&gt; 动态上下文
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param &lt;TrialBalanceEntity&gt; 返参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AbstractGroupMarketSupport</span><span style="color:#f92672">&lt;</span>MarketProductEntity, DynamicContext, TrialBalanceEntity<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">extends</span> AbstractStrategyRouter<span style="color:#f92672">&lt;</span>MarketProductEntity, DynamicContext, TrialBalanceEntity<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 一个工厂类，用来管理初始流程节点和动态上下文
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultActivityStrategyFactory</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 业务流程中的起始节点 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> RootNode rootNode;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DefaultActivityStrategyFactory</span>(RootNode rootNode) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">rootNode</span> <span style="color:#f92672">=</span> rootNode;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> StrategyHandler<span style="color:#f92672">&lt;</span>MarketProductEntity, DynamicContext, TrialBalanceEntity<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">strategyHandler</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> rootNode;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Data</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Builder</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@NoArgsConstructor</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@AllArgsConstructor</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DynamicContext</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">/** 保存上下文信息 */</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>如上面的代码，服务支撑类继承了原先的策略路由器，使得其同时拥有了映射器和处理器的方法，而使用一个工厂类来管理动态上下文和初始节点， <strong>随着业务的不断扩展，流程可能需要更多的信息，这时候就可以往动态上下文中添加信息来满足流程的执行</strong>。</p>
+<p>最后就是创建每个节点，节点的创建方式是一样的，唯一有区别的可能就是在业务逻辑上。四个节点分别如下：</p>
+<p><strong>RootNode</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RootNode</span> <span style="color:#66d9ef">extends</span> AbstractGroupMarketSupport<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> SwitchNode switchNode;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> TrialBalanceEntity <span style="color:#a6e22e">apply</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;==== RootNode 开始执行 ====&#34;</span>);
+</span></span><span style="display:flex;"><span>        dynamicContext.<span style="color:#a6e22e">setInfo</span>(<span style="color:#e6db74">&#34;### 这里是业务流程要使用的信息&#34;</span>);
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;==== 在RootNode中存入上下文信息 信息为:{}&#34;</span>, dynamicContext.<span style="color:#a6e22e">getInfo</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> router(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 获得起始节点的下一个节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param requestParam 入参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param dynamicContext 上下文
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return 返参
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @throws Exception
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> StrategyHandler<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">get</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> switchNode;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>SwitchNode</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SwitchNode</span> <span style="color:#66d9ef">extends</span> AbstractGroupMarketSupport<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> MarketNode marketNode;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> TrialBalanceEntity <span style="color:#a6e22e">apply</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;==== SwitchNode 开始执行 ====&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> router(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> StrategyHandler<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">get</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> marketNode;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>MarketNode</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MarketNode</span> <span style="color:#66d9ef">extends</span> AbstractGroupMarketSupport<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> EndNode endNode;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> TrialBalanceEntity <span style="color:#a6e22e">apply</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;==== MarketNode 开始执行 ====&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 可以在这里执行查询商品和活动信息并试算，同时利用上下文信息</span>
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;==== 取出上下文信息，信息为:{}&#34;</span>, dynamicContext.<span style="color:#a6e22e">getInfo</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> router(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> StrategyHandler<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">get</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> endNode;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>EndNode</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EndNode</span> <span style="color:#66d9ef">extends</span> AbstractGroupMarketSupport<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> TrialBalanceEntity <span style="color:#a6e22e">apply</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;==== EndNode 开始执行 ====&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* 此处就可以返回试算结果了 */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TrialBalanceEntity();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> StrategyHandler<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">get</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> defaultHandler;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后，用单元测试来验证一下执行的顺序，单元测试类如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@RunWith</span>(SpringRunner.<span style="color:#a6e22e">class</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@SpringBootTest</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IndexTest</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> DefaultActivityStrategyFactory defaultActivityStrategyFactory;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Test</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test</span>() <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        StrategyHandler<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> handler <span style="color:#f92672">=</span> defaultActivityStrategyFactory.<span style="color:#a6e22e">strategyHandler</span>();
+</span></span><span style="display:flex;"><span>        TrialBalanceEntity trialBalance <span style="color:#f92672">=</span> handler.<span style="color:#a6e22e">apply</span>(<span style="color:#66d9ef">new</span> MarketProductEntity(), <span style="color:#66d9ef">new</span> DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>得到的执行结果为：</p>
+<p><figure 
+	>
+	<a href="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250925222309.png" >
+		<img src="https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20250925222309.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>可以看到，每个节点按照既定的顺序执行，并可以在流程中使用上下文信息。</p>
+<h2 id="优化">优化</h2>
+<p>通过上述对链式多分支规则树模型的讲述，已经有了较为详细的了解。下面，针对实际可能出现的业务场景，我们引入线程池来优化程序的执行时间。</p>
+<h3 id="背景-1">背景</h3>
+<p>在规则树模型结构中，如果要进行商品的试算，至少需要查询商品信息和活动信息才有可能计算商品的折扣。如果这个步骤放在主线程中执行，势必会拖慢主线程的执行。如果查询的数据很多，那么这个代价肯定是不可接受的。所以，这时候可以考虑引入线程池，将必要的查询交由线程池中的线程实现，尽可能的减少对主线程的影响。</p>
+<h3 id="线程池创建">线程池创建</h3>
+<p>创建线程池的方式有很多种，这里也是准备了一种较为优雅的方式。首先在yml配置文件中先配置需要用到的配置信息。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># 线程池配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">thread</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pool</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">executor</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">config</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">core-pool-size</span>: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">max-pool-size</span>: <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">keep-alive-time</span>: <span style="color:#ae81ff">5000</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">block-queue-size</span>: <span style="color:#ae81ff">5000</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">policy</span>: <span style="color:#ae81ff">CallerRunsPolicy</span>
+</span></span></code></pre></div><p>接下来我们创建一个线程池配置属性类（ <code>ThreadPoolConfigProperties</code> ）来接收yml文件中的配置信息。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Java" data-lang="Java"><span style="display:flex;"><span><span style="color:#a6e22e">@Data</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@ConfigurationProperties</span>(prefix <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;thread.pool.executor.config&#34;</span>, ignoreInvalidFields <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ThreadPoolConfigProperties</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 核心线程数 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Integer corePoolSize;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 最大线程数 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Integer maxPoolSize;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 最大等待时间 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Long keepAliveTime;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 最大队列数 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Integer blockQueueSize;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * AbortPolicy：丢弃任务并抛出RejectedExecutionException异常。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * DiscardPolicy：直接丢弃任务，但是不会抛出异常
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * DiscardOldestPolicy：将最早进入队列的任务删除，之后再尝试加入队列的任务被拒绝
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * CallerRunsPolicy：如果任务添加线程池失败，那么主线程自己执行该任务
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String policy;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里需要使用注解 <code>@ConfigurationPorperties</code>来指定在yml文件中的配置信息， <code>prefix</code>也就是yml配置中的前缀信息。最后就是创建真正的线程池配置类（ <code>ThreadPoolConfig</code> )。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 线程池配置信息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @EnableAsync 这个注解允许方法在后台线程中异步执行，而不是阻塞调用线程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@EnableAsync</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@EnableConfigurationProperties</span>(ThreadPoolConfigProperties.<span style="color:#a6e22e">class</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ThreadPoolConfig</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Bean</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@ConditionalOnMissingBean</span>(ThreadPoolExecutor.<span style="color:#a6e22e">class</span>) <span style="color:#75715e">// 这个注解用来保证线程池的唯一性，当不存在线程池时才会创建</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> ThreadPoolExecutor <span style="color:#a6e22e">threadPoolExecutor</span>(ThreadPoolConfigProperties properties) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 实例化策略，用于之后实际创建用</span>
+</span></span><span style="display:flex;"><span>        RejectedExecutionHandler handler;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> (properties.<span style="color:#a6e22e">getPolicy</span>()) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;AbortPolicy&#34;</span>:
+</span></span><span style="display:flex;"><span>                handler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor.<span style="color:#a6e22e">AbortPolicy</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;DiscardPolicy&#34;</span>:
+</span></span><span style="display:flex;"><span>                handler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor.<span style="color:#a6e22e">DiscardPolicy</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;DiscardOldestPolicy&#34;</span>:
+</span></span><span style="display:flex;"><span>                handler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor.<span style="color:#a6e22e">DiscardOldestPolicy</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;CallerRunsPolicy&#34;</span>:
+</span></span><span style="display:flex;"><span>                handler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor.<span style="color:#a6e22e">CallerRunsPolicy</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>                handler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor.<span style="color:#a6e22e">AbortPolicy</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor(properties.<span style="color:#a6e22e">getCorePoolSize</span>(),
+</span></span><span style="display:flex;"><span>                properties.<span style="color:#a6e22e">getMaxPoolSize</span>(),
+</span></span><span style="display:flex;"><span>                properties.<span style="color:#a6e22e">getKeepAliveTime</span>(),
+</span></span><span style="display:flex;"><span>                TimeUnit.<span style="color:#a6e22e">SECONDS</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;&gt;</span>(properties.<span style="color:#a6e22e">getBlockQueueSize</span>()),
+</span></span><span style="display:flex;"><span>                Executors.<span style="color:#a6e22e">defaultThreadFactory</span>(),
+</span></span><span style="display:flex;"><span>                handler);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>其中一些比较关键的信息通过注释呈现。</p>
+<h3 id="改造链式多分支规则树模型">改造链式多分支规则树模型</h3>
+<p>回想一下，每个流程节点其实都是继承自 <code>AbstractGroupMarketSupport</code> 类，而这个类又是继承自 <code>AbstractStrategyRouter</code> 这个策略路由器。所以从最上层开始，引入需要的线程池方法。</p>
+<p>我们重新创建一个类 <code>AbstractMutiThreadStrategyRouter</code> 代替原先的 <code>AbstractStrategyRouter</code> 。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AbstractMutiThreadStrategyRouter</span><span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> StrategyMapper<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span>, StrategyHandler<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Getter</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Setter</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> StrategyHandler<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> defaultStrategyHandler <span style="color:#f92672">=</span> StrategyHandler.<span style="color:#a6e22e">DEFAULT</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> R <span style="color:#a6e22e">router</span>(T requestParam, D dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        StrategyHandler<span style="color:#f92672">&lt;</span>T, D, R<span style="color:#f92672">&gt;</span> strategyHandler <span style="color:#f92672">=</span> get(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">null</span> <span style="color:#f92672">!=</span> strategyHandler) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> strategyHandler.<span style="color:#a6e22e">apply</span>(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> defaultStrategyHandler.<span style="color:#a6e22e">apply</span>(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> R <span style="color:#a6e22e">apply</span>(T requestParam, D dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        mutiThread(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> doApply(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">abstract</span> R <span style="color:#a6e22e">doApply</span>(T requestParam, D dynamicContext) <span style="color:#66d9ef">throws</span> Exception;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mutiThread</span>(T requestParam, D dynamicContext) <span style="color:#66d9ef">throws</span> Exception;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>与原先不同的是，在这个策略路由器中，对 <code>apply</code> 方法进行了简单的实现，在内部执行两个方法：</p>
+<ul>
+<li><code>mutiThread</code> 方法，也就是线程池查找的相应方法</li>
+<li><code>doApply</code> 方法，真正的业务逻辑实现</li>
+</ul>
+<p>值得注意的是，这两个方法依旧为抽象方法，具体的实现交由子类负责。</p>
+<p>在服务支持类上没有过多的改动，但需要实现缺省的 <code>mutiThread</code> 方法，这样可以避免之后的每个业务流程节点都要实现这一方法。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AbstractGroupBuyMarketSupport</span><span style="color:#f92672">&lt;</span>MarketProductEntity, DynamicContext, TrialBalanceEntity<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">extends</span> AbstractMutiThreadStrategyRouter<span style="color:#f92672">&lt;</span>MarketProductEntity, DynamicContext, TrialBalanceEntity<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** 在这里注入查询接口，当流程节点使用时可以不用再次注入 */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> IActivityRepository repository;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mutiThread</span>(MarketProductEntity requestParam, DynamicContext dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 缺省的方法，避免每个子类都要实现</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后就是业务流程节点的实现，每个业务流程节点只需要实现自己对应的业务逻辑，也就是 <code>doApply</code> 方法，在需要查询的时候额外实现 <code>mutiThread</code> 方法即可，这里使用MarketNode作为例子。假如我们要在MarketNode执行时获得商品信息，可以这么做。</p>
+<p>首先需要创建交由线程池执行的线程，再因为查询需要返回结果，所以使用 FutureTask的方式来创建线程。如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QuerySkuVOThreadTask</span> <span style="color:#66d9ef">implements</span> Callable<span style="color:#f92672">&lt;</span>SkuVO<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">/** 商品ID */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> String goodsId;
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">/** 查询接口 */</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> IActivityRepository repository;
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">QuerySkuVOThreadTask</span>(String goodsId, IActivityRepository repository) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">goodsId</span> <span style="color:#f92672">=</span> goodsId;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">repository</span> <span style="color:#f92672">=</span> repository;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> SkuVO <span style="color:#a6e22e">call</span>() <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> repository.<span style="color:#a6e22e">querySkuVO</span>(goodsId);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后只需要在MarketNode节点中实现 <code>mutiThread</code> 方法，并将查询任务交给线程池执行即可。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MarketNode</span> <span style="color:#66d9ef">extends</span> AbstractGroupBuyMarketSupport
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> ThreadPoolExecutor threadPoolExecutor;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> EndNode endNode;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 实现异步数据加载，并存储到动态上下文中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param requestParam
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param dynamicContext
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @throws Exception
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mutiThread</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 通过线程池去查询商品信息</span>
+</span></span><span style="display:flex;"><span>        QuerySkuVOFromDBThreadTask querySkuVOFromDBThreadTask <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> QuerySkuVOFromDBThreadTask(requestParam.<span style="color:#a6e22e">getGoodsId</span>(), repository);
+</span></span><span style="display:flex;"><span>        FutureTask<span style="color:#f92672">&lt;</span>SkuVO<span style="color:#f92672">&gt;</span> skuVOFutureTask <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FutureTask<span style="color:#f92672">&lt;&gt;</span>(querySkuVOFromDBThreadTask);
+</span></span><span style="display:flex;"><span>        threadPoolExecutor.<span style="color:#a6e22e">execute</span>(skuVOFutureTask);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> TrialBalanceEntity <span style="color:#a6e22e">doApply</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) <span style="color:#66d9ef">throws</span> Exception {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> router(requestParam, dynamicContext);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> StrategyHandler<span style="color:#f92672">&lt;</span>MarketProductEntity, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span>, TrialBalanceEntity<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">get</span>(MarketProductEntity requestParam, DefaultActivityStrategyFactory.<span style="color:#a6e22e">DynamicContext</span> dynamicContext) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> endNode;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>到这里，也就完成了链式多分支规则树模型的线程池引入。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%81%9C%E6%AD%A2%E7%BA%BF%E7%A8%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">如何正确地停止线程</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94-%E9%94%81/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL学习（五）| 锁</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E5%9B%9B-%E7%B4%A2%E5%BC%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL学习（四）| 索引</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+         <br />
+        
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#链式多分支规则树模型">链式多分支规则树模型</a>
+      <ul>
+        <li><a href="#策略处理器">策略处理器</a></li>
+        <li><a href="#策略映射器">策略映射器</a></li>
+        <li><a href="#策略路由器">策略路由器</a></li>
+      </ul>
+    </li>
+    <li><a href="#场景">场景</a></li>
+    <li><a href="#优化">优化</a>
+      <ul>
+        <li><a href="#背景-1">背景</a></li>
+        <li><a href="#线程池创建">线程池创建</a></li>
+        <li><a href="#改造链式多分支规则树模型">改造链式多分支规则树模型</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+                
+            </section>
+        </aside>
+        
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>

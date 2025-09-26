@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JUC on 墨纹</title>
+    <link>https://MUNLELEE.github.io/tags/juc/</link>
+    <description>Recent content in JUC on 墨纹</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 20 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://MUNLELEE.github.io/tags/juc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何正确地停止线程</title>
+      <link>https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%81%9C%E6%AD%A2%E7%BA%BF%E7%A8%8B/</link>
+      <pubDate>Sun, 20 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%81%9C%E6%AD%A2%E7%BA%BF%E7%A8%8B/</guid>
+      <description>前言 通常情况下，我们不会手动停止一个线程，而是允许线程运行到结束，然后让它自然停止。但是依然会有许多特殊的情况需要我们提前停止线程，比如：用户突然关闭程序，或程序运行出错重启等。在这种情况下，即将停止的线程在很多业务场景下仍然很有价值。尤其是我们想写一个健壮性很好，能够安全应对各种场景的程序时，正确停止线程就显得格外重要。&#xA;为什么不强制停止？ 对于Java来说，最正确的停止线程的方式就是使用 interrupt。但是 interrupt仅仅是起到通知被停止线程的作用。对于被停止的线程来说，它拥有完全的自主权， 既可以选择立即停止，也可以选择过一段时间后再停止，甚至压根不停止。 在Java中，程序通过互相通知、相互协作来管理线程，如果不了解线程的工作贸然停止可能会造成一些安全问题。就比如线程正在写入一个文件，但是收到了终止信号，这时候线程就要根据自身业务情况决定是立即停止还是写完文件再停止，如果选择立即停止可能会造成数据的不完整。&#xA;interrupt 如何使用interrupt终止线程？ 一般来说，被停止线程总是需要不断的判断线程是否收到了终止信号，常见的循环如下：&#xA;while (Thread.currentThread().isInterrupted() &amp;amp;&amp;amp; do sth.) { // do sth. of thread; } 接下来用代码来看看Java是怎么实现停止线程的逻辑的。一旦调用某个线程的interrupt方法之后，这个线程的中断标志位就会被置为true。 每个线程都有这样的标志位，当线程执行时应该定期检查这个标志位，如果标志位被置为true，说明有程序想要终止该线程。 示例代码如下：&#xA;public class StopThread implements Runnable { @Override public void run() { int cnt = 0; while (!Thread.currentThread().isInterrupted() &amp;amp;&amp;amp; cnt &amp;lt;= 1000) { System.out.println(cnt++); } } public static void main(String[] args) throws InterruptedException { Thread thread = new Thread(new StopThread()); thread.start(); Thread.sleep(2); thread.interrupt(); } } 此时会得到如下输出：</description>
+    </item>
+  </channel>
+</rss>
