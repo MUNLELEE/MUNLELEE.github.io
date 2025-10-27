@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 在一个项目中，经常会遇到这样一个需求，希望能够在程序运行过程中，直接动态变更某些属性配置。这些动态变更的配置可能包括降级和切量开关等等。
+当然，如果是一个微服务项目，动态配置这一功能实现显然是可以通过注册中心（Nacos）来满足。但实际上，亦可以通过代码本身来实现这个功能。在这篇博客中就使用 Java反射&#43;Redis发布/订阅 的方式来实现。
+实现方法 在真正开始实现前，不妨可以想想技术路线。能够知道的是， Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。 这个能力显然和需求十分匹配。那么如何能够在反射时知道要修改哪些字段以及修改的值是什么呢？前者可以通过自定义注解来实现，在希望进行动态配置的字段上添加相应的注解作为标记，当Spring扫描Bean对象时就可以管理这些类的属性。后者可以通过Redis的发布/订阅来实现（其实也就是消息队列），监听某一个topic获取相应要更改的值。
+经过上面的描述，要自己实现动态配置大概可以分为以下几个步骤：
+添加一个自定义注解，用于Spring扫描Bean对象的时候，可以直接管理这些配置了自定义注解的类的属性。 给服务类的属性添加自定义注解，这里的服务类也就是包含了动态配置属性的对象。 添加一个动态配置管理的工厂，用来自动完成属性信息的填充和动态变更操作 业务的使用，这里会调用步骤2中的属性服务。当配置有变动时，可以把配置信息直接刷新到内存属性上。 实现动态变更接口，当调用相应接口时，触发Redis的发布/订阅，以此来更新类上的属性。 自定义注解的实现和使用 自定义注解 @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.FIELD}) @Documented public @interface DCCValue { String value() default &amp;#34;&amp;#34;; } 按照常规方式配置一个自定义注解，同时具有一个value属性值，默认值为空字符串即可。
+自定义注解的使用 @Service public class DCCService { // 是否降级 @DCCValue(&amp;#34;downgradeSwitch:0&amp;#34;) private String downgradeSwitch; // 是否切量 @DCCValue(&amp;#34;cutRange:100&amp;#34;) private String cutRange; public boolean isDowngradeSwitchOn() { return &amp;#34;1&amp;#34;.equals(downgradeSwitch); } public boolean isCutRange(String userId) { int hashCode = Math.abs(userId.hashCode()); // 获取最后两位 int lastTwoDigit = hashCode % 100; if (lastTwoDigit &amp;lt;= Integer.'><title>如何实现动态配置</title>
+
+<link rel='canonical' href='https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/'>
+
+<link rel="stylesheet" href="/scss/style.min.2d5c7b7fe00d3723b47df5ddeea35027ba1a58ec45a6d797c9c0e626dd65ac00.css"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script>
+    
+    $(window).scroll(function() {
+    if ($(this).scrollTop()) {
+        $('#go-top').fadeIn();
+    } else {
+        $('#go-top').fadeOut();
+    }
+    });
+
+    
+    $('#go-top').click(function() {
+    $('html, body').animate({scrollTop: 0}, 1000);
+    return false;
+    });
+</script>
+
+
+
+
+<meta property='og:title' content='如何实现动态配置'>
+<meta property='og:description' content='前言 在一个项目中，经常会遇到这样一个需求，希望能够在程序运行过程中，直接动态变更某些属性配置。这些动态变更的配置可能包括降级和切量开关等等。
+当然，如果是一个微服务项目，动态配置这一功能实现显然是可以通过注册中心（Nacos）来满足。但实际上，亦可以通过代码本身来实现这个功能。在这篇博客中就使用 Java反射&#43;Redis发布/订阅 的方式来实现。
+实现方法 在真正开始实现前，不妨可以想想技术路线。能够知道的是， Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。 这个能力显然和需求十分匹配。那么如何能够在反射时知道要修改哪些字段以及修改的值是什么呢？前者可以通过自定义注解来实现，在希望进行动态配置的字段上添加相应的注解作为标记，当Spring扫描Bean对象时就可以管理这些类的属性。后者可以通过Redis的发布/订阅来实现（其实也就是消息队列），监听某一个topic获取相应要更改的值。
+经过上面的描述，要自己实现动态配置大概可以分为以下几个步骤：
+添加一个自定义注解，用于Spring扫描Bean对象的时候，可以直接管理这些配置了自定义注解的类的属性。 给服务类的属性添加自定义注解，这里的服务类也就是包含了动态配置属性的对象。 添加一个动态配置管理的工厂，用来自动完成属性信息的填充和动态变更操作 业务的使用，这里会调用步骤2中的属性服务。当配置有变动时，可以把配置信息直接刷新到内存属性上。 实现动态变更接口，当调用相应接口时，触发Redis的发布/订阅，以此来更新类上的属性。 自定义注解的实现和使用 自定义注解 @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.FIELD}) @Documented public @interface DCCValue { String value() default &amp;#34;&amp;#34;; } 按照常规方式配置一个自定义注解，同时具有一个value属性值，默认值为空字符串即可。
+自定义注解的使用 @Service public class DCCService { // 是否降级 @DCCValue(&amp;#34;downgradeSwitch:0&amp;#34;) private String downgradeSwitch; // 是否切量 @DCCValue(&amp;#34;cutRange:100&amp;#34;) private String cutRange; public boolean isDowngradeSwitchOn() { return &amp;#34;1&amp;#34;.equals(downgradeSwitch); } public boolean isCutRange(String userId) { int hashCode = Math.abs(userId.hashCode()); // 获取最后两位 int lastTwoDigit = hashCode % 100; if (lastTwoDigit &amp;lt;= Integer.'>
+<meta property='og:url' content='https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/'>
+<meta property='og:site_name' content='墨纹'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='技术' /><meta property='article:published_time' content='2025-10-26T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-10-26T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="如何实现动态配置">
+<meta name="twitter:description" content="前言 在一个项目中，经常会遇到这样一个需求，希望能够在程序运行过程中，直接动态变更某些属性配置。这些动态变更的配置可能包括降级和切量开关等等。
+当然，如果是一个微服务项目，动态配置这一功能实现显然是可以通过注册中心（Nacos）来满足。但实际上，亦可以通过代码本身来实现这个功能。在这篇博客中就使用 Java反射&#43;Redis发布/订阅 的方式来实现。
+实现方法 在真正开始实现前，不妨可以想想技术路线。能够知道的是， Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。 这个能力显然和需求十分匹配。那么如何能够在反射时知道要修改哪些字段以及修改的值是什么呢？前者可以通过自定义注解来实现，在希望进行动态配置的字段上添加相应的注解作为标记，当Spring扫描Bean对象时就可以管理这些类的属性。后者可以通过Redis的发布/订阅来实现（其实也就是消息队列），监听某一个topic获取相应要更改的值。
+经过上面的描述，要自己实现动态配置大概可以分为以下几个步骤：
+添加一个自定义注解，用于Spring扫描Bean对象的时候，可以直接管理这些配置了自定义注解的类的属性。 给服务类的属性添加自定义注解，这里的服务类也就是包含了动态配置属性的对象。 添加一个动态配置管理的工厂，用来自动完成属性信息的填充和动态变更操作 业务的使用，这里会调用步骤2中的属性服务。当配置有变动时，可以把配置信息直接刷新到内存属性上。 实现动态变更接口，当调用相应接口时，触发Redis的发布/订阅，以此来更新类上的属性。 自定义注解的实现和使用 自定义注解 @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.FIELD}) @Documented public @interface DCCValue { String value() default &amp;#34;&amp;#34;; } 按照常规方式配置一个自定义注解，同时具有一个value属性值，默认值为空字符串即可。
+自定义注解的使用 @Service public class DCCService { // 是否降级 @DCCValue(&amp;#34;downgradeSwitch:0&amp;#34;) private String downgradeSwitch; // 是否切量 @DCCValue(&amp;#34;cutRange:100&amp;#34;) private String cutRange; public boolean isDowngradeSwitchOn() { return &amp;#34;1&amp;#34;.equals(downgradeSwitch); } public boolean isCutRange(String userId) { int hashCode = Math.abs(userId.hashCode()); // 获取最后两位 int lastTwoDigit = hashCode % 100; if (lastTwoDigit &amp;lt;= Integer."><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /><style>
+    :root {
+        --article-font-family: "Noto Serif SC", var(--base-font-family);
+    }
+</style>
+
+<script> 
+		(function () {
+		    const customFont = document.createElement('link');
+		    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;700&display=swap"; 
+		    customFont.type = "text/css";
+		    customFont.rel = "stylesheet";
+		
+		    document.head.appendChild(customFont);
+		}());
+</script>
+<style>
+	h1 {
+		letter-spacing: 6px;
+	}
+</style>
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>返回</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0/" >
+                学习
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/">如何实现动态配置</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 26, 2025</time>
+            </div>
+        
+
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="前言">前言</h2>
+<p>在一个项目中，经常会遇到这样一个需求，希望能够在程序运行过程中，直接动态变更某些属性配置。这些动态变更的配置可能包括降级和切量开关等等。</p>
+<p>当然，如果是一个微服务项目，动态配置这一功能实现显然是可以通过注册中心（Nacos）来满足。但实际上，亦可以通过代码本身来实现这个功能。在这篇博客中就使用 <strong>Java反射+Redis发布/订阅</strong> 的方式来实现。</p>
+<h2 id="实现方法">实现方法</h2>
+<p>在真正开始实现前，不妨可以想想技术路线。能够知道的是， <strong>Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。</strong> 这个能力显然和需求十分匹配。那么如何能够在反射时知道要修改哪些字段以及修改的值是什么呢？前者可以通过自定义注解来实现，在希望进行动态配置的字段上添加相应的注解作为标记，当Spring扫描Bean对象时就可以管理这些类的属性。后者可以通过Redis的发布/订阅来实现（其实也就是消息队列），监听某一个topic获取相应要更改的值。</p>
+<p>经过上面的描述，要自己实现动态配置大概可以分为以下几个步骤：</p>
+<ol>
+<li>添加一个自定义注解，用于Spring扫描Bean对象的时候，可以直接管理这些配置了自定义注解的类的属性。</li>
+<li>给服务类的属性添加自定义注解，这里的服务类也就是包含了动态配置属性的对象。</li>
+<li>添加一个动态配置管理的工厂，用来自动完成属性信息的填充和动态变更操作</li>
+<li>业务的使用，这里会调用步骤2中的属性服务。当配置有变动时，可以把配置信息直接刷新到内存属性上。</li>
+<li>实现动态变更接口，当调用相应接口时，触发Redis的发布/订阅，以此来更新类上的属性。</li>
+</ol>
+<h2 id="自定义注解的实现和使用">自定义注解的实现和使用</h2>
+<h3 id="自定义注解">自定义注解</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Retention</span>(RetentionPolicy.<span style="color:#a6e22e">RUNTIME</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Target</span>({ElementType.<span style="color:#a6e22e">FIELD</span>})
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Documented</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">@interface</span> DCCValue {
+</span></span><span style="display:flex;"><span>	String <span style="color:#a6e22e">value</span>() <span style="color:#66d9ef">default</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>按照常规方式配置一个自定义注解，同时具有一个value属性值，默认值为空字符串即可。</p>
+<h3 id="自定义注解的使用">自定义注解的使用</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DCCService</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 是否降级</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@DCCValue</span>(<span style="color:#e6db74">&#34;downgradeSwitch:0&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String downgradeSwitch;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 是否切量</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@DCCValue</span>(<span style="color:#e6db74">&#34;cutRange:100&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String cutRange;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isDowngradeSwitchOn</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;1&#34;</span>.<span style="color:#a6e22e">equals</span>(downgradeSwitch);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isCutRange</span>(String userId) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> hashCode <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">abs</span>(userId.<span style="color:#a6e22e">hashCode</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 获取最后两位</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> lastTwoDigit <span style="color:#f92672">=</span> hashCode <span style="color:#f92672">%</span> 100;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (lastTwoDigit <span style="color:#f92672">&lt;=</span> Integer.<span style="color:#a6e22e">parseInt</span>(cutRange)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>创建DCCService服务类，交给Spring管理，也是动态配置项的实际使用类，在这个类中定义了 <code>downgradeSwitch</code>，<code>cutRange</code>两个具有动态配置能力的属性（也就是使用 <code>@DCCValue</code> 注解）。两个属性分别表示是否降级以及切量，降级简单的通过0和1来决定开启或关闭。切量通过userId的哈希值的最后两位进行判断。</p>
+<h2 id="动态变更属性值">动态变更属性值</h2>
+<h3 id="bean对象初始化后操作">Bean对象初始化后操作</h3>
+<p>在这部分中，就要开始真正实现动态变更操作。需要创建一个配置类实现 <code>BeanPostProcessor</code> 接口，同时重写 <code>postProcessAfterInitialization(Object bean, String beanName)</code> 方法。如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DCCValueBeanFactory</span> <span style="color:#66d9ef">implements</span> BeanPostProcessor {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> String BASE_CONFIG_PAHT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;group_buy_market_dcc_&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> RedissonClient redissonClient;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Map<span style="color:#f92672">&lt;</span>String, Object<span style="color:#f92672">&gt;</span> dccObjGroup <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DCCValueBeanFactory</span>(RedissonClient redissonClient) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">redissonClient</span> <span style="color:#f92672">=</span> redissonClient;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>	
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">postProcessAfterInitialization</span>(Object bean, String beanName) <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>        Class<span style="color:#f92672">&lt;?&gt;</span> targetBeanClass <span style="color:#f92672">=</span> bean.<span style="color:#a6e22e">getClass</span>();
+</span></span><span style="display:flex;"><span>        Object targetBeanObject <span style="color:#f92672">=</span> bean;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 判断是否有代理</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (AopUtils.<span style="color:#a6e22e">isAopProxy</span>(bean)) {
+</span></span><span style="display:flex;"><span>            targetBeanClass <span style="color:#f92672">=</span> AopUtils.<span style="color:#a6e22e">getTargetClass</span>(bean);
+</span></span><span style="display:flex;"><span>            targetBeanObject <span style="color:#f92672">=</span> AopProxyUtils.<span style="color:#a6e22e">getSingletonTarget</span>(bean);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 获取对象的字段</span>
+</span></span><span style="display:flex;"><span>        Field<span style="color:#f92672">[]</span> fields <span style="color:#f92672">=</span> targetBeanClass.<span style="color:#a6e22e">getDeclaredFields</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (Field field : fields) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 判断这个字段是否有DCCValue注解</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>field.<span style="color:#a6e22e">isAnnotationPresent</span>(DCCValue.<span style="color:#a6e22e">class</span>)) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 获取字段的DCCValue注解</span>
+</span></span><span style="display:flex;"><span>            DCCValue dccValue <span style="color:#f92672">=</span> field.<span style="color:#a6e22e">getAnnotation</span>(DCCValue.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 判断字段是否为空，为空抛出异常</span>
+</span></span><span style="display:flex;"><span>            String value <span style="color:#f92672">=</span> dccValue.<span style="color:#a6e22e">value</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (StringUtils.<span style="color:#a6e22e">isBlank</span>(value)) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(<span style="color:#e6db74">&#34;...&#34;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            String<span style="color:#f92672">[]</span> split <span style="color:#f92672">=</span> value.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;:&#34;</span>);
+</span></span><span style="display:flex;"><span>            String key <span style="color:#f92672">=</span> BASE_CONFIG_PAHT.<span style="color:#a6e22e">concat</span>(split<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>            String defaultValue <span style="color:#f92672">=</span> split.<span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 2 <span style="color:#f92672">?</span> split<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> : <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            String setValue <span style="color:#f92672">=</span> defaultValue;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 判断是否设置了对应的值 设置错误抛出异常</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (StringUtils.<span style="color:#a6e22e">isBlank</span>(defaultValue)) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(<span style="color:#e6db74">&#34;...&#34;</span>);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 从redis中获取设置值</span>
+</span></span><span style="display:flex;"><span>                RBucket<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> bucket <span style="color:#f92672">=</span> redissonClient.<span style="color:#a6e22e">getBucket</span>(key);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">boolean</span> exists <span style="color:#f92672">=</span> bucket.<span style="color:#a6e22e">isExists</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>exists) {
+</span></span><span style="display:flex;"><span>                    bucket.<span style="color:#a6e22e">set</span>(defaultValue);
+</span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                    setValue <span style="color:#f92672">=</span> bucket.<span style="color:#a6e22e">get</span>();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 填充值</span>
+</span></span><span style="display:flex;"><span>                field.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">true</span>); <span style="color:#75715e">// 允许访问</span>
+</span></span><span style="display:flex;"><span>                field.<span style="color:#a6e22e">set</span>(targetBeanObject, setValue);
+</span></span><span style="display:flex;"><span>                field.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (IllegalAccessException e) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(e);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            dccObjGroup.<span style="color:#a6e22e">put</span>(key, targetBeanObject);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bean;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在这个配置类中，首先是实现了 <code>BeanPostProcessor</code>接口，意味着它能够在Spring容器初始化Bean之后，对Bean进行额外的处理。重写 <code>postProcessAfterInitialization</code> 方法就是为了实现对Bean初始化之后的操作。 <strong>因为在DCCService类上加上了Service注解，让这个服务类被Spring管理，所以这个方法能够扫描到服务类对象。</strong></p>
+<p>在重写的 <code>postProcessAfterInitialization</code> 方法中</p>
+<ul>
+<li>这个方法会对所有Bean对象进行扫描，通过反射获取字节码文件以及Object对象。 <strong>这里需要注意的是，要判断拿到的对象是否是代理对象，如果是，需要借助AopUtils重新获取相应的字节码文件和Object对象。</strong></li>
+<li>利用Class文件获取对象声明的属性，并在判断属性是否加上了 <code>@DCCValue</code> 注解，如果有，就判解析出注解上的配置项和默认值。同时，由于将配置值存放在Redis中，也需要去判断Redis中是否存在，存在就使用Redis中的值。</li>
+<li>将反射获取到的对象字段设置为可访问，并更新其相应的配置值。这里可以利用一个Map来存储反射获取的对象，避免之后再次通过反射去寻找。</li>
+</ul>
+<h3 id="redis订阅发布">Redis订阅/发布</h3>
+<p>为了实现能够多次更改配置项的值，还需要使用Redis中的订阅/发布功能。还是在这个类中，创建一个Redis主题的监听方法，并将这个主题作为Bean对象返回（交给Spring管理，在发布消息时能够使用）。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> RTopic <span style="color:#a6e22e">dccRedisTopicListener</span>(RedissonClient redissonClient) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 创建Topic</span>
+</span></span><span style="display:flex;"><span>    RTopic topic <span style="color:#f92672">=</span> redissonClient.<span style="color:#a6e22e">getTopic</span>(<span style="color:#e6db74">&#34;group_buy_market_dcc&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 为这个topic添加监听器</span>
+</span></span><span style="display:flex;"><span>    topic.<span style="color:#a6e22e">addListener</span>(String.<span style="color:#a6e22e">class</span>, <span style="color:#66d9ef">new</span> MessageListener<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 第一个参数代表哪个主题（也就是topic)，第二个参数就是实际的消息内容</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onMessage</span>(CharSequence charSequence, String s) {
+</span></span><span style="display:flex;"><span>            String<span style="color:#f92672">[]</span> split <span style="color:#f92672">=</span> s.<span style="color:#a6e22e">split</span>(Constants.<span style="color:#a6e22e">SPLIT</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            String attribute <span style="color:#f92672">=</span> split<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>            String key <span style="color:#f92672">=</span> BASE_CONFIG_PAHT <span style="color:#f92672">+</span> attribute;
+</span></span><span style="display:flex;"><span>            String value <span style="color:#f92672">=</span> split<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            RBucket<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;</span> bucket <span style="color:#f92672">=</span> redissonClient.<span style="color:#a6e22e">getBucket</span>(key);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">boolean</span> exists <span style="color:#f92672">=</span> bucket.<span style="color:#a6e22e">isExists</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>exists) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            bucket.<span style="color:#a6e22e">set</span>(value);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 通过之前存储的map获取一下对象</span>
+</span></span><span style="display:flex;"><span>            Object objBean <span style="color:#f92672">=</span> dccObjGroup.<span style="color:#a6e22e">get</span>(key);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">null</span> <span style="color:#f92672">==</span> objBean) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 获取class</span>
+</span></span><span style="display:flex;"><span>            Class<span style="color:#f92672">&lt;?&gt;</span> objBeanClass <span style="color:#f92672">=</span> objBean.<span style="color:#a6e22e">getClass</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (AopUtils.<span style="color:#a6e22e">isAopProxy</span>(objBeanClass)) {
+</span></span><span style="display:flex;"><span>                objBeanClass <span style="color:#f92672">=</span> AopUtils.<span style="color:#a6e22e">getTargetClass</span>(objBean);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                Field field <span style="color:#f92672">=</span> objBeanClass.<span style="color:#a6e22e">getDeclaredField</span>(attribute);
+</span></span><span style="display:flex;"><span>                field.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>                field.<span style="color:#a6e22e">set</span>(objBean, value);
+</span></span><span style="display:flex;"><span>                field.<span style="color:#a6e22e">setAccessible</span>(<span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (Exception e) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(e);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> topic;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这个方法实现思路同上面的方法异曲同工，也是通过反射来修改对象的配置值。只不过经过 <code>postProcessAfterInitialization</code> 的执行之后，可以通过之前建立的Map来直接获取对象。当然，依旧需要判断获取到的对象是否是代理对象。</p>
+<p>与 <code>postProcessAfterInitialization</code> 方法不同的是，在设置配置值时要从Redis中获取，如果Redis中不存在相应的配置项，那么就可以直接返回了。</p>
+<h2 id="外部接口的实现">外部接口的实现</h2>
+<p>到了这一步就是简单的接口实现了，只需要在调用接口时，往Redis中的相应key中发送一条消息即可。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">IDCCService</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Response<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">updateConfig</span>(String key, String value);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Slf4j</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@RestController</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@CrossOrigin</span>(<span style="color:#e6db74">&#34;*&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@RequestMapping</span>(<span style="color:#e6db74">&#34;/api/v1/gbm/dcc/&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DCCController</span> <span style="color:#66d9ef">implements</span> IDCCService {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Resource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> RTopic dccTopic;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@RequestMapping</span>(value <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;update_config&#34;</span>, method <span style="color:#f92672">=</span> RequestMethod.<span style="color:#a6e22e">GET</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Response<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">updateConfig</span>(<span style="color:#a6e22e">@RequestParam</span> String key, <span style="color:#a6e22e">@RequestParam</span> String value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 往topic发送消息</span>
+</span></span><span style="display:flex;"><span>            dccTopic.<span style="color:#a6e22e">publish</span>(key <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;,&#34;</span> <span style="color:#f92672">+</span> value);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Response.<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span>builder()
+</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">code</span>(ResponseCode.<span style="color:#a6e22e">SUCCESS</span>.<span style="color:#a6e22e">getCode</span>())
+</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">info</span>(ResponseCode.<span style="color:#a6e22e">SUCCESS</span>.<span style="color:#a6e22e">getInfo</span>())
+</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">build</span>();
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">catch</span> (Exception e) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Response.<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span>builder()
+</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">code</span>(ResponseCode.<span style="color:#a6e22e">UN_ERROR</span>.<span style="color:#a6e22e">getCode</span>())
+</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">info</span>(ResponseCode.<span style="color:#a6e22e">UN_ERROR</span>.<span style="color:#a6e22e">getInfo</span>())
+</span></span><span style="display:flex;"><span>                    .<span style="color:#a6e22e">build</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="为什么要检测对象是否是代理对象">为什么要检测对象是否是代理对象</h2>
+<p>在博客的最后，回过头去想一想，为什么在 <code>DCCValueBeanFactory</code> 中有这样一段代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (AopUtils.<span style="color:#a6e22e">isAopProxy</span>(bean)) {
+</span></span><span style="display:flex;"><span>    targetBeanClass <span style="color:#f92672">=</span> AopUtils.<span style="color:#a6e22e">getTargetClass</span>(bean);
+</span></span><span style="display:flex;"><span>    targetBeanObject <span style="color:#f92672">=</span> AopProxyUtils.<span style="color:#a6e22e">getSingletonTarget</span>(bean);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>加入这段代码的核心原因是为了正确处理被Spring AOP代理过的Bean对象，确保反射能够作用于原始的目标对象，而不是代理对象。</strong> 下面就解释Spring AOP与代理对象</p>
+<h3 id="aop核心概念">AOP核心概念</h3>
+<ul>
+<li><strong>AOP (Aspect-Oriented Programming)</strong> ： 面向切面编程，用于将 <strong>横切关注点</strong> （如日志、事务、权限）从业务逻辑中分离出来，形成可重用的 <strong>切面 (Aspect)</strong> 。</li>
+<li><strong>目标对象 (Target Object)</strong> ：包含核心业务逻辑的原始对象。</li>
+<li><strong>AOP代理 (AOP Proxy)</strong> ：AOP框架创建的一个对象，它包裹了目标对象。应用程序中实际引用的是这个代理对象。</li>
+</ul>
+<h3 id="代理对象proxy的工作原理">代理对象（Proxy）的工作原理</h3>
+<p>代理对象就像一个“中介”。当客户端调用一个Bean的方法时，调用首先被代理对象拦截。其调用过程如下：</p>
+<ol>
+<li>客户端调用  <code>proxy.doSomething()</code> 。</li>
+<li><strong>代理对象</strong> 拦截调用，执行 <strong>前置通知</strong>（如打印日志）。</li>
+<li>代理对象将调用 <strong>委托</strong> 给被它包裹的 <strong>原始目标对象</strong> 的 <code>doSomething()</code> 方法。</li>
+<li><strong>目标对象</strong> 执行真正的业务逻辑。</li>
+<li>业务逻辑执行完毕后，返回给 <strong>代理对象</strong>。</li>
+<li><strong>代理对象</strong> 获得控制权，执行 <strong>后置通知</strong>（如记录方法耗时）。</li>
+<li>最后，<strong>代理对象</strong> 将最终结果返回给客户端。</li>
+</ol>
+<p><strong>因此，如果不检测反射获取的对象是否是代理对象，就会发现所作的修改是作用在了无用的代理对象上，而真正执行业务的目标对象内部实际上是没有改变的，业务最后也会继续按照旧的配置进行。</strong></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/%E9%93%BE%E5%BC%8F%E5%A4%9A%E5%88%86%E6%94%AF%E8%A7%84%E5%88%99%E6%A0%91%E6%A8%A1%E5%9E%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">链式多分支规则树模型</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%81%9C%E6%AD%A2%E7%BA%BF%E7%A8%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">如何正确地停止线程</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/mysql%E5%AD%A6%E4%B9%A0%E4%BA%94-%E9%94%81/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MySQL学习（五）| 锁</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    <script src='//unpkg.com/@waline/client@v2/dist/waline.js'></script>
+<link href='//unpkg.com/@waline/client@v2/dist/waline.css' rel='stylesheet'/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script>
+    
+    Waline.init({"dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",null],"lang":"zh-CN","placeholder":"写下你的评论吧~","requiredMeta":["name","email"],"serverURL":"https://waline-comment-k87yg2ovb-munlelees-projects.vercel.app","visitor":false});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 墨纹
+    </section>
+    
+    <section class="powerby">
+        
+            你要相信流星划过会带给我们幸运，就像现实告诉你我要心存感激 <br/>
+         <br />
+        
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">目录</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#实现方法">实现方法</a></li>
+    <li><a href="#自定义注解的实现和使用">自定义注解的实现和使用</a>
+      <ul>
+        <li><a href="#自定义注解">自定义注解</a></li>
+        <li><a href="#自定义注解的使用">自定义注解的使用</a></li>
+      </ul>
+    </li>
+    <li><a href="#动态变更属性值">动态变更属性值</a>
+      <ul>
+        <li><a href="#bean对象初始化后操作">Bean对象初始化后操作</a></li>
+        <li><a href="#redis订阅发布">Redis订阅/发布</a></li>
+      </ul>
+    </li>
+    <li><a href="#外部接口的实现">外部接口的实现</a></li>
+    <li><a href="#为什么要检测对象是否是代理对象">为什么要检测对象是否是代理对象</a>
+      <ul>
+        <li><a href="#aop核心概念">AOP核心概念</a></li>
+        <li><a href="#代理对象proxy的工作原理">代理对象（Proxy）的工作原理</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+                
+                
+                <a class="go-top" id="go-top" href="#top">
+                    <img src="/img/top3_hu2d68ddee36f4745c9b8a323729022ab3_7941_35x0_resize_box_3.png" />
+                </a>
+                
+            </section>
+        </aside>
+        
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<div class="btn-scroll-top">
+    <i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+
+
+    </body>
+</html>

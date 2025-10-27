@@ -6,7 +6,249 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 26 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 26 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>如何实现动态配置</title>
+        <link>https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</link>
+        <pubDate>Sun, 26 Oct 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</guid>
+        <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;在一个项目中，经常会遇到这样一个需求，希望能够在程序运行过程中，直接动态变更某些属性配置。这些动态变更的配置可能包括降级和切量开关等等。&lt;/p&gt;
+&lt;p&gt;当然，如果是一个微服务项目，动态配置这一功能实现显然是可以通过注册中心（Nacos）来满足。但实际上，亦可以通过代码本身来实现这个功能。在这篇博客中就使用 &lt;strong&gt;Java反射+Redis发布/订阅&lt;/strong&gt; 的方式来实现。&lt;/p&gt;
+&lt;h2 id=&#34;实现方法&#34;&gt;实现方法&lt;/h2&gt;
+&lt;p&gt;在真正开始实现前，不妨可以想想技术路线。能够知道的是， &lt;strong&gt;Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。&lt;/strong&gt; 这个能力显然和需求十分匹配。那么如何能够在反射时知道要修改哪些字段以及修改的值是什么呢？前者可以通过自定义注解来实现，在希望进行动态配置的字段上添加相应的注解作为标记，当Spring扫描Bean对象时就可以管理这些类的属性。后者可以通过Redis的发布/订阅来实现（其实也就是消息队列），监听某一个topic获取相应要更改的值。&lt;/p&gt;
+&lt;p&gt;经过上面的描述，要自己实现动态配置大概可以分为以下几个步骤：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;添加一个自定义注解，用于Spring扫描Bean对象的时候，可以直接管理这些配置了自定义注解的类的属性。&lt;/li&gt;
+&lt;li&gt;给服务类的属性添加自定义注解，这里的服务类也就是包含了动态配置属性的对象。&lt;/li&gt;
+&lt;li&gt;添加一个动态配置管理的工厂，用来自动完成属性信息的填充和动态变更操作&lt;/li&gt;
+&lt;li&gt;业务的使用，这里会调用步骤2中的属性服务。当配置有变动时，可以把配置信息直接刷新到内存属性上。&lt;/li&gt;
+&lt;li&gt;实现动态变更接口，当调用相应接口时，触发Redis的发布/订阅，以此来更新类上的属性。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;自定义注解的实现和使用&#34;&gt;自定义注解的实现和使用&lt;/h2&gt;
+&lt;h3 id=&#34;自定义注解&#34;&gt;自定义注解&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Retention&lt;/span&gt;(RetentionPolicy.&lt;span style=&#34;color:#a6e22e&#34;&gt;RUNTIME&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Target&lt;/span&gt;({ElementType.&lt;span style=&#34;color:#a6e22e&#34;&gt;FIELD&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Documented&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;@interface&lt;/span&gt; DCCValue {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	String &lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;() &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;按照常规方式配置一个自定义注解，同时具有一个value属性值，默认值为空字符串即可。&lt;/p&gt;
+&lt;h3 id=&#34;自定义注解的使用&#34;&gt;自定义注解的使用&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DCCService&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// 是否降级&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;@DCCValue&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;downgradeSwitch:0&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; String downgradeSwitch;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// 是否切量&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;@DCCValue&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cutRange:100&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; String cutRange;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;boolean&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;isDowngradeSwitchOn&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;equals&lt;/span&gt;(downgradeSwitch);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;boolean&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;isCutRange&lt;/span&gt;(String userId) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; hashCode &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Math.&lt;span style=&#34;color:#a6e22e&#34;&gt;abs&lt;/span&gt;(userId.&lt;span style=&#34;color:#a6e22e&#34;&gt;hashCode&lt;/span&gt;());
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// 获取最后两位&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; lastTwoDigit &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; hashCode &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; 100;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (lastTwoDigit &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; Integer.&lt;span style=&#34;color:#a6e22e&#34;&gt;parseInt&lt;/span&gt;(cutRange)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;创建DCCService服务类，交给Spring管理，也是动态配置项的实际使用类，在这个类中定义了 &lt;code&gt;downgradeSwitch&lt;/code&gt;，&lt;code&gt;cutRange&lt;/code&gt;两个具有动态配置能力的属性（也就是使用 &lt;code&gt;@DCCValue&lt;/code&gt; 注解）。两个属性分别表示是否降级以及切量，降级简单的通过0和1来决定开启或关闭。切量通过userId的哈希值的最后两位进行判断。&lt;/p&gt;
+&lt;h2 id=&#34;动态变更属性值&#34;&gt;动态变更属性值&lt;/h2&gt;
+&lt;h3 id=&#34;bean对象初始化后操作&#34;&gt;Bean对象初始化后操作&lt;/h3&gt;
+&lt;p&gt;在这部分中，就要开始真正实现动态变更操作。需要创建一个配置类实现 &lt;code&gt;BeanPostProcessor&lt;/code&gt; 接口，同时重写 &lt;code&gt;postProcessAfterInitialization(Object bean, String beanName)&lt;/code&gt; 方法。如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Slf4j&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Configuration&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DCCValueBeanFactory&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;implements&lt;/span&gt; BeanPostProcessor {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String BASE_CONFIG_PAHT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;group_buy_market_dcc_&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; RedissonClient redissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; Map&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;String, Object&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; dccObjGroup &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HashMap&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DCCValueBeanFactory&lt;/span&gt;(RedissonClient redissonClient) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;redissonClient&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; redissonClient;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;@Override&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; Object &lt;span style=&#34;color:#a6e22e&#34;&gt;postProcessAfterInitialization&lt;/span&gt;(Object bean, String beanName) &lt;span style=&#34;color:#66d9ef&#34;&gt;throws&lt;/span&gt; BeansException {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Class&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; targetBeanClass &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bean.&lt;span style=&#34;color:#a6e22e&#34;&gt;getClass&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Object targetBeanObject &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bean;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// 判断是否有代理&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (AopUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;isAopProxy&lt;/span&gt;(bean)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            targetBeanClass &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AopUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;getTargetClass&lt;/span&gt;(bean);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            targetBeanObject &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AopProxyUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;getSingletonTarget&lt;/span&gt;(bean);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// 获取对象的字段&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        Field&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; fields &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; targetBeanClass.&lt;span style=&#34;color:#a6e22e&#34;&gt;getDeclaredFields&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (Field field : fields) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;// 判断这个字段是否有DCCValue注解&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;field.&lt;span style=&#34;color:#a6e22e&#34;&gt;isAnnotationPresent&lt;/span&gt;(DCCValue.&lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;continue&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;// 获取字段的DCCValue注解&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            DCCValue dccValue &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; field.&lt;span style=&#34;color:#a6e22e&#34;&gt;getAnnotation&lt;/span&gt;(DCCValue.&lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;// 判断字段是否为空，为空抛出异常&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dccValue.&lt;span style=&#34;color:#a6e22e&#34;&gt;value&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (StringUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;isBlank&lt;/span&gt;(value)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; RuntimeException(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;...&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; split &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; value.&lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;:&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; BASE_CONFIG_PAHT.&lt;span style=&#34;color:#a6e22e&#34;&gt;concat&lt;/span&gt;(split&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String defaultValue &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; split.&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; 2 &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; split&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; : &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String setValue &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; defaultValue;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#75715e&#34;&gt;// 判断是否设置了对应的值 设置错误抛出异常&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (StringUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;isBlank&lt;/span&gt;(defaultValue)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#66d9ef&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; RuntimeException(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;...&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#75715e&#34;&gt;// 从redis中获取设置值&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                RBucket&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; bucket &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; redissonClient.&lt;span style=&#34;color:#a6e22e&#34;&gt;getBucket&lt;/span&gt;(key);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;boolean&lt;/span&gt; exists &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bucket.&lt;span style=&#34;color:#a6e22e&#34;&gt;isExists&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;exists) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    bucket.&lt;span style=&#34;color:#a6e22e&#34;&gt;set&lt;/span&gt;(defaultValue);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    setValue &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bucket.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#75715e&#34;&gt;// 填充值&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                field.&lt;span style=&#34;color:#a6e22e&#34;&gt;setAccessible&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;); &lt;span style=&#34;color:#75715e&#34;&gt;// 允许访问&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                field.&lt;span style=&#34;color:#a6e22e&#34;&gt;set&lt;/span&gt;(targetBeanObject, setValue);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                field.&lt;span style=&#34;color:#a6e22e&#34;&gt;setAccessible&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            } &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; (IllegalAccessException e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; RuntimeException(e);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            dccObjGroup.&lt;span style=&#34;color:#a6e22e&#34;&gt;put&lt;/span&gt;(key, targetBeanObject);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bean;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在这个配置类中，首先是实现了 &lt;code&gt;BeanPostProcessor&lt;/code&gt;接口，意味着它能够在Spring容器初始化Bean之后，对Bean进行额外的处理。重写 &lt;code&gt;postProcessAfterInitialization&lt;/code&gt; 方法就是为了实现对Bean初始化之后的操作。 &lt;strong&gt;因为在DCCService类上加上了Service注解，让这个服务类被Spring管理，所以这个方法能够扫描到服务类对象。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在重写的 &lt;code&gt;postProcessAfterInitialization&lt;/code&gt; 方法中&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;这个方法会对所有Bean对象进行扫描，通过反射获取字节码文件以及Object对象。 &lt;strong&gt;这里需要注意的是，要判断拿到的对象是否是代理对象，如果是，需要借助AopUtils重新获取相应的字节码文件和Object对象。&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;利用Class文件获取对象声明的属性，并在判断属性是否加上了 &lt;code&gt;@DCCValue&lt;/code&gt; 注解，如果有，就判解析出注解上的配置项和默认值。同时，由于将配置值存放在Redis中，也需要去判断Redis中是否存在，存在就使用Redis中的值。&lt;/li&gt;
+&lt;li&gt;将反射获取到的对象字段设置为可访问，并更新其相应的配置值。这里可以利用一个Map来存储反射获取的对象，避免之后再次通过反射去寻找。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;redis订阅发布&#34;&gt;Redis订阅/发布&lt;/h3&gt;
+&lt;p&gt;为了实现能够多次更改配置项的值，还需要使用Redis中的订阅/发布功能。还是在这个类中，创建一个Redis主题的监听方法，并将这个主题作为Bean对象返回（交给Spring管理，在发布消息时能够使用）。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; RTopic &lt;span style=&#34;color:#a6e22e&#34;&gt;dccRedisTopicListener&lt;/span&gt;(RedissonClient redissonClient) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// 创建Topic&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    RTopic topic &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; redissonClient.&lt;span style=&#34;color:#a6e22e&#34;&gt;getTopic&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;group_buy_market_dcc&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// 为这个topic添加监听器&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    topic.&lt;span style=&#34;color:#a6e22e&#34;&gt;addListener&lt;/span&gt;(String.&lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; MessageListener&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// 第一个参数代表哪个主题（也就是topic)，第二个参数就是实际的消息内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;@Override&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;onMessage&lt;/span&gt;(CharSequence charSequence, String s) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; split &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; s.&lt;span style=&#34;color:#a6e22e&#34;&gt;split&lt;/span&gt;(Constants.&lt;span style=&#34;color:#a6e22e&#34;&gt;SPLIT&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String attribute &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; split&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; BASE_CONFIG_PAHT &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; attribute;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            String value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; split&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;1&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            RBucket&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Object&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; bucket &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; redissonClient.&lt;span style=&#34;color:#a6e22e&#34;&gt;getBucket&lt;/span&gt;(key);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;boolean&lt;/span&gt; exists &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bucket.&lt;span style=&#34;color:#a6e22e&#34;&gt;isExists&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;exists) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            bucket.&lt;span style=&#34;color:#a6e22e&#34;&gt;set&lt;/span&gt;(value);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;// 通过之前存储的map获取一下对象&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            Object objBean &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dccObjGroup.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(key);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; objBean) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;// 获取class&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            Class&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; objBeanClass &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objBean.&lt;span style=&#34;color:#a6e22e&#34;&gt;getClass&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (AopUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;isAopProxy&lt;/span&gt;(objBeanClass)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                objBeanClass &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AopUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;getTargetClass&lt;/span&gt;(objBean);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                Field field &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objBeanClass.&lt;span style=&#34;color:#a6e22e&#34;&gt;getDeclaredField&lt;/span&gt;(attribute);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                field.&lt;span style=&#34;color:#a6e22e&#34;&gt;setAccessible&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                field.&lt;span style=&#34;color:#a6e22e&#34;&gt;set&lt;/span&gt;(objBean, value);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                field.&lt;span style=&#34;color:#a6e22e&#34;&gt;setAccessible&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            } &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; (Exception e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#66d9ef&#34;&gt;throw&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; RuntimeException(e);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    });
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; topic;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个方法实现思路同上面的方法异曲同工，也是通过反射来修改对象的配置值。只不过经过 &lt;code&gt;postProcessAfterInitialization&lt;/code&gt; 的执行之后，可以通过之前建立的Map来直接获取对象。当然，依旧需要判断获取到的对象是否是代理对象。&lt;/p&gt;
+&lt;p&gt;与 &lt;code&gt;postProcessAfterInitialization&lt;/code&gt; 方法不同的是，在设置配置值时要从Redis中获取，如果Redis中不存在相应的配置项，那么就可以直接返回了。&lt;/p&gt;
+&lt;h2 id=&#34;外部接口的实现&#34;&gt;外部接口的实现&lt;/h2&gt;
+&lt;p&gt;到了这一步就是简单的接口实现了，只需要在调用接口时，往Redis中的相应key中发送一条消息即可。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;interface&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;IDCCService&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Response&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Boolean&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;updateConfig&lt;/span&gt;(String key, String value);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@Slf4j&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@RestController&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@CrossOrigin&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@RequestMapping&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/api/v1/gbm/dcc/&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DCCController&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;implements&lt;/span&gt; IDCCService {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Resource&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; RTopic dccTopic;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;@RequestMapping&lt;/span&gt;(value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;update_config&amp;#34;&lt;/span&gt;, method &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; RequestMethod.&lt;span style=&#34;color:#a6e22e&#34;&gt;GET&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;@Override&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; Response&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Boolean&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;updateConfig&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;@RequestParam&lt;/span&gt; String key, &lt;span style=&#34;color:#a6e22e&#34;&gt;@RequestParam&lt;/span&gt; String value) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;// 往topic发送消息&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            dccTopic.&lt;span style=&#34;color:#a6e22e&#34;&gt;publish&lt;/span&gt;(key &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;,&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; value);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Response.&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Boolean&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;builder()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    .&lt;span style=&#34;color:#a6e22e&#34;&gt;code&lt;/span&gt;(ResponseCode.&lt;span style=&#34;color:#a6e22e&#34;&gt;SUCCESS&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getCode&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    .&lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;(ResponseCode.&lt;span style=&#34;color:#a6e22e&#34;&gt;SUCCESS&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getInfo&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    .&lt;span style=&#34;color:#a6e22e&#34;&gt;build&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        } &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; (Exception e) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Response.&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;Boolean&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;builder()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    .&lt;span style=&#34;color:#a6e22e&#34;&gt;code&lt;/span&gt;(ResponseCode.&lt;span style=&#34;color:#a6e22e&#34;&gt;UN_ERROR&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getCode&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    .&lt;span style=&#34;color:#a6e22e&#34;&gt;info&lt;/span&gt;(ResponseCode.&lt;span style=&#34;color:#a6e22e&#34;&gt;UN_ERROR&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getInfo&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    .&lt;span style=&#34;color:#a6e22e&#34;&gt;build&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;为什么要检测对象是否是代理对象&#34;&gt;为什么要检测对象是否是代理对象&lt;/h2&gt;
+&lt;p&gt;在博客的最后，回过头去想一想，为什么在 &lt;code&gt;DCCValueBeanFactory&lt;/code&gt; 中有这样一段代码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (AopUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;isAopProxy&lt;/span&gt;(bean)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    targetBeanClass &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AopUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;getTargetClass&lt;/span&gt;(bean);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    targetBeanObject &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; AopProxyUtils.&lt;span style=&#34;color:#a6e22e&#34;&gt;getSingletonTarget&lt;/span&gt;(bean);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;加入这段代码的核心原因是为了正确处理被Spring AOP代理过的Bean对象，确保反射能够作用于原始的目标对象，而不是代理对象。&lt;/strong&gt; 下面就解释Spring AOP与代理对象&lt;/p&gt;
+&lt;h3 id=&#34;aop核心概念&#34;&gt;AOP核心概念&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;AOP (Aspect-Oriented Programming)&lt;/strong&gt; ： 面向切面编程，用于将 &lt;strong&gt;横切关注点&lt;/strong&gt; （如日志、事务、权限）从业务逻辑中分离出来，形成可重用的 &lt;strong&gt;切面 (Aspect)&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;目标对象 (Target Object)&lt;/strong&gt; ：包含核心业务逻辑的原始对象。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AOP代理 (AOP Proxy)&lt;/strong&gt; ：AOP框架创建的一个对象，它包裹了目标对象。应用程序中实际引用的是这个代理对象。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;代理对象proxy的工作原理&#34;&gt;代理对象（Proxy）的工作原理&lt;/h3&gt;
+&lt;p&gt;代理对象就像一个“中介”。当客户端调用一个Bean的方法时，调用首先被代理对象拦截。其调用过程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端调用  &lt;code&gt;proxy.doSomething()&lt;/code&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;代理对象&lt;/strong&gt; 拦截调用，执行 &lt;strong&gt;前置通知&lt;/strong&gt;（如打印日志）。&lt;/li&gt;
+&lt;li&gt;代理对象将调用 &lt;strong&gt;委托&lt;/strong&gt; 给被它包裹的 &lt;strong&gt;原始目标对象&lt;/strong&gt; 的 &lt;code&gt;doSomething()&lt;/code&gt; 方法。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;目标对象&lt;/strong&gt; 执行真正的业务逻辑。&lt;/li&gt;
+&lt;li&gt;业务逻辑执行完毕后，返回给 &lt;strong&gt;代理对象&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;代理对象&lt;/strong&gt; 获得控制权，执行 &lt;strong&gt;后置通知&lt;/strong&gt;（如记录方法耗时）。&lt;/li&gt;
+&lt;li&gt;最后，&lt;strong&gt;代理对象&lt;/strong&gt; 将最终结果返回给客户端。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;因此，如果不检测反射获取的对象是否是代理对象，就会发现所作的修改是作用在了无用的代理对象上，而真正执行业务的目标对象内部实际上是没有改变的，业务最后也会继续按照旧的配置进行。&lt;/strong&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>链式多分支规则树模型</title>
         <link>https://MUNLELEE.github.io/post/%E9%93%BE%E5%BC%8F%E5%A4%9A%E5%88%86%E6%94%AF%E8%A7%84%E5%88%99%E6%A0%91%E6%A8%A1%E5%9E%8B/</link>
         <pubDate>Fri, 26 Sep 2025 00:00:00 +0000</pubDate>

@@ -6,8 +6,15 @@
     <description>Recent content in 技术 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 26 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 26 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何实现动态配置</title>
+      <link>https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Sun, 26 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</guid>
+      <description>前言 在一个项目中，经常会遇到这样一个需求，希望能够在程序运行过程中，直接动态变更某些属性配置。这些动态变更的配置可能包括降级和切量开关等等。&#xA;当然，如果是一个微服务项目，动态配置这一功能实现显然是可以通过注册中心（Nacos）来满足。但实际上，亦可以通过代码本身来实现这个功能。在这篇博客中就使用 Java反射+Redis发布/订阅 的方式来实现。&#xA;实现方法 在真正开始实现前，不妨可以想想技术路线。能够知道的是， Java反射机制的核心是在程序运行时动态加载类并获取类的详细信息，从而操作类或对象的属性和方法。 这个能力显然和需求十分匹配。那么如何能够在反射时知道要修改哪些字段以及修改的值是什么呢？前者可以通过自定义注解来实现，在希望进行动态配置的字段上添加相应的注解作为标记，当Spring扫描Bean对象时就可以管理这些类的属性。后者可以通过Redis的发布/订阅来实现（其实也就是消息队列），监听某一个topic获取相应要更改的值。&#xA;经过上面的描述，要自己实现动态配置大概可以分为以下几个步骤：&#xA;添加一个自定义注解，用于Spring扫描Bean对象的时候，可以直接管理这些配置了自定义注解的类的属性。 给服务类的属性添加自定义注解，这里的服务类也就是包含了动态配置属性的对象。 添加一个动态配置管理的工厂，用来自动完成属性信息的填充和动态变更操作 业务的使用，这里会调用步骤2中的属性服务。当配置有变动时，可以把配置信息直接刷新到内存属性上。 实现动态变更接口，当调用相应接口时，触发Redis的发布/订阅，以此来更新类上的属性。 自定义注解的实现和使用 自定义注解 @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.FIELD}) @Documented public @interface DCCValue { String value() default &amp;#34;&amp;#34;; } 按照常规方式配置一个自定义注解，同时具有一个value属性值，默认值为空字符串即可。&#xA;自定义注解的使用 @Service public class DCCService { // 是否降级 @DCCValue(&amp;#34;downgradeSwitch:0&amp;#34;) private String downgradeSwitch; // 是否切量 @DCCValue(&amp;#34;cutRange:100&amp;#34;) private String cutRange; public boolean isDowngradeSwitchOn() { return &amp;#34;1&amp;#34;.equals(downgradeSwitch); } public boolean isCutRange(String userId) { int hashCode = Math.abs(userId.hashCode()); // 获取最后两位 int lastTwoDigit = hashCode % 100; if (lastTwoDigit &amp;lt;= Integer.</description>
+    </item>
     <item>
       <title>链式多分支规则树模型</title>
       <link>https://MUNLELEE.github.io/post/%E9%93%BE%E5%BC%8F%E5%A4%9A%E5%88%86%E6%94%AF%E8%A7%84%E5%88%99%E6%A0%91%E6%A8%A1%E5%9E%8B/</link>
