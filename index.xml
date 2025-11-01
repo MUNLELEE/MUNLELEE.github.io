@@ -14,7 +14,7 @@
         <guid>https://MUNLELEE.github.io/post/%E8%AE%A9wsl%E5%83%8F%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%B8%80%E6%A0%B7/</guid>
         <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
 &lt;p&gt;最新在开发学习的时候使用到了WSL（苦于没有Mac电脑っ╥╯﹏╰╥c），在使用时发现了一些痛点。打开WSL时，会在任务栏保留一个程序窗口，如果将这个程序窗口关闭，那么存在于WSL内的Docker容器也随之关闭，这点十分难受。于是就想有什么办法能够在不显示窗口的情况下在后台运行WSL。在实践的过程中还蛮有意思，遂稍微记录。&lt;/p&gt;
-&lt;h2 id=&#34;让wsl成为应用程序&#34;&gt;让WSL”成为“应用程序&lt;/h2&gt;
+&lt;h2 id=&#34;让wsl成为应用程序&#34;&gt;让WSL“成为”应用程序&lt;/h2&gt;
 &lt;p&gt;我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。&lt;/p&gt;
 &lt;h3 id=&#34;启动&#34;&gt;启动&lt;/h3&gt;
 &lt;p&gt;首先需要一个命令来启动WSL并让它保持运行。这里可以选择使用 &lt;code&gt;sleep infinity&lt;/code&gt; ，但是，单纯让WSL保持运行会在界面上保留一个黑色控制台，就膈应。这时候可以考虑使用 &lt;code&gt;-WindowStyle Hidden&lt;/code&gt; 来隐藏这个控制台，可以利用脚本来实现这个命令。&lt;/p&gt;

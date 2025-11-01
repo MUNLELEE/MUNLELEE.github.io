@@ -2,7 +2,7 @@
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 最新在开发学习的时候使用到了WSL（苦于没有Mac电脑っ╥╯﹏╰╥c），在使用时发现了一些痛点。打开WSL时，会在任务栏保留一个程序窗口，如果将这个程序窗口关闭，那么存在于WSL内的Docker容器也随之关闭，这点十分难受。于是就想有什么办法能够在不显示窗口的情况下在后台运行WSL。在实践的过程中还蛮有意思，遂稍微记录。
-让WSL”成为“应用程序 我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。
+让WSL“成为”应用程序 我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。
 启动 首先需要一个命令来启动WSL并让它保持运行。这里可以选择使用 sleep infinity ，但是，单纯让WSL保持运行会在界面上保留一个黑色控制台，就膈应。这时候可以考虑使用 -WindowStyle Hidden 来隐藏这个控制台，可以利用脚本来实现这个命令。
 脚本的实现有两种方式，分别是powershell和cmd，这里选择了powershell（个人觉得cmd的命令没有powershell易读）。那么首先就要创建这样一个脚本，使用记事本或者vscode创建一个新的文本，在文本中键入以下命令
 Start-Process -FilePath &amp;#34;wsl.exe&amp;#34; -ArgumentList &amp;#34;--distribution &amp;lt;Ubuntu发行版本&amp;gt; --exec sleep infinity&amp;#34; -WindowStyle Hidden 在保存之前，需要将命令中缺少的Ubuntu发行版本替换为你自己的版本，可以使用 wsl -l -v 这个命令来查看。最后只要将这个文件保存为 .ps1 文件即可。之后执行这个脚本就能够实现想要的功能。
@@ -42,7 +42,7 @@ cmd /k wsl -l -v 其中 cmd /k 作用是打开窗口执行之后的命令，同�
 
 <meta property='og:title' content='让WSL像应用程序一样'>
 <meta property='og:description' content='前言 最新在开发学习的时候使用到了WSL（苦于没有Mac电脑っ╥╯﹏╰╥c），在使用时发现了一些痛点。打开WSL时，会在任务栏保留一个程序窗口，如果将这个程序窗口关闭，那么存在于WSL内的Docker容器也随之关闭，这点十分难受。于是就想有什么办法能够在不显示窗口的情况下在后台运行WSL。在实践的过程中还蛮有意思，遂稍微记录。
-让WSL”成为“应用程序 我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。
+让WSL“成为”应用程序 我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。
 启动 首先需要一个命令来启动WSL并让它保持运行。这里可以选择使用 sleep infinity ，但是，单纯让WSL保持运行会在界面上保留一个黑色控制台，就膈应。这时候可以考虑使用 -WindowStyle Hidden 来隐藏这个控制台，可以利用脚本来实现这个命令。
 脚本的实现有两种方式，分别是powershell和cmd，这里选择了powershell（个人觉得cmd的命令没有powershell易读）。那么首先就要创建这样一个脚本，使用记事本或者vscode创建一个新的文本，在文本中键入以下命令
 Start-Process -FilePath &amp;#34;wsl.exe&amp;#34; -ArgumentList &amp;#34;--distribution &amp;lt;Ubuntu发行版本&amp;gt; --exec sleep infinity&amp;#34; -WindowStyle Hidden 在保存之前，需要将命令中缺少的Ubuntu发行版本替换为你自己的版本，可以使用 wsl -l -v 这个命令来查看。最后只要将这个文件保存为 .ps1 文件即可。之后执行这个脚本就能够实现想要的功能。
@@ -60,7 +60,7 @@ cmd /k wsl -l -v 其中 cmd /k 作用是打开窗口执行之后的命令，同�
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='折腾' /><meta property='article:published_time' content='2025-11-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-11-01T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="让WSL像应用程序一样">
 <meta name="twitter:description" content="前言 最新在开发学习的时候使用到了WSL（苦于没有Mac电脑っ╥╯﹏╰╥c），在使用时发现了一些痛点。打开WSL时，会在任务栏保留一个程序窗口，如果将这个程序窗口关闭，那么存在于WSL内的Docker容器也随之关闭，这点十分难受。于是就想有什么办法能够在不显示窗口的情况下在后台运行WSL。在实践的过程中还蛮有意思，遂稍微记录。
-让WSL”成为“应用程序 我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。
+让WSL“成为”应用程序 我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。
 启动 首先需要一个命令来启动WSL并让它保持运行。这里可以选择使用 sleep infinity ，但是，单纯让WSL保持运行会在界面上保留一个黑色控制台，就膈应。这时候可以考虑使用 -WindowStyle Hidden 来隐藏这个控制台，可以利用脚本来实现这个命令。
 脚本的实现有两种方式，分别是powershell和cmd，这里选择了powershell（个人觉得cmd的命令没有powershell易读）。那么首先就要创建这样一个脚本，使用记事本或者vscode创建一个新的文本，在文本中键入以下命令
 Start-Process -FilePath &amp;#34;wsl.exe&amp;#34; -ArgumentList &amp;#34;--distribution &amp;lt;Ubuntu发行版本&amp;gt; --exec sleep infinity&amp;#34; -WindowStyle Hidden 在保存之前，需要将命令中缺少的Ubuntu发行版本替换为你自己的版本，可以使用 wsl -l -v 这个命令来查看。最后只要将这个文件保存为 .ps1 文件即可。之后执行这个脚本就能够实现想要的功能。
@@ -185,7 +185,7 @@ cmd /k wsl -l -v 其中 cmd /k 作用是打开窗口执行之后的命令，同�
     <section class="article-content">
     <h2 id="前言">前言</h2>
 <p>最新在开发学习的时候使用到了WSL（苦于没有Mac电脑っ╥╯﹏╰╥c），在使用时发现了一些痛点。打开WSL时，会在任务栏保留一个程序窗口，如果将这个程序窗口关闭，那么存在于WSL内的Docker容器也随之关闭，这点十分难受。于是就想有什么办法能够在不显示窗口的情况下在后台运行WSL。在实践的过程中还蛮有意思，遂稍微记录。</p>
-<h2 id="让wsl成为应用程序">让WSL”成为“应用程序</h2>
+<h2 id="让wsl成为应用程序">让WSL“成为”应用程序</h2>
 <p>我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。</p>
 <h3 id="启动">启动</h3>
 <p>首先需要一个命令来启动WSL并让它保持运行。这里可以选择使用 <code>sleep infinity</code> ，但是，单纯让WSL保持运行会在界面上保留一个黑色控制台，就膈应。这时候可以考虑使用 <code>-WindowStyle Hidden</code> 来隐藏这个控制台，可以利用脚本来实现这个命令。</p>
@@ -450,7 +450,7 @@ cmd /k wsl -l -v 其中 cmd /k 作用是打开窗口执行之后的命令，同�
                     <nav id="TableOfContents">
   <ul>
     <li><a href="#前言">前言</a></li>
-    <li><a href="#让wsl成为应用程序">让WSL”成为“应用程序</a>
+    <li><a href="#让wsl成为应用程序">让WSL“成为”应用程序</a>
       <ul>
         <li><a href="#启动">启动</a></li>
         <li><a href="#停止">停止</a></li>
