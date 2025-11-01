@@ -6,7 +6,50 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Sun, 26 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 01 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>让WSL像应用程序一样</title>
+        <link>https://MUNLELEE.github.io/post/%E8%AE%A9wsl%E5%83%8F%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%B8%80%E6%A0%B7/</link>
+        <pubDate>Sat, 01 Nov 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/%E8%AE%A9wsl%E5%83%8F%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%B8%80%E6%A0%B7/</guid>
+        <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;最新在开发学习的时候使用到了WSL（苦于没有Mac电脑っ╥╯﹏╰╥c），在使用时发现了一些痛点。打开WSL时，会在任务栏保留一个程序窗口，如果将这个程序窗口关闭，那么存在于WSL内的Docker容器也随之关闭，这点十分难受。于是就想有什么办法能够在不显示窗口的情况下在后台运行WSL。在实践的过程中还蛮有意思，遂稍微记录。&lt;/p&gt;
+&lt;h2 id=&#34;让wsl成为应用程序&#34;&gt;让WSL”成为“应用程序&lt;/h2&gt;
+&lt;p&gt;我希望的就是能够通过某种实现来随时控制WSL的启动和停止，这里能够想到的就是使用脚本来控制。&lt;/p&gt;
+&lt;h3 id=&#34;启动&#34;&gt;启动&lt;/h3&gt;
+&lt;p&gt;首先需要一个命令来启动WSL并让它保持运行。这里可以选择使用 &lt;code&gt;sleep infinity&lt;/code&gt; ，但是，单纯让WSL保持运行会在界面上保留一个黑色控制台，就膈应。这时候可以考虑使用 &lt;code&gt;-WindowStyle Hidden&lt;/code&gt; 来隐藏这个控制台，可以利用脚本来实现这个命令。&lt;/p&gt;
+&lt;p&gt;脚本的实现有两种方式，分别是powershell和cmd，这里选择了powershell（个人觉得cmd的命令没有powershell易读）。那么首先就要创建这样一个脚本，使用记事本或者vscode创建一个新的文本，在文本中键入以下命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Start-Process -FilePath &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;wsl.exe&amp;#34;&lt;/span&gt; -ArgumentList &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;--distribution &amp;lt;Ubuntu发行版本&amp;gt; --exec sleep infinity&amp;#34;&lt;/span&gt; -WindowStyle Hidden
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在保存之前，需要将命令中缺少的Ubuntu发行版本替换为你自己的版本，可以使用 &lt;code&gt;wsl -l -v&lt;/code&gt; 这个命令来查看。最后只要将这个文件保存为 &lt;code&gt;.ps1&lt;/code&gt; 文件即可。之后执行这个脚本就能够实现想要的功能。&lt;/p&gt;
+&lt;h4 id=&#34;优化&#34;&gt;优化&lt;/h4&gt;
+&lt;p&gt;不过，随之而来的是第二个问题，执行这个脚本是不是还得敲命令呢？说到底，还是没有绕开启动的这一个命令。就有了下面这个方法，将脚本的启动绑定到快捷方式中。&lt;/p&gt;
+&lt;p&gt;在桌面右键，选择 &lt;code&gt;新建-&amp;gt;快捷方式&lt;/code&gt; ，在弹出的窗口中键入以下命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;powershell.exe -ExecutionPolicy Bypass &lt;span style=&#34;color:#f92672&#34;&gt;-File&lt;/span&gt; &amp;lt;script path&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;你需要将 &lt;code&gt;&amp;lt;script path&amp;gt;&lt;/code&gt; 替换为你刚刚创建的脚本路径。命令输入的位置如下图&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20251101105416.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20251101105416.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;之后你就可以得到一个快捷方式，点击这个快捷方式就能够直接启动WSL了。&lt;/p&gt;
+&lt;h3 id=&#34;停止&#34;&gt;停止&lt;/h3&gt;
+&lt;p&gt;做完启动的功能，停止就显得十分简单了。同样新建一个快捷方式，输入下面这个命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --shutdown
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;保存即可。&lt;/p&gt;
+&lt;p&gt;有了启动和停止，自然会联想到查看当前WSL的状态，这里就再使用同样的方法，创建查看状态的快捷方式，命令如下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmd /k wsl -l -v
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其中 &lt;code&gt;cmd /k&lt;/code&gt; 作用是打开窗口执行之后的命令，同时保留窗口显示结果。&lt;/p&gt;
+&lt;p&gt;到此为止，就可以通过三个快捷方式点击实现WSL的开启、关闭和查看状态了。既没有了任务窗口，Docker容器也不会停止了。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>如何实现动态配置</title>
         <link>https://MUNLELEE.github.io/post/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE/</link>
         <pubDate>Sun, 26 Oct 2025 00:00:00 +0000</pubDate>
