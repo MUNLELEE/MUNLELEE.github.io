@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 01 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 07 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://MUNLELEE.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL学习（六） 索引 第二篇</title>
+      <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%85%AD-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%BA%8C%E7%AF%87/</link>
+      <pubDate>Sat, 07 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%85%AD-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%BA%8C%E7%AF%87/</guid>
+      <description>前言 在之前的索引篇章中基本上讲述了MySQL中常见的几种索引，在这篇中，打算续上之前的索引的部分，讲述MySQL使用索引过程中的一些隐藏机制。&#xA;为什么MySQL会选错索引 在MySQL中一张表其实是可以支持多个索引的。但是，你写SQL语句的时候，并没有主动指定使用哪个索引。也就是说，使用哪个索引是由MySQL来确定的。因此就会存在这样一种情况，一条本来可以执行很快的SQL语句因为MySQL选错了索引，导致执行速度变得很慢。&#xA;先来看一个简单的例子，首先我们创建一张表：&#xA;CREATE TABLE `t` ( `id` int(11) NOT NULL AUTO_INCREMENT, `a` int(11) DEFAULT NULL, `b` int(11) DEFAULT NULL, PRIMARY KEY (`id`), KEY `a` (`a`), KEY `b` (`b`) ) ENGINE=InnoDB; 然后，我们往表t中插入10万行记录，取值按整数递增，即：(1,1,1)，(2,2,2)，(3,3,3) 直到(100000,100000,100000)。&#xA;然后执行这样一条SQL语句 mysql&amp;gt; select * from t where a between 10000 and 20000;&#xA;使用explain命令查看语句执行情况，得到的结果如下图所示&#xA;从结果上看，语句选择了索引a，也是情理之中。之后，在这张插入10万条数据的表中，再进行如下操作：&#xA;session A 和 session B的执行流程 其中，call idata()是执行一个存储过程，这个存储过程就是之前用来插入10万条数据。&#xA;这时候，session B的查询语句 select * from t where a between 10000 and 20000 就不会再选择索引a了。我们可以通过慢查询日志（slow log）来查看一下具体的执行情况。为了说明优化器选择的结果是否正确，增加了一个对照，即：使用force index(a)来让优化器强制使用索引a，实验过程为以下三条SQL语句</description>
+    </item>
     <item>
       <title>让WSL像应用程序一样</title>
       <link>https://MUNLELEE.github.io/post/%E8%AE%A9wsl%E5%83%8F%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%B8%80%E6%A0%B7/</link>
