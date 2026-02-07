@@ -483,6 +483,7 @@ InnoDB的索引模型 在 InnoDB 中，表都是根据主键顺序以索引的�
 	<figcaption>带change buffer的更新过程</figcaption>
 	
 </figure></p>
+<p>这条更新语句涉及了四个部分：内存、redo log（ib_log_fileX）、 数据表空间（t.ibd）、系统表空间（ibdata1）</p>
 <p>这条更新语句做了如下几个操作：</p>
 <ol>
 <li>Page 1 在内存中，直接更新内存；</li>
@@ -516,7 +517,7 @@ InnoDB的索引模型 在 InnoDB 中，表都是根据主键顺序以索引的�
 <p>要读 Page 2 的时候，需要把 Page 2 从磁盘读入内存中，然后应用 change buffer 里面的操作日志，生成一个正确的版本并返回结果。</p>
 </li>
 </ol>
-<p>总结来说就是， <strong>redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘的 IO 消耗。</strong></p>
+<p>总结来说就是， <strong>redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘的 IO 消耗。</strong>  <em>这里再简单说明一下为什么redo log节省了随机写磁盘的IO消耗，因为将要写入磁盘的数据先顺序写入了内存中，从而避免了寻道。</em></p>
 <h2 id="延伸问题">延伸问题</h2>
 <ol>
 <li>
