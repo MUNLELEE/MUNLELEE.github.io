@@ -6,8 +6,15 @@
     <description>Recent content in 技术 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 07 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 08 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://MUNLELEE.github.io/tags/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL学习（七） 索引 第三篇</title>
+      <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%83-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%B8%89%E7%AF%87/</link>
+      <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%83-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%B8%89%E7%AF%87/</guid>
+      <description>前言 在现代互联网的数据库表中，邮箱应该是一个非常常见的字段，如何在这样一个字段上加索引，也是一个需要考量的问题。&#xA;背景 假设现在在维护一个支持邮箱登录的系统，用户表是这么定义的：&#xA;mysql&amp;gt; create table SUser( ID bigint unsigned primary key, email varchar(64), ... )engine=innodb; 由于可以支持邮箱登录，因此在后端中大概率会出现如下的SQL语句：&#xA;mysql&amp;gt; select f1, f2 from SUser where email=&amp;#39;xxx&amp;#39;; 而如果email这个字段上没有设置索引，那么MySQL在执行时将会进行全表扫描，这显然在数据量庞大时是不可接受的。MySQL是支持前缀索引的，也就是说可以定义字符串的一部分作为索引。默认情况下，如果创建索引不指定前缀长度，那么索引就会包含整个字符串。&#xA;比如下面这两个语句就是在email字段上创建索引&#xA;mysql&amp;gt; alter table SUser add index index1(email); mysql&amp;gt; alter table SUser add index index2(email(6)); 第一个语句就是默认创建，使用整个字符串作为索引；第二个语句中，对于每个记录都是只取前6个字节。&#xA;两种索引结构在数据结构和存储上分别如下图所示：&#xA;email 索引结构 eamil(6) 索引结构 从图中可以看到，由于email(6)这个索引结构中每个邮箱字段都只取前6个字节（即：zhangs），所以占用的空间会更小，这就是使用前缀索引的优势。 但同时带来的损失是，可能会增加额外的记录扫描次数。在这两种索引的建立下，对于以下这个语句，索引定义的执行分别如下：&#xA;select id,name,email from SUser where email=&amp;#39;zhangssxyz@xxx.com&amp;#39;; 如果使用的是index1 （即email整个字符串的索引结构），执行顺序是这样的：&#xA;从index1索引树找到满足索引值是’zhangssxyz@xxx.com’的这条记录，取得ID2的值； 到主键上查到主键值是ID2的行，判断email的值是正确的，将这行记录加入结果集； 取index1索引树上刚刚查到的位置的下一条记录，发现已经不满足email=&amp;lsquo;zhangssxyz@xxx.com’的条件了，循环结束。 这个过程中，只需要回主键索引取一次数据，所以系统认为只扫描了一行。&#xA;如果使用的是index2 （即email(6)索引结构），执行顺序是这样的：&#xA;从index2索引树找到满足索引值是’zhangs’的记录，找到的第一个是ID1； 到主键上查到主键值是ID1的行，判断出email的值不是’zhangssxyz@xxx.com’，这行记录丢弃； 取index2上刚刚查到的位置的下一条记录，发现仍然是’zhangs’，取出ID2，再到ID索引上取整行然后判断，这次值对了，将这行记录加入结果集； 重复上一步，直到在idxe2上取到的值不是’zhangs’时，循环结束。 在这个过程中，要回主键索引取4次数据，也就是扫描了4行。从中可以发现，使用前缀索引可能会导致查询语句读数据的次数变多。因此， 如果能够在使用前缀索引时，定义好长度，就可以做到即节省空间，又不用额外增加太多的查询成本。</description>
+    </item>
     <item>
       <title>MySQL学习（六） 索引 第二篇</title>
       <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%85%AD-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%BA%8C%E7%AF%87/</link>

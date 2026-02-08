@@ -6,7 +6,125 @@
         <description>Recent content on 墨纹</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Sat, 07 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 08 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://MUNLELEE.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>MySQL学习（七） 索引 第三篇</title>
+        <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%83-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%B8%89%E7%AF%87/</link>
+        <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
+        
+        <guid>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%83-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%B8%89%E7%AF%87/</guid>
+        <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;在现代互联网的数据库表中，邮箱应该是一个非常常见的字段，如何在这样一个字段上加索引，也是一个需要考量的问题。&lt;/p&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;假设现在在维护一个支持邮箱登录的系统，用户表是这么定义的：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;table&lt;/span&gt; SUser(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ID bigint unsigned &lt;span style=&#34;color:#66d9ef&#34;&gt;primary&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;key&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;email varchar(&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)engine&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;innodb;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;由于可以支持邮箱登录，因此在后端中大概率会出现如下的SQL语句：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; f1, f2 &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; SUser &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; email&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;xxx&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;而如果email这个字段上没有设置索引，那么MySQL在执行时将会进行全表扫描，这显然在数据量庞大时是不可接受的。MySQL是支持前缀索引的，也就是说可以定义字符串的一部分作为索引。默认情况下，如果创建索引不指定前缀长度，那么索引就会包含整个字符串。&lt;/p&gt;
+&lt;p&gt;比如下面这两个语句就是在email字段上创建索引&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;alter&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;table&lt;/span&gt; SUser &lt;span style=&#34;color:#66d9ef&#34;&gt;add&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; index1(email);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;alter&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;table&lt;/span&gt; SUser &lt;span style=&#34;color:#66d9ef&#34;&gt;add&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt; index2(email(&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;第一个语句就是默认创建，使用整个字符串作为索引；第二个语句中，对于每个记录都是只取前6个字节。&lt;/p&gt;
+&lt;p&gt;两种索引结构在数据结构和存储上分别如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20260208164205.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20260208164205.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			alt=&#34;email 索引结构&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;email 索引结构&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20260208164232.png&#34; &gt;
+		&lt;img src=&#34;https://cdn.jsdelivr.net/gh/MUNLELEE/image-hosting/blog/20260208164232.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			alt=&#34;eamil(6) 索引结构&#34;&gt;
+	&lt;/a&gt;
+	
+	&lt;figcaption&gt;eamil(6) 索引结构&lt;/figcaption&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;从图中可以看到，由于email(6)这个索引结构中每个邮箱字段都只取前6个字节（即：zhangs），所以占用的空间会更小，这就是使用前缀索引的优势。&lt;/strong&gt; 但同时带来的损失是，可能会增加额外的记录扫描次数。在这两种索引的建立下，对于以下这个语句，索引定义的执行分别如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; id,name,email &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; SUser &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; email&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zhangssxyz@xxx.com&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;如果使用的是index1&lt;/strong&gt; （即email整个字符串的索引结构），执行顺序是这样的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;从index1索引树找到满足索引值是’zhangssxyz@xxx.com’的这条记录，取得ID2的值；&lt;/li&gt;
+&lt;li&gt;到主键上查到主键值是ID2的行，判断email的值是正确的，将这行记录加入结果集；&lt;/li&gt;
+&lt;li&gt;取index1索引树上刚刚查到的位置的下一条记录，发现已经不满足email=&amp;lsquo;&lt;a class=&#34;link&#34; href=&#34;mailto:zhangssxyz@xxx.com&#34; &gt;zhangssxyz@xxx.com&lt;/a&gt;’的条件了，循环结束。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这个过程中，只需要回主键索引取一次数据，所以系统认为只扫描了一行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果使用的是index2&lt;/strong&gt; （即email(6)索引结构），执行顺序是这样的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;从index2索引树找到满足索引值是’zhangs’的记录，找到的第一个是ID1；&lt;/li&gt;
+&lt;li&gt;到主键上查到主键值是ID1的行，判断出email的值不是’zhangssxyz@xxx.com’，这行记录丢弃；&lt;/li&gt;
+&lt;li&gt;取index2上刚刚查到的位置的下一条记录，发现仍然是’zhangs’，取出ID2，再到ID索引上取整行然后判断，这次值对了，将这行记录加入结果集；&lt;/li&gt;
+&lt;li&gt;重复上一步，直到在idxe2上取到的值不是’zhangs’时，循环结束。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在这个过程中，要回主键索引取4次数据，也就是扫描了4行。从中可以发现，使用前缀索引可能会导致查询语句读数据的次数变多。因此， &lt;strong&gt;如果能够在使用前缀索引时，定义好长度，就可以做到即节省空间，又不用额外增加太多的查询成本。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;如何建立前缀索引&#34;&gt;如何建立前缀索引&lt;/h2&gt;
+&lt;p&gt;到这里，应该会诞生一个问题，要怎么判断使用多长的前缀作为前缀索引才合适呢。&lt;/p&gt;
+&lt;p&gt;在之前的索引篇章中提到，索引的选择取决于扫描行数，而扫描行数取决于区分度。区分度越高，意味着重复的键值越少。所以，保证创建的前缀索引在全表数据行数中有满足一定的区分度就是目标。&lt;/p&gt;
+&lt;p&gt;首先，可以使用下面的SQL语句统计列上有多少不同的值：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;count&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;distinct&lt;/span&gt; email) &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; L &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; SUser;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后，依次选取不同的前缀长度来比较这个值，如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;count&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;distinct&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;left&lt;/span&gt;(email,&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;）&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; L4,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;count&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;distinct&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;left&lt;/span&gt;(email,&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;）&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; L5,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;count&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;distinct&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;left&lt;/span&gt;(email,&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;）&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; L6,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;count&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;distinct&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;left&lt;/span&gt;(email,&lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;）&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; L7,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; SUser;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;前缀索引对覆盖索引的影响&#34;&gt;前缀索引对覆盖索引的影响&lt;/h2&gt;
+&lt;p&gt;在前面说到前缀索引会增加扫描行数，从而影响性能。前缀索引对覆盖索引同样也具有一定影响。&lt;/p&gt;
+&lt;p&gt;假定有以下两个SQL语句：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; id,email &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; SUser &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; email&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zhangssxyz@xxx.com&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; id,name,email &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; SUser &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; email&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;zhangssxyz@xxx.com&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;第一条SQL语句中，只需要返回id，email。所以，如果使用index1（即email整个字符串的索引结构）的话，可以利用覆盖索引，从index1查到结果后直接就返回了，不需要回到ID索引再去查一次。而如果使用index2（即email(6)索引结构）的话，就不得不回到ID索引再去判断email字段的值。即使将index2的定义修改为email(18)的前缀索引，这时候虽然index2已经包含了所有的信息，但InnoDB还是要回到id索引再查一下，因为系统并不确定前缀索引的定义是否截断了完整信息。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;也就是说，使用前缀索引就用不上覆盖索引对查询性能的优化了，这也是在选择是否使用前缀索引时需要考虑的一个因素。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;其他创建前缀索引的方式&#34;&gt;其他创建前缀索引的方式&lt;/h2&gt;
+&lt;p&gt;对于类似于邮箱这样的字段来说，使用前缀索引的效果可能还不错。不过总是会有前缀区分度不够好的情况，就比如身份证号。一共18位，其中前6位是地址码，所以同一个县的人的身份证号前6位一般会是相同的。假设维护的数据库是一个市的公民信息系统，这时候如果对身份证号做长度为6的前缀索引的话，这个索引的区分度就非常低了。按照我们前面说的方法，可能需要创建长度为12以上的前缀索引，才能够满足区分度要求。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;但是索引选取越长，占用的磁盘空间越大，相同的数据页能放下的索引值就越少，搜索的效率也就会越低。&lt;/strong&gt; 自然这时候就会想有没有办法能够让索引占用空间较小，同时保证查询效率。&lt;/p&gt;
+&lt;h3 id=&#34;方式&#34;&gt;方式&lt;/h3&gt;
+&lt;h4 id=&#34;倒序存储&#34;&gt;倒序存储&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;第一种方式是使用倒序存储。&lt;/strong&gt; 如果存储身份证号的时候把它倒过来存，每次查询的时候，可以这么写：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; field_list &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; t &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; id_card &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reverse(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;input_id_card_string&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;由于身份证号的最后6位没有地址码这样的重复逻辑，所以最后这6位很可能就提供了足够的区分度。&lt;/p&gt;
+&lt;h4 id=&#34;使用hash字段&#34;&gt;使用hash字段&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;第二种方式是使用hash字段。&lt;/strong&gt; 可以在表上再创建一个整数字段，来保存身份证的校验码，同时在这个字段上创建索引。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;alter&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;table&lt;/span&gt; t &lt;span style=&#34;color:#66d9ef&#34;&gt;add&lt;/span&gt; id_card_crc int unsigned, &lt;span style=&#34;color:#66d9ef&#34;&gt;add&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;index&lt;/span&gt;(id_card_crc);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后每次插入新记录的时候，都同时用crc32()这个函数得到校验码填到这个新字段。由于校验码可能存在冲突，也就是说两个不同的身份证号通过crc32()函数得到的结果可能是相同的，所以的查询语句where部分要判断id_card的值是否精确相同。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mysql&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; field_list &lt;span style=&#34;color:#66d9ef&#34;&gt;from&lt;/span&gt; t &lt;span style=&#34;color:#66d9ef&#34;&gt;where&lt;/span&gt; id_card_crc&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;crc32(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;input_id_card_string&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;and&lt;/span&gt; id_card&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;input_id_card_string&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这两种方法的区别主要有以下几点&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;从占用的额外空间来看，倒序存储方式在主键索引上，不会消耗额外的存储空间，而hash字段方法需要增加一个字段。当然，倒序存储方式使用4个字节的前缀长度应该是不够的，如果再长一点，这个消耗跟额外这个hash字段也差不多抵消了。&lt;/li&gt;
+&lt;li&gt;在CPU消耗方面，倒序方式每次写和读的时候，都需要额外调用一次reverse函数，而hash字段的方式需要额外调用一次crc32()函数。如果只从这两个函数的计算复杂度来看的话，reverse函数额外消耗的CPU资源会更小些。&lt;/li&gt;
+&lt;li&gt;从查询效率上看，使用hash字段方式的查询性能相对更稳定一些。因为crc32算出来的值虽然有冲突的概率，但是概率非常小，可以认为每次查询的平均扫描行数接近1。而倒序存储方式毕竟还是用的前缀索引的方式，也就是说还是会增加扫描行数。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;MySQL实战45讲——怎么给字符串加索引？&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>MySQL学习（六） 索引 第二篇</title>
         <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E5%85%AD-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%BA%8C%E7%AF%87/</link>
         <pubDate>Sat, 07 Feb 2026 00:00:00 +0000</pubDate>
