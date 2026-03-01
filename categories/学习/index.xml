@@ -6,8 +6,15 @@
     <description>Recent content in 学习 on 墨纹</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 08 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 27 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://MUNLELEE.github.io/categories/%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用Go实现堆排序</title>
+      <link>https://MUNLELEE.github.io/post/%E4%BD%BF%E7%94%A8go%E5%AE%9E%E7%8E%B0%E5%A0%86%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://MUNLELEE.github.io/post/%E4%BD%BF%E7%94%A8go%E5%AE%9E%E7%8E%B0%E5%A0%86%E6%8E%92%E5%BA%8F/</guid>
+      <description>前言 最近准备寻找下一份工作，也是到了再刷刷算法题的时候了，正巧碰到了堆排序的问题，虽说在Java中又优先队列可以避免手写，但想来再复习一下堆排序也无伤大雅，也是想着用Go来实现一下这个算法。&#xA;堆排序 基本概念 堆排序是一种基于二叉堆数据结构的原地排序算法，时间复杂度 O(nlogn)，额外空间复杂度 O(1)。下面解释一下几个概念：&#xA;完全二叉树：除了最后一层，所有层都是满的，且最后一层节点从左向右排列 大顶堆：父节点大于等于子节点 小顶堆：父节点小于等于子节点 算法执行步骤 首先需要构建堆（假设我们要构建一个大顶堆），步骤如下：&#xA;从最后一个非叶子节点开始 (n / 2 - 1) 对每个节点执行“下沉”操作，比较父子节点，将最大值交换给父节点 不断重复这个过程，直到根节点 之后就是根据这个堆进行排序，步骤如下：&#xA;将堆顶元素（最大值）与堆尾交换 堆大小减1 对堆顶执行下沉操作恢复大顶堆性质 不断重复直到堆大小为1 这里使用网上很热门的一个gif图来演示&#xA;堆排序gif图 优缺点 堆排序算法在最坏情况下，复杂度也是O(nlogn)，且为原地排序，空间效率高。适合外部排序（数据在磁盘中）。缺点是属于不稳定排序。&#xA;算法实现 堆排序实现 整体实现的代码如下：&#xA;package main import &amp;#34;fmt&amp;#34; // 堆排序 func heapSort(arr []int) { n := len(arr) // 数组长度 // 构建最大堆 从最后一个非叶子节点开始 for i := n/2 - 1; i &amp;gt;= 0; i-- { heapify(arr, n, i) } // 排序 for i := n - 1; i &amp;gt; 0; i-- { // 将堆顶的最大值移至数组末尾 arr[i], arr[0] = arr[0], arr[i] // 从堆顶开始向下调整堆 heapify(arr, i, 0) } } // 以索引i为根的子树调整为最大堆 func heapify(arr []int, n, i int) { largest := i left := i*2 + 1 right := i*2 + 2 // 判断当前三个节点的最大值 if left &amp;lt; n &amp;amp;&amp;amp; arr[left] &amp;gt; arr[largest] { // 如果要实现小顶堆 只需要调整第二个条件的比较符即可 largest = left } if right &amp;lt; n &amp;amp;&amp;amp; arr[right] &amp;gt; arr[largest] { largest = right } // 如果当前节点不是最大节点 交换 并向下调整堆 if largest !</description>
+    </item>
     <item>
       <title>MySQL学习（七） 索引 第三篇</title>
       <link>https://MUNLELEE.github.io/post/mysql%E5%AD%A6%E4%B9%A0%E4%B8%83-%E7%B4%A2%E5%BC%95-%E7%AC%AC%E4%B8%89%E7%AF%87/</link>
